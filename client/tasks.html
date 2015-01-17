@@ -7,8 +7,18 @@
 
   <div class="row">
     <div class="col-md-12">
-      {{#each tasks}}
-        {{> taskitem}}
+      {{#each dayTasks}}
+        <div class="day-tasks-container">
+          <div class="day-title">
+            <span class="title">Today</span>
+            <span class="timeslot">{{timeslot}}</span>
+          </div>
+          <div class="tasks">
+            {{#each tasks}}
+              {{> taskitem}}
+            {{/each}}
+          </div>
+        </div>
       {{/each}}
     </div>
   </div>
