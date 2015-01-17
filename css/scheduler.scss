@@ -2,6 +2,9 @@
 
 /*Page Effects*/
 
+.page {
+  padding-top: 60px;
+}
 
 /*Navigation*/
 .login {
@@ -23,6 +26,13 @@
   border-radius:0;
 }
 
+.navbar-toggle {
+  background-color: rgb(104,184,43);
+  &:hover {
+    @extend .navbar-toggle
+  }
+}
+
 .navbar-brand
 {
   position: absolute;
@@ -30,10 +40,15 @@
   left: 0;
   text-align: center;
   margin: auto;
+  color: white !important;
+  &:hover {
+    cursor: default;
+    color: white !important;
+  }
 }
 
 .navbar-link {
-  color: white;
+  color: white !important;
   text-decoration: none;
   &:hover {
     color: white;

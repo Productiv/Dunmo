@@ -1,15 +1,17 @@
 <template name="tasks">
-  <div class="row">
-    <div class="col-md-12">
-      <p><a id="newTaskBtn" class="btn btn-primary btn-block" href="#" role="button">Add New Task</a></p>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <p><a id="newTaskBtn" class="btn btn-primary btn-block" href="#" role="button">Add New Task</a></p>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      {{#each tasks}}
+    <div class="row">
+      <div class="col-md-12">
+        {{#each tasks}}
         {{> taskitem}}
-      {{/each}}
+        {{/each}}
+      </div>
     </div>
   </div>
 </template>
