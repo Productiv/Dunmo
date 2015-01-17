@@ -33,4 +33,3 @@ Template.tasks.events({
     location.href = '/tasks/new';
   }
 });
-
