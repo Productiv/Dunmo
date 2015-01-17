@@ -14,6 +14,7 @@
 
 Todos = new Mongo.Collection("todos");
 
+<<<<<<< Updated upstream
 Todos.helpers({
   owner: function() {
     return Meteor.users.find(this.ownerId);
@@ -34,6 +35,9 @@ Todos.helpers({
 
 });
 
+=======
+// Callback takes (err, id) as params
+>>>>>>> Stashed changes
 insertTodo = function (todo, callback) {
 	todo.title = todo.title || "New todo";
 	todo.isDone = todo.isDone || false;
@@ -46,5 +50,65 @@ insertTodo = function (todo, callback) {
 	todo.importance = todo.importance || 3;
 	todo.totalLength = todo.totalLength || 1800;
 	todo.completedLength = todo.completedLength || 0;
+<<<<<<< Updated upstream
 };
 
+=======
+}
+
+updateTodo = function(_id, modifier, callback) {
+  var keys = _.keys(modifier);
+  if(!_.every(keys, isFirstChar('$'))) modifier = { $set: modifier };
+  if(!modifier.$set) modifier.$set = { updatedAt: (new Date()).getTime() };
+  else modifier.$set.updatedAt = (new Date()).getTime();
+  Todos.update(_id, modifier, callback);
+};
+
+removeTodo = function(_id) {
+  Todos.remove(_id);
+};
+
+findTodo = function(_id) {
+  return Todos.findOne(_id);
+};
+
+findTodos = function(ids) {
+  if(!ids) return;
+  return Todos.find({ _id: { $in: ids } });
+};
+
+todosByIndex = function(selector) {
+  if(!selector) selector = {};
+  return Todos.find(selector, { sort: [[ 'index', 'asc' ]] });
+};
+
+allTodos = function() {
+  return Todos.find();
+};
+
+userTodos = function(uid) {
+  return Todos.find({ ownerId: uid });
+};
+
+userTodosByIndex = function(uid) {
+  return Todos.find({ ownerId: uid }, { sort: [[ 'index', 'asc' ]] });
+};
+
+userTodosByIndexByNotDone = function(uid) {
+  return Todos.find({ ownerId: uid, isDone: true }, {
+    sort: [
+      ['isDone', 'desc'],
+      ['index', 'asc']
+    ]
+  });
+};
+
+userTodosByIndexBy = function(uid, sortBy, sortOrder) {
+  return Todos.find({ ownerId: uid }, {
+    sort: [
+      [sortBy, sortOrder],
+      ['index', 'asc']
+    ]
+  });
+};
+>>>>>>> Stashed changes
