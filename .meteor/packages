@@ -10,4 +10,5 @@ insecure
 reywood:bootstrap3-sass
 fourseven:scss
 iron:router
+dburles:collection-helpers
 tsega:bootstrap3-datetimepicker
