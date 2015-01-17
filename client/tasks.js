@@ -29,7 +29,7 @@ Template.tasks.helpers({
 });
 
 Template.tasks.events({
-  'click #newTask': function() {
+  'click #newTaskBtn': function() {
     Router.go('/tasks/new');
   }
 });
