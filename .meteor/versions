@@ -3,6 +3,7 @@ accounts-password@1.0.5
 accounts-ui@1.1.4
 accounts-ui-unstyled@1.1.5
 application-configuration@1.0.4
+arunoda:fast-render@0.2.8
 autopublish@1.0.2
 autoupdate@1.1.4
 base64@1.0.2
@@ -48,6 +49,7 @@ minimongo@1.0.6
 mobile-status-bar@1.0.2
 momentjs:moment@2.8.4
 mongo@1.0.11
+mongo-livedata@1.0.7
 npm-bcrypt@0.7.7
 observe-sequence@1.0.4
 ordered-dict@1.0.2

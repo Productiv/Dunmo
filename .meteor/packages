@@ -15,3 +15,5 @@ tsega:bootstrap3-datetimepicker
 accounts-password
 accounts-ui
 stevezhu:lodash
+arunoda:fast-render
+fastclick
