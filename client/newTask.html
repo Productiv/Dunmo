@@ -1,28 +1,48 @@
 <template name="newTask">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <form>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <label for="importance">title:</label>
-                                <input class="form-control" />
-                            </div>
-                        </div>
-                        <label for="importance">importance:</label>
-                        <input class="form-control" name="importance" />
-                        <label for="task-length">task length:</label>
-                        <input class="form-control" name="task-length" />
-                        <div class="form-group">
-                            <label for="due">due:</label>
-                            <div class="input-group date" id="datetimepicker">
-                                <input type="text" class="form-control" name="due" />
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-2" for="importance">title:</label>
+                    <div class="col xs-12 col-sm-10">
+                        <input class="form-control" />
+                    </div>
                 </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-2" for="importance">importance:</label>
+                    <div class="col-xs-12 col-sm-10">
+                        <div class="btn-group btn-group-justified input-group" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" name="importances" value="1" />!</label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="importances" value="2" />!!</label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="importances" value="3" />!!!</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-2" for="task-length">task length:</label>
+                    <div class="col-xs-10 col-sm-4">
+                        <select class="form-control" name="task-hours" id="task-hours">
+                        </select>
+                    </div>
+                    <label class="col-xs-2 col-sm-1">hours</label>
+                    <div class="col-xs-10 col-sm-4">
+                        <select class="form-control" name="task-minutes" id="task-minutes">
+                        </select>
+                    </div>
+                    <label class="col-xs-2 col-sm-1">mins</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-2" for="due">due:</label>
+                    <div class="date col-xs-12 col-sm-10" id="datetimepicker">
+                        <input type="text" class="form-control" name="due" />
+                    </div>
+                </div>
+                </form>
             </div>
         </div>
+    </div>
 </template>
