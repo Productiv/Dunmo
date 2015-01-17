@@ -1,2 +1,4 @@
-# Scheduler
-Thing that schedules things. It's pretty neat. 
+Scheduler
+===========
+Thing that schedules things. It's pretty neat.
+
