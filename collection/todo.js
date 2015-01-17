@@ -121,8 +121,6 @@ userTodosSort = function (userId) {
     return pair;
   });
 
-  console.log(dateGroupedImportanceSorted);
-
   return dateGroupedImportanceSorted;
 };
 
