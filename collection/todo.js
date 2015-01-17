@@ -40,7 +40,7 @@ insertTodo = function (todo, callback) {
 
 	if (!todo.dueAt) {
 		var today = new Date();
-		var todo.dueAt = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 23, 59, 00, 00);
+		todo.dueAt = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 23, 59, 00, 00);
 	}
 
 	todo.importance = todo.importance || 3;
