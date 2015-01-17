@@ -13,3 +13,9 @@ Template.dayTaskGroup.helpers({
     return this[2];
   }
 });
+
+Template.dayTaskGroup.events({
+  'click .day-title': function(e) {
+    //
+  }
+});

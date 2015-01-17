@@ -49,6 +49,7 @@ Meteor.users.helpers({
   }, // end of user.timeslots()
 
   tasksByDay: function() {
+    //return userFillDays(Meteor.user());
     return [
       [
         new Date(), [
