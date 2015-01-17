@@ -1,11 +1,18 @@
 @import '../.meteor/local/build/programs/server/assets/packages/reywood_bootstrap3-sass/bootstrap';
 
 /*Page Effects*/
-.page {
-  margin-top: 60px;
-}
+
 
 /*Navigation*/
 .login {
-  padding-top: 15px;
+  margin-top: 10px;
+}
+
+.navbar-brand
+{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  margin: auto;
 }

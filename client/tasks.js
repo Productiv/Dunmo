@@ -39,3 +39,15 @@ Template.tasks.events({
     location.href = '/tasks/new';
   }
 });
+
+Template.tasksNav.events({
+  'click #newTaskBtn': function() {
+    location.href = '/tasks/new';
+  }
+});
+
+Template.newTaskNav.events({
+  'click #tasks': function() {
+    location.href = '/tasks';
+  }
+});
