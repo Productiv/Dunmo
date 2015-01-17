@@ -32,7 +32,8 @@ Template.tasks.helpers({
             totalLength: 4800,
             // percentDone: Math.round((0/4800)*100)
           }
-        ]
+        ],
+        3
       ]
     ];
   }

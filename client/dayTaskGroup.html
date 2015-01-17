@@ -1,0 +1,13 @@
+<template name="dayTaskGroup">
+  <div class="day-tasks-container">
+    <div class="day-title">
+      <span class="title">{{date}}</span>
+      <span class="timeslot">{{timeslot}}</span>
+    </div>
+    <div class="tasks">
+      {{#each tasks}}
+        {{> taskitem}}
+      {{/each}}
+    </div>
+  </div>
+</template>
