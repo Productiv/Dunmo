@@ -106,22 +106,27 @@ userTodosSort = function (userId) {
   var userTodos = Todos.find({ ownerId: userId }).fetch();
 
   var dateGrouped = _.sortBy(
-    _.pairs(
-      _.groupBy(userTodos, function (todo) {
-        var dueDate = new Date(todo.dueAt);
-        dueDate.setHours(0,0,0,0);
-        return dueDate;
-      })
-    ), function(pair) {
+      _.pairs(
+        _.groupBy(userTodos, function (todo) {
+          var dueDate = new Date(todo.dueAt);
+          dueDate.setHours(0,0,0,0);
+          return dueDate;
+        })
+      ), function(pair) {
       return Date.parse(pair[0]);
     });
 
-  var dateGroupedImportanceSorted = _.map(dateGrouped, function(pair) {
+  var dateGroupedTimeSorted = _.map(dateGrouped, function(pair) {
+    pair[1] = _.sortBy(pair[1], 'remainingLength').reverse();
+    return pair;
+  });
+
+  var dateGroupedTimeSortedImportanceSorted = _.map(dateGroupedTimeSorted, function(pair) {
     pair[1] = _.sortBy(pair[1], 'importance').reverse();
     return pair;
   });
 
-  return dateGroupedImportanceSorted;
+  return dateGroupedTimeSortedImportanceSorted;
 };
 
 userTodosOrdered = function (userId) {
