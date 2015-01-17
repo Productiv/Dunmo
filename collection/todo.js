@@ -14,7 +14,6 @@
 
 Todos = new Mongo.Collection("todos");
 
-<<<<<<< Updated upstream
 Todos.helpers({
   owner: function() {
     return Meteor.users.find(this.ownerId);
@@ -35,9 +34,7 @@ Todos.helpers({
 
 });
 
-=======
 // Callback takes (err, id) as params
->>>>>>> Stashed changes
 insertTodo = function (todo, callback) {
 	todo.title = todo.title || "New todo";
 	todo.isDone = todo.isDone || false;
@@ -50,11 +47,7 @@ insertTodo = function (todo, callback) {
 	todo.importance = todo.importance || 3;
 	todo.totalLength = todo.totalLength || 1800;
 	todo.completedLength = todo.completedLength || 0;
-<<<<<<< Updated upstream
 };
-
-=======
-}
 
 updateTodo = function(_id, modifier, callback) {
   var keys = _.keys(modifier);
@@ -111,4 +104,3 @@ userTodosByIndexBy = function(uid, sortBy, sortOrder) {
     ]
   });
 };
->>>>>>> Stashed changes
