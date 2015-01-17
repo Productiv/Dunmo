@@ -3,6 +3,6 @@
  *
  */
 
-Todos = new Mongo.collection("todos");
+Todos = new Mongo.Collection("todos");
 
 
