@@ -1,9 +1,11 @@
-
 Router.configure({
   layout: 'layout'
 });
 
-Router.route('/', 'tasks');
+Router.route('/tasks', function () {
+  this.render('tasks');
+});
 
-Router.route('/tasks/new', 'newTask');
-
+Router.route('/tasks/new', function () {
+  this.render('newTask');
+});
