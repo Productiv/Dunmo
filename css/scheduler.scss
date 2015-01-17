@@ -1,11 +1,42 @@
 @import '../.meteor/local/build/programs/server/assets/packages/reywood_bootstrap3-sass/bootstrap';
 
 /*Page Effects*/
-.page {
-  margin-top: 60px;
-}
+
 
 /*Navigation*/
 .login {
-  padding-top: 15px;
+  margin-top: 10px;
+  a {
+    text-decoration: none;
+    color: green;
+  }
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: rgb(104,184,43) ;
+}
+
+.navbar-custom {
+  background-color:rgb(104,184,43);
+  color:#ffffff;
+  border-radius:0;
+}
+
+.navbar-brand
+{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  margin: auto;
+}
+
+.navbar-link {
+  color: white;
+  text-decoration: none;
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
 }
