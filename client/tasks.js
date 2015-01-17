@@ -1,7 +1,7 @@
 
 Template.tasks.helpers({
   dayTasks: function() {
-    // return Meteor.user().tasks();
+    return Meteor.user().tasksByDay();
     return [
       [
         new Date(), [

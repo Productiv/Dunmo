@@ -21,7 +21,7 @@ Todos.helpers({
 
   // returns percentage between 0 and 1
   percentageCompleted: function() {
-    return (this.totalLength - this.remainingLength) / this.totalLength;
+    return Math.floor((this.totalLength - this.remainingLength) / this.totalLength * 100);
   },
 
   daysUntilDue: function() {
@@ -41,7 +41,7 @@ insertTodo = function (todo, callback) {
 	todo.dueAt = todo.dueAt || Date.getMidnight();
 	todo.importance = todo.importance || 3;
 	todo.totalLength = todo.totalLength || 1800;
-	todo.remainingLength = todo.remainingLength || 1800;
+	todo.remainingLength = todo.remainingLength || todo.totalLength;
 	console.log(todo);
 	return Todos.insert(todo, callback);
 };
