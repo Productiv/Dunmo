@@ -10,7 +10,9 @@
 
       <div class="row">
         <div class="col-md-12">
-          {{> taskitem}}
+          {{#each tasks}}
+            {{> taskitem}}
+          {{/each}}
         </div>
       </div>
     </div>

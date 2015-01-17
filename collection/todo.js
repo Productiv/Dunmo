@@ -38,12 +38,7 @@ Todos.helpers({
 insertTodo = function (todo, callback) {
 	todo.title = todo.title || "New todo";
 	todo.isDone = todo.isDone || false;
-
-	if (!todo.dueAt) {
-		var today = new Date();
-		todo.dueAt = new Date(today.getFullYear(), today.getMonth(), today.getDay(), 23, 59, 00, 00);
-	}
-
+	todo.dueAt = todo.dueAt || Date.getMidnight();
 	todo.importance = todo.importance || 3;
 	todo.totalLength = todo.totalLength || 1800;
 	todo.completedLength = todo.completedLength || 0;
