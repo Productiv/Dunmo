@@ -35,7 +35,7 @@ Template.tasks.helpers({
 });
 
 Template.tasks.events({
-  'click #newTask': function() {
-    Router.go('/tasks/new');
+  'click #newTaskBtn': function() {
+    location.href = '/tasks/new';
   }
 });
