@@ -1,20 +1,15 @@
 <template name="tasks">
-  {{> tasksNav}}
-  <div class="page">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <p><a id="newTaskBtn" class="btn btn-primary btn-block" href="#" role="button">Add New Task</a></p>
-        </div>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p><a id="newTaskBtn" class="btn btn-primary btn-block" href="#" role="button">Add New Task</a></p>
+    </div>
+  </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          {{#each tasks}}
-            {{> taskitem}}
-          {{/each}}
-        </div>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#each tasks}}
+        {{> taskitem}}
+      {{/each}}
     </div>
   </div>
 </template>

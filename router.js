@@ -1,5 +1,5 @@
 Router.configure({
-  layout: 'layout'
+  layoutTemplate: 'layout'
 });
 
 Router.route('/', function () {
@@ -8,8 +8,10 @@ Router.route('/', function () {
 
 Router.route('/tasks', function () {
   this.render('tasks');
+  this.render('tasksNav', { to: 'navbar' });
 });
 
 Router.route('/tasks/new', function () {
   this.render('newTask');
+  this.render('newTaskNav', { to: 'navbar' });
 });
