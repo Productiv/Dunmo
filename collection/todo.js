@@ -102,6 +102,30 @@ userTodosByIndexBy = function(uid, sortBy, sortOrder) {
   });
 };
 
+userTodosSort = function (userId) {
+  var userTodos = Todos.find({ ownerId: userId }).fetch();
+
+  var dateGrouped = _.sortBy(
+    _.pairs(
+      _.groupBy(userTodos, function (todo) {
+        var dueDate = new Date(todo.dueAt);
+        dueDate.setHours(0,0,0,0);
+        return dueDate;
+      })
+    ), function(pair) {
+      return Date.parse(pair[0]);
+    });
+
+  var dateGroupedImportanceSorted = _.map(dateGrouped, function(pair) {
+    pair[1] = _.sortBy(pair[1], 'importance').reverse();
+    return pair;
+  });
+
+  console.log(dateGroupedImportanceSorted);
+
+  return dateGroupedImportanceSorted;
+};
+
 userTodosOrdered = function (userId) {
 	console.log(userTodos(userId).fetch());
 	return Todos.find({ ownerId: userId }, { sort: [[ 'dueAt', 'asc' ], [ 'importance', 'desc' ], [ 'remainingLength', 'asc' ]] });
