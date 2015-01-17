@@ -1,5 +1,5 @@
 <template name="tasksNav">
-  <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-custom" role="navigation">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>
@@ -7,13 +7,13 @@
         <span class="icon-bar"></span>
       </button>
     </div>
-    <a class="navbar-brand" href="#">Tasks</a>
+    <a class="navbar-brand navbar-link">Tasks</a>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-left">
         <li><p><a class="btn btn-default login" href="#" role="button">{{> loginButtons}}</a></p></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a id="newTaskBtn" href="#">New</a></li>
+        <li><a id="newTaskBtn" class="navbar-link" href="#">New</a></li>
       </ul>
     </div>
   </nav>

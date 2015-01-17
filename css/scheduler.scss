@@ -6,6 +6,21 @@
 /*Navigation*/
 .login {
   margin-top: 10px;
+  a {
+    text-decoration: none;
+    color: green;
+  }
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: rgb(104,184,43) ;
+}
+
+.navbar-custom {
+  background-color:rgb(104,184,43);
+  color:#ffffff;
+  border-radius:0;
 }
 
 .navbar-brand
@@ -15,4 +30,13 @@
   left: 0;
   text-align: center;
   margin: auto;
+}
+
+.navbar-link {
+  color: white;
+  text-decoration: none;
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
 }
