@@ -22,6 +22,8 @@ Template.newTask.rendered = function() {
 
 Template.newTaskNav.events({
     "click a#confirm-new-task": function (event) {
+
+        // validation
         $("div.form-group").removeClass("has-error");
         if ($("input#title").val() == "") {
             $("div#title-group").addClass("has-error");
@@ -35,6 +37,10 @@ Template.newTaskNav.events({
         if ($("div#importance-group label.active").length == 0) {
             $("div#importance-group").addClass("has-error");
         }
+
+        // if ($("div.form-group.has-error").length == 0) {
+        //
+        // }
 
         // $("div#importance-group label.active").children("input").eq(0).val()
         return false;
