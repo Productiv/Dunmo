@@ -8,7 +8,7 @@
  * dueAt : Date
  * importance : Integer<1,2,3>
  * totalLength : Number<seconds>
- * completedLength : Number<seconds>
+ * remainingLength : Number<seconds>
  *
  */
 
@@ -21,7 +21,7 @@ Todos.helpers({
 
   // returns percentage between 0 and 1
   percentageCompleted: function() {
-    return this.completedLength / this.totalLength;
+    return (this.totalLength - this.remainingLength) / this.totalLength;
   },
 
   daysUntilDue: function() {
@@ -34,14 +34,16 @@ Todos.helpers({
 
 });
 
-// Callback takes (err, id) as params
 insertTodo = function (todo, callback) {
+	console.log(todo);
 	todo.title = todo.title || "New todo";
 	todo.isDone = todo.isDone || false;
 	todo.dueAt = todo.dueAt || Date.getMidnight();
 	todo.importance = todo.importance || 3;
 	todo.totalLength = todo.totalLength || 1800;
-	todo.completedLength = todo.completedLength || 0;
+	todo.remainingLength = todo.remainingLength || 1800;
+	console.log(todo);
+	return Todos.insert(todo, callback);
 };
 
 updateTodo = function(_id, modifier, callback) {
@@ -98,4 +100,21 @@ userTodosByIndexBy = function(uid, sortBy, sortOrder) {
       ['index', 'asc']
     ]
   });
+};
+
+userTodosOrdered = function (userId) {
+	console.log(userTodos(userId).fetch());
+	return Todos.find({ ownerId: userId }, { sort: [[ 'dueAt', 'asc' ], [ 'importance', 'desc' ], [ 'remainingLength', 'asc' ]] });
+};
+
+userTodosGroupByDate = function (userId) {
+	return Todos.find({ ownerId: userId }, { sort: [[ 'dueAt', 'asc' ]] });
+};
+
+userTodosGroupByImportance = function (userId) {
+	return userTodosGroupByDate(userId).find({ ownerId: userId }, { sort: [[ 'importance', 'desc' ]] });
+};
+
+userTodosGroupByRemainingLength = function (userId) {
+	return userTodosGroupByImportance(userId).find({ ownerId: userId }, { sort: [[ 'remainingLength', 'asc' ]] })
 };
