@@ -12,3 +12,5 @@ fourseven:scss
 iron:router
 dburles:collection-helpers
 tsega:bootstrap3-datetimepicker
+accounts-password
+accounts-ui
