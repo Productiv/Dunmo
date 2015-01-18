@@ -9,9 +9,9 @@ Template.taskitem.rendered = function() {
 
 Template.taskitem.helpers({
     importanceClass: function() {
-        if (this.importance == "!") {
+        if (this.importance == 1) {
             return "lowImportance";
-        } else if (this.importance == "!!") {
+        } else if (this.importance == 2) {
             return "mediumImportance";
         } else {
             return "highImportance";

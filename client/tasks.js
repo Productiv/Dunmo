@@ -28,9 +28,6 @@ Template.newTaskNav.events({
 });
 
 Template.loginButtons.rendered = function() {
-  $('.btn.login').hide();
-  window.setTimeout(function(){
-    $('.login-link-text').html('<i class="glyphicon glyphicon-user"></i>');
-    $('.btn.login').show();
-  }, 2000);
+  $('.login-link-text').html('<i class="glyphicon glyphicon-user"></i>');
+  $('.navbar .login').show();
 };
