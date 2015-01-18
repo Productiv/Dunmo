@@ -1,5 +1,7 @@
+
 Template.dayTaskGroup.rendered = function() {
-}
+  Session.set('editing-today-freetime', false);
+};
 
 Template.dayTaskGroup.helpers({
   date: function() {
@@ -24,17 +26,24 @@ Template.dayTaskGroup.events({
   'click .timeslot': function(e) {
     console.log('e.target: ', e.target);
     console.log(Session.set('editing-today-freetime', true));
-    setTimeout(render, 300);
+    setTimeout(render.bind(this), 300);
   },
 
   'click .free-time-submit': function(e) {
     console.log('e.target: ', e.target);
     confirm();
-    console.log(Session.set('editing-today-freetime', false));
   }
 });
 
 function render() {
+  var freetime = Meteor.user().freeTime();
+  console.log('free: ', freetime);
+  var hr = parseInt(freetime.substr(0, freetime.indexOf(':')));
+  var minstr = freetime.substr(freetime.indexOf(':')+1, freetime.length);
+  console.log('minstr: ', minstr);
+  var min = parseInt(minstr);
+  console.log('min: ', min);
+
   $(function () {
     $("#datetimepicker").datetimepicker({
       pick12HourFormat: true
@@ -46,6 +55,7 @@ function render() {
     for (var i = 0; i < 101; i++) {
       taskHours.append($("<option/>").val(i).text(i));
     }
+    taskHours.val(hr);
   });
 
   $(function() {
@@ -53,7 +63,7 @@ function render() {
     for (var i = 0; i < 60; i += 5) {
       taskMinutes.append($("<option/>") .val(i) .text(i));
     }
-    taskMinutes.val(30);
+    taskMinutes.val(min);
   });
 };
 
