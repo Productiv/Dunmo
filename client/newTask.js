@@ -6,7 +6,7 @@ Template.newTask.rendered = function() {
   });
   $(function() {
     var taskHours = $('select#task-hours');
-    for (var i = 0; i < 24; i++) {
+    for (var i = 0; i < 101; i++) {
       taskHours.append($("<option/>").val(i).text(i));
     }
   });
