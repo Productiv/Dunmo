@@ -23,3 +23,9 @@ Template.newTaskNav.events({
     location.href = '/tasks';
   }
 });
+
+Template.loginButtons.rendered = function() {
+  window.setTimeout(function(){
+    $('.login-link-text').html('<i class="glyphicon glyphicon-user"></i>');
+  }, 100);
+};
