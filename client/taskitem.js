@@ -1,7 +1,8 @@
 Template.taskitem.rendered = function() {
   $(function() {
     $(".dial").knob({
-      readOnly: true
+      readOnly: true,
+      'fgColor': '#42FF23'
     });
   });
 }

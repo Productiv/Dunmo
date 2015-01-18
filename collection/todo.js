@@ -40,6 +40,44 @@ Todos.helpers({
     } else {
       return "!!!";
     }
+  },
+
+  remainingLengthDisplay: function() {
+    var minutes = this.remainingLength / 60;
+    var hours = 0;
+    var days = 0;
+    var str = "";
+
+    while (minutes >= 60) {
+      minutes -= 60;
+      hours += 1;
+    };
+
+    if (hours < 10) {
+      str += "0"+hours.toString() + ":";
+      if (minutes < 10) { str += "0"; };
+      str += minutes.toString();
+
+    } else if (hours > 24) {
+
+      while (hours >= 24) {
+        hours -= 24;
+        days += 1;
+      };
+
+      str += days.toString() + ":";
+      if (hours < 10) { str += "0"; };
+      str += hours.toString() + ":";
+      if (minutes < 10) { str += "0"; };
+      str += minutes.toString();
+
+    } else {
+
+      str += hours.toString() + ":";
+      if (minutes < 10) { str += "0"; };
+      str += minutes.toString();
+    };
+    return str;
   }
 
 });
@@ -114,26 +152,35 @@ userTodosByIndexBy = function(uid, sortBy, sortOrder) {
 };
 
 userFillDays = function (userId) {
-  var userTimeslots = Timeslots.find({ ownerId: userId }).fetch();
+  var user = Meteor.users.findOne(userId);
+  if (!user) return;
+  var userTimeslots = user.timeslots();
   var userTodosSorted = userTodosSort(userId);
-  var dayLists = [];
+  console.log(userTimeslots);
+  console.log(userTodosSorted);
+  var dayLists = [[]];
   var todoTime, remLength;
 
   userTimeslots.forEach(function (timeslot, index1) {
-    var todayTimeslot = _.find(userTimeslots, { 'date': Date.todayStart() })[index];
+    console.log("index1: ",index1);
+    // var timeslots = _.findWhere(userTimeslots, { 'date': new Date(Date.todayStart()) });
+    var todayTimeslot = userTimeslots[index1];
+    console.log("RAWR",todayTimeslot);
     remLength = 0;
-
     userTodosSorted.forEach(function (todo, index2) {
-      if ((todayTimeslot -= (remLength = todo.remainingLength)) >= 0) {
+      console.log("index2: ",index2);
+      console.log("todo: ",todo,"todo.remainingLength: ",todo.remainingLength);
+      if ((todayTimeslot.inputLength -= (remLength = todo.remainingLength)) >= 0) {
         // Push this item to this day
         dayLists[index1].push(todo);
-      } else if (todayTimeslot < 0) {
-        todayTimeslot += remLength;
+        console.log(dayLists);
+      } else if (todayTimeslot.inputLength < 0) {
+        todayTimeslot.inputLength += remLength;
         return false;
       };
     });
   });
-  console.log(dayLists);
+  console.log("I'm drunk!!!!!!! :D",dayLists);
   return dayLists;
 }
 

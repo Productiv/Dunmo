@@ -6,11 +6,11 @@ Template.dayTaskGroup.helpers({
   },
 
   tasks: function() {
-    return this[1];
+    return this;
   },
 
   timeslot: function() {
-    return this[2];
+    return (Meteor.user().timeslots()[0]).inputLength / 3600;
   }
 });
 
