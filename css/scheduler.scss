@@ -117,6 +117,27 @@ div.tasks {
     }
 }
 
+@media(max-width: 768px) {
+    div.tasks {
+        font-size: 16px;
+    }
+}
+
+@media(max-width: 400px) {
+    div.edit-complete button {
+        padding: 4px;
+    }
+    div.importance-display {
+        padding: 0px;
+    }
+}
+
+@media(max-width: 330px) {
+    div.edit-complete button {
+        padding: 2px;
+    }
+}
+
 /* New Task Page */
 div.btn-group-justified label {
     font-weight: 500;
