@@ -35,7 +35,8 @@ Meteor.users.helpers({
     if(!todaysTimeslot) todaysTimeslot = { ownerId: this._id, date: new Date(Date.todayStart()), inputLength: avgLength };
     var timeslots = [ todaysTimeslot ];
     var startDate = new Date(Date.todayStart());
-    var endDate = _.last(todos) && _.last(todos).dueAt || new Date(Date.todayStart());
+    if (!_.last(todos)) { return timeslots  } else {  var endDate = _.last(todos).dueAt;  };
+
     for(var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       timeslots.push({
         ownerId: this._id,
