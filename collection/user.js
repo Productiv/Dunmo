@@ -81,7 +81,7 @@ Meteor.users.helpers({
             title: 'task 1',
             dueAt: new Date(),
             isDone: false,
-            importance: 2,
+            importance: "!!",
             completedLength: 100,
             inputLength: 3600,
             // percentDone: Math.round((100/3600)*100)
@@ -90,7 +90,7 @@ Meteor.users.helpers({
             title: 'task 2',
             dueAt: new Date(),
             isDone: false,
-            importance: 3,
+            importance: "!!!",
             completedLength: 1000,
             inputLength: 1800,
             // percentDone: Math.round((1000/1800)*100)
@@ -99,7 +99,7 @@ Meteor.users.helpers({
             title: 'task 3',
             dueAt: new Date(),
             isDone: true,
-            importance: 1,
+            importance: "!",
             completedLength: 0,
             inputLength: 4800,
             // percentDone: Math.round((0/4800)*100)
