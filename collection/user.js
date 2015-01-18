@@ -67,6 +67,11 @@ Meteor.users.helpers({
     return secToTime(timeslot.inputLength - timeslot.actualLength);
   },
 
+  changeFreeTime: function(newTime) {
+    var id = Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) })._id;
+    Timeslots.update(id, { $set: { inputLength: newTime } });
+  },
+
   tasksByDay: function() {
     console.log(userTodos(Meteor.user()));
     // return userTodos(Meteor.user());

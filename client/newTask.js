@@ -34,7 +34,7 @@ Template.newTask.events({
   }
 });
 
-confirm = function() {
+function confirm() {
     event.preventDefault();
     // validation
     var itemsInvalid = false;
