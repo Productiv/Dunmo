@@ -4,6 +4,7 @@
 $lowImportance: #20D4BC;
 $medImportance: #F29830;
 $highImportance: #D42038;
+$coyoteGreen: #42FF23;
 
 /*Page Effects*/
 
@@ -37,22 +38,10 @@ div#login-dropdown-list {
 
 /*Navigation*/
 
-.nav > li > a:hover,
-.nav > li > a:focus {
-  background-color: rgb(104,184,43) ;
-}
-
 .navbar-custom {
-  background-color: #42FF23;
+  background-color: $coyoteGreen;
   color:#ffffff;
   border-radius:0;
-}
-
-.navbar-toggle {
-  background-color: rgb(104,184,43);
-  &:hover {
-    @extend .navbar-toggle
-  }
 }
 
 .navbar-brand
