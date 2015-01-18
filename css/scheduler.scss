@@ -1,5 +1,10 @@
 @import '../.meteor/local/build/programs/server/assets/packages/reywood_bootstrap3-sass/bootstrap';
 
+/* SCSS variables */
+$lowImportance: #20D4BC;
+$medImportance: #F29830;
+$highImportance: #D42038;
+
 /*Page Effects*/
 
 .page {
@@ -87,7 +92,17 @@ div#login-dropdown-list {
 
 div.tasks {
     font-size: 24px;
-    div.title-display {
+    div.title-display,
+    div.importance-display {
         font-weight: 500;
+    }
+    span.lowImportance {
+        color: $lowImportance;
+    }
+    span.mediumImportance {
+        color: $medImportance;
+    }
+    span.highImportance {
+        color: $highImportance;
     }
 }

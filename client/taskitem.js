@@ -5,3 +5,15 @@ Template.taskitem.rendered = function() {
     });
   });
 }
+
+Template.taskitem.helpers({
+    importanceClass: function() {
+        if (this.importance == "!") {
+            return "lowImportance";
+        } else if (this.importance == "!!") {
+            return "mediumImportance";
+        } else {
+            return "highImportance";
+        }
+    }
+});
