@@ -26,7 +26,8 @@ Template.newTaskNav.events({
 });
 
 Template.loginButtons.rendered = function() {
+
   window.setTimeout(function(){
     $('.login-link-text').html('<i class="glyphicon glyphicon-user"></i>');
-  }, 100);
+  }, 300);
 };
