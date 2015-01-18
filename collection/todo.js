@@ -30,6 +30,16 @@ Todos.helpers({
 
   secondsUntilDue: function() {
     return this.dueAt.getTime() - Date.now().getTime();
+  },
+
+  importanceBangs: function() {
+    if (this.importance == 1) {
+      return "!";
+    } else if (this.importance == 2) {
+      return "!!";
+    } else {
+      return "!!!";
+    }
   }
 
 });
@@ -42,6 +52,7 @@ insertTodo = function (todo, callback) {
 	todo.importance = todo.importance || 3;
 	todo.inputLength = todo.inputLength || 1800;
 	todo.remainingLength = todo.remainingLength || 1800;
+    todo.ownerId = Meteor.user()._id;
 	console.log(todo);
 	return Todos.insert(todo, callback);
 };
