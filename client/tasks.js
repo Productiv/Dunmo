@@ -1,9 +1,11 @@
 
 Template.tasks.helpers({
   dayTasks: function() {
-    var user = Meteor.user();
-    user && user.timeslots();
-    return user && user.tasksByDay();
+    var userId = Meteor.userId();
+    if (!userId) { return []; };
+    var thing = userFillDays(userId);
+    console.log(thing);
+    return thing;
   }
 });
 
