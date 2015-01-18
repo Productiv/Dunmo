@@ -1,0 +1,47 @@
+<template name="editTask">
+  <div class="row">
+    <div class="col-xs-12">
+      <form class="form-horizontal">
+        <div class="form-group" id="title-group">
+          <label class="col-xs-12" for="title">title:</label>
+          <div class="col-xs-12">
+            <input class="form-control" id="title" />
+          </div>
+        </div>
+        <div class="form-group" id="importance-group">
+          <input type="hidden" id="importance-value" value=""/>
+          <label class="col-xs-12" for="importance">importance:</label>
+          <div class="col-xs-12">
+            <div class="btn-group btn-group-justified input-group" data-toggle="buttons">
+              <label class="btn btn-default">
+                <input type="radio" name="importances" value="1" />!</label>
+              <label class="btn btn-default">
+                <input type="radio" name="importances" value="2" />!!</label>
+              <label class="btn btn-default">
+                <input type="radio" name="importances" value="3" />!!!</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" id="length-group">
+          <label class="col-xs-12" for="task-length">remaining time:</label>
+          <div class="col-xs-10 col-sm-5">
+            <select class="form-control" name="task-hours" id="task-hours">
+            </select>
+          </div>
+          <label class="col-xs-2 col-sm-1">hours</label>
+          <div class="col-xs-10 col-sm-5">
+            <select class="form-control" name="task-minutes" id="task-minutes">
+            </select>
+          </div>
+          <label class="col-xs-2 col-sm-1">mins</label>
+        </div>
+        <div class="form-group" id="date-group">
+          <label class="col-xs-12" for="due">due:</label>
+          <div class="date col-xs-12" id="datetimepicker">
+            <input type="text" class="form-control" name="due" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
