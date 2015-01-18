@@ -120,3 +120,18 @@ div.tasks {
         color: $highImportance;
     }
 }
+
+/* New Task Page */
+div.btn-group-justified label {
+    font-weight: 500;
+
+    &:nth-child(1) {
+        color: $lowImportance;
+    }
+    &:nth-child(2) {
+        color: $medImportance;
+    }
+    &:nth-child(3) {
+        color: $highImportance;
+    }
+}
