@@ -43,43 +43,8 @@ Todos.helpers({
   },
 
   remainingLengthDisplay: function() {
-    var minutes = this.remainingLength / 60;
-    var hours = 0;
-    var days = 0;
-    var str = "";
-
-    while (minutes >= 60) {
-      minutes -= 60;
-      hours += 1;
-    };
-
-    if (hours < 10) {
-      str += "0"+hours.toString() + ":";
-      if (minutes < 10) { str += "0"; };
-      str += minutes.toString();
-
-    } else if (hours > 24) {
-
-      while (hours >= 24) {
-        hours -= 24;
-        days += 1;
-      };
-
-      str += days.toString() + ":";
-      if (hours < 10) { str += "0"; };
-      str += hours.toString() + ":";
-      if (minutes < 10) { str += "0"; };
-      str += minutes.toString();
-
-    } else {
-
-      str += hours.toString() + ":";
-      if (minutes < 10) { str += "0"; };
-      str += minutes.toString();
-    };
-    return str;
+    return secToTime(this.remainingLength);
   }
-
 });
 
 insertTodo = function (todo, callback) {
@@ -226,3 +191,45 @@ userTodosGroupByImportance = function (userId) {
 userTodosGroupByRemainingLength = function (userId) {
 	return userTodosGroupByImportance(userId).find({ ownerId: userId }, { sort: [[ 'remainingLength', 'asc' ]] })
 };
+
+secToTime = function(seconds) {
+    var minutes = seconds / 60;
+    var hours = 0;
+    var days = 0;
+    var str = "";
+    console.log("sec to time");
+    console.log(minutes);
+    console.log(typeof minutes);
+    console.log(seconds);
+
+    while (minutes >= 60) {
+        minutes -= 60;
+        hours += 1;
+    };
+
+    if (hours < 10) {
+        str += "0"+hours.toString() + ":";
+        if (minutes < 10) { str += "0"; };
+        str += minutes.toString();
+
+    } else if (hours > 24) {
+
+        while (hours >= 24) {
+            hours -= 24;
+            days += 1;
+        };
+
+        str += days.toString() + ":";
+        if (hours < 10) { str += "0"; };
+        str += hours.toString() + ":";
+        if (minutes < 10) { str += "0"; };
+        str += minutes.toString();
+
+    } else {
+
+        str += hours.toString() + ":";
+        if (minutes < 10) { str += "0"; };
+        str += minutes.toString();
+    };
+    return str;
+}

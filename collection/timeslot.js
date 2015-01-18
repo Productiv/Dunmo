@@ -16,4 +16,3 @@ Timeslots.helpers({
     return this.inputLength - this.actualLength;
   }
 });
-

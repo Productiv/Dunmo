@@ -10,12 +10,12 @@ Template.dayTaskGroup.helpers({
   },
 
   timeslot: function() {
-    return (Meteor.user().timeslots()[0]).inputLength / 3600;
+    return Meteor.user().freeTime();
   }
 });
 
 Template.dayTaskGroup.events({
   'click .day-title': function(e) {
-    // var 
+    // var
   }
 });
