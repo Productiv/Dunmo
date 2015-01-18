@@ -20,6 +20,7 @@ Template.pomodoro.events({
   'click .back': function(e) {
     var time = clock.getTime();
     var remaining = this.inputLength - time;
+    Meteor.user().updateTimeslot(remaining - this.remainingLength);
     Todos.update(this._id, { $set: { remainingLength: remaining } });
     window.location.href = '/';
   },
@@ -33,6 +34,15 @@ Template.pomodoro.events({
       clock.stop();
       Session.set('pause', true);
     }
+  },
+
+  'click .complete-task': function (event) {
+    $('pomodoro-container').hide();
+    var time = clock.getTime();
+    var remaining = this.inputLength - time;
+    Meteor.user().updateTimeslot(this.remainingLength);
+    removeTodo(this._id);
+    window.location.href = '/';
   }
 });
 

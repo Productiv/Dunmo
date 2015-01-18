@@ -10,22 +10,24 @@
     </div>
     <div class="col-xs-4">
       <ul class="nav navbar-nav navbar-right">
-        <li><a class="confirm-new-task navbar-link" href="#"><i class="glyphicon glyphicon-ok"></i> Done</a></li>
+        <li><a class="complete-task navbar-link" href="#"><i class="glyphicon glyphicon-ok"></i> Done</a></li>
       </ul>
     </div>
   </nav>
-  <h1>{{title}} - in progress</h1>
-  {{> taskitem this}}
-  <div class="clock-wrapper" hidden="true">
-    <div class="clock"></div>
-  </div>
-  <div class="play-pause-container">
-    <div class="play-pause">
-      {{#if pause}}
-        <span class="glyphicon glyphicon-play"></span>
-      {{else}}
-        <span class="glyphicon glyphicon-pause"></span>
-      {{/if}}
+  <div class="pomodoro-container">
+    <h1>{{title}} - in progress</h1>
+    {{> taskitem this}}
+    <div class="clock-wrapper" hidden="true">
+      <div class="clock"></div>
+    </div>
+    <div class="play-pause-container">
+      <div class="play-pause">
+        {{#if pause}}
+          <span class="glyphicon glyphicon-play"></span>
+        {{else}}
+          <span class="glyphicon glyphicon-pause"></span>
+        {{/if}}
+      </div>
     </div>
   </div>
 </template>
