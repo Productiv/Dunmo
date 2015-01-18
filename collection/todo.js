@@ -21,11 +21,7 @@ Todos.helpers({
 
   // returns percentage between 0 and 1
   percentageCompleted: function() {
-<<<<<<< Updated upstream
-    return Math.floor((this.totalLength - this.remainingLength) / this.totalLength * 100);
-=======
-    return (this.inputLength - this.remainingLength) / this.inputLength;
->>>>>>> Stashed changes
+    return Math.floor((this.inputLength - this.remainingLength) / this.inputLength * 100);
   },
 
   daysUntilDue: function() {
@@ -44,13 +40,8 @@ insertTodo = function (todo, callback) {
 	todo.isDone = todo.isDone || false;
 	todo.dueAt = todo.dueAt || Date.todayEnd();
 	todo.importance = todo.importance || 3;
-<<<<<<< Updated upstream
-	todo.totalLength = todo.totalLength || 1800;
-	todo.remainingLength = todo.remainingLength || todo.totalLength;
-=======
 	todo.inputLength = todo.inputLength || 1800;
 	todo.remainingLength = todo.remainingLength || 1800;
->>>>>>> Stashed changes
 	console.log(todo);
 	return Todos.insert(todo, callback);
 };
