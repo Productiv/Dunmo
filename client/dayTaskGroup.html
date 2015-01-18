@@ -4,28 +4,32 @@
     <div class="col-md-12">
       <h2>
         <span class="title pull-left">Today</span>
-        {{#if editing}}
-          <div class="form-group" id="length-group">
-            <div class="col-xs-10 col-sm-5">
-              <select class="form-control" name="task-hours" id="task-hours">
-              </select>
-            </div>
-            <label class="col-xs-2 col-sm-1">hr</label>
-            <div class="col-xs-10 col-sm-5">
-              <select class="form-control" name="task-minutes" id="task-minutes">
-              </select>
-            </div>
-            <label class="col-xs-2 col-sm-1">min</label>
-            <button class="free-time-submit">Save</button>
-          </div>
-        {{else}}
           <span class="timeslot pull-right">
             {{timeslot}} hr
           </span>
-        {{/if}}
       </h2>
     </div>
   </div>
+  {{#if editing}}
+  <div class="row">
+      <div class="form-group" id="length-group">
+          <div class="col-xs-8 col-sm-4">
+              <select class="form-control" name="task-hours" id="task-hours">
+              </select>
+          </div>
+          <label class="col-xs-2 col-sm-1">hours</label>
+          <div class="col-xs-8 col-sm-4">
+              <select class="form-control" name="task-minutes" id="task-minutes">
+              </select>
+          </div>
+          <label class="col-xs-2 col-sm-1">mins</label>
+          <div class="col-sm-2">
+              <button class="free-time-submit btn btn-default">Save</button>
+          </div>
+      </div>
+  </div>
+  {{/if}}
+
   <div class="tasks">
     {{#each tasks}}
       {{> taskitem}}
