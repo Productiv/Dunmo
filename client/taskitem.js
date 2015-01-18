@@ -17,3 +17,10 @@ Template.taskitem.helpers({
         }
     }
 });
+
+Template.taskitem.events({
+    "click button#complete-task": function (event) {
+        
+    }
+
+});
