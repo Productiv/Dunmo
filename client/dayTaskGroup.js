@@ -32,6 +32,7 @@ Template.dayTaskGroup.events({
   'click .free-time-submit': function(e) {
     console.log('e.target: ', e.target);
     confirm();
+    console.log(Session.set('editing-today-freetime', false));
   }
 });
 
@@ -68,7 +69,6 @@ function render() {
 };
 
 function confirm() {
-  event.preventDefault();
   // validation
   var itemsInvalid = false;
   $("div.form-group").removeClass("has-error");
@@ -82,4 +82,5 @@ function confirm() {
   // add todo
   var inputLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
   Meteor.user().changeFreeTime(inputLength);
-}
+};
+
