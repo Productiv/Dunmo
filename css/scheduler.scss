@@ -6,7 +6,7 @@
   padding-top: 75px;
 }
 
-/*Navigation*/
+/* Login */
 .login {
   margin-top: 10px;
   a {
@@ -14,6 +14,23 @@
     color: black;
   }
 }
+
+div#login-dropdown-list {
+  div#login-email-label-and-input {
+    margin-bottom: 10px;
+    input {
+      width: 190px;
+      display: inline-block;
+    }
+  }
+  div#login-password-label-and-input input {
+    width: 164px;
+    display: inline-block;
+  }
+  z-index: 9999;
+}
+
+/*Navigation*/
 
 .nav > li > a:hover,
 .nav > li > a:focus {
@@ -58,11 +75,19 @@
 }
 
 .navbar-right {
-  float: right !important;
+  float: right;
 }
+
 
 /*Task Items*/
 
 .dialdiv {
   margin-top: -10px;
+}
+
+div.tasks {
+    font-size: 24px;
+    div.title-display {
+        font-weight: 500;
+    }
 }
