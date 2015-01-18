@@ -42,6 +42,7 @@ insertTodo = function (todo, callback) {
 	todo.importance = todo.importance || 3;
 	todo.inputLength = todo.inputLength || 1800;
 	todo.remainingLength = todo.remainingLength || 1800;
+    todo.ownerId = Meteor.user()._id;
 	console.log(todo);
 	return Todos.insert(todo, callback);
 };
