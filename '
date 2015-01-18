@@ -1,0 +1,26 @@
+var clock;
+
+Template.pomodoro.rendered = function() {
+  clock = $('.clock').FlipClock();
+  $('.clock-wrapper').attr('hidden', false);
+};
+
+Template.pomodoro.helpers({
+  pause: function() {
+    return Session.get('pause');
+  }
+});
+
+Template.pomodoro.events({
+  'click .play-pause': function(e) {
+    var pause = Session.get('pause');
+    if(pause) {
+      clock.start();
+      Session.set('pause', false);
+    } else {
+      clock.stop();
+      Session.set('pause', false);
+    }
+  }
+});
+

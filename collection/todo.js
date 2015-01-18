@@ -72,7 +72,7 @@ Todos.helpers({
 
         if ((check = due.getDate() - today.getDate()) == 0) {
           str = time;
-          
+
         } else if (check == 1) {
           str = "Tomorrow " + time;
 
@@ -103,6 +103,7 @@ insertTodo = function (todo, callback) {
 updateTodo = function(_id, modifier, callback) {
   var keys = _.keys(modifier);
   if(!_.every(keys, isFirstChar('$'))) modifier = { $set: modifier };
+  console.log(modifier);
   if(!modifier.$set) modifier.$set = { updatedAt: (new Date()).getTime() };
   else modifier.$set.updatedAt = (new Date()).getTime();
   Todos.update(_id, modifier, callback);
@@ -239,8 +240,6 @@ secToTime = function(seconds) {
     var hours = 0;
     var days = 0;
     var str = "";
-    console.log(minutes, typeof minutes);
-    console.log(seconds, typeof seconds);
 
     while (minutes >= 60) {
         minutes -= 60;
@@ -248,9 +247,9 @@ secToTime = function(seconds) {
     };
 
     if (hours < 10) {
-        str += hours.toString() + ":";
+        str += Math.floor(hours).toString() + ":";
         if (minutes < 10) { str += "0"; };
-        str += minutes.toString();
+        str += Math.floor(minutes).toString();
 
     } else if (hours > 24) {
 
@@ -259,17 +258,18 @@ secToTime = function(seconds) {
             days += 1;
         };
 
-        str += days.toString() + ":";
+        str += Math.floor(days).toString() + ":";
         if (hours < 10) { str += "0"; };
-        str += hours.toString() + ":";
+        str += Math.floor(hours).toString() + ":";
         if (minutes < 10) { str += "0"; };
-        str += minutes.toString();
+        str += Math.floor(minutes).toString();
 
     } else {
 
-        str += hours.toString() + ":";
+        str += Math.floor(hours).toString() + ":";
         if (minutes < 10) { str += "0"; };
-        str += minutes.toString();
+        str += Math.floor(minutes).toString();
     };
     return str;
 }
+
