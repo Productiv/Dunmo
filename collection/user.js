@@ -53,9 +53,12 @@ Meteor.users.helpers({
   }, // end of user.timeslots()
 
   updateTimeslot: function(timeToAdd) {
-    console.log(typeof timeToAdd);
+    console.log(timeToAdd);
+    console.log("TYPE" + parseInt(timeToAdd));
     var id = Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) })._id;
+    console.log("ACTUAL BEFORE: " + Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) }).actualLength)
     Timeslots.update(id, {$inc: { actualLength: parseInt(timeToAdd) }});
+    console.log("ACTUAL: " + Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) }).actualLength)
 
   },
 
