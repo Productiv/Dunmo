@@ -1,19 +1,19 @@
 <template name="taskitem">
   <hr>
   <div class="row">
-    <div class="col-md-4 col-xs-4">
-      <h3>{{title}}</h3>
+    <div class="col-md-4 col-xs-4 title-display">
+      {{title}}
     </div>
-    <div class="col-md-2 col-xs-2">
-      {{importanceBangs}}
+    <div class="col-md-2 col-xs-2 importance-display">
+      {{importance}}
     </div>
-    <div class="col-md-4 col-xs-4">
+    <div class="col-md-4 col-xs-4 percent-display">
       <div class="dialdiv">
         <input type="text" value="{{percentDone}}" data-width="50" data-height="50" class="dial">
       </div>
     </div>
-    <div class="col-md-2 col-xs-2">
-      {{inputLength}}
+    <div class="col-md-2 col-xs-2 length-display">
+      <span class="pull-right">{{inputLength}}</span>
     </div>
   </div>
 </template>
