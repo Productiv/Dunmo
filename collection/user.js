@@ -31,16 +31,15 @@ Meteor.users.helpers({
                            }).fetch();
 
     // create all the timeslots from today until the furthest due date, sorted by date
-    var todaysTimeslot = Timeslots.find({ ownerId: this._id, date: new Date(Date.todayStart()) }).fetch()[0];
-    if(!todaysTimeslot) todaysTimeslot = { ownerId: this._id, date: new Date(Date.todayStart()), inputLength: avgLength };
-    Timeslots.insert(todaysTimeslot);
+    var todaysTimeslot = Timeslots.find({ ownerId: this._id, date: Date.todayStart() }).fetch()[0];
+    if(!todaysTimeslot) {
+      todaysTimeslot = { ownerId: this._id, date: new Date(Date.todayStart()), inputLength: avgLength };
+      Timeslots.insert(todaysTimeslot);
+    }
     var timeslots = [ todaysTimeslot ];
     var startDate = new Date(Date.todayStart());
-    console.log('todos: ', todos);
     if (!_.last(todos)) return timeslots;
     else var endDate = _.last(todos).dueAt;
-
-    console.log('endDate: ', endDate);
 
     for(var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       timeslots.push({
@@ -49,8 +48,6 @@ Meteor.users.helpers({
         inputLength: avgLength
       });
     }
-
-    console.log("Slots: ", timeslots);
 
     return timeslots;
   }, // end of user.timeslots()

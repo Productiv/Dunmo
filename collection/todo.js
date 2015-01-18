@@ -151,10 +151,8 @@ userTodosByIndexBy = function(uid, sortBy, sortOrder) {
 
 userFillDays = function (userId) {
   var user = Meteor.users.findOne(userId);
-  console.log('user: ', user);
   if (!user) return;
   var userTimeslots = user.timeslots();
-  console.log('userTimeslots: ', userTimeslots);
   var userTodosSorted = userTodosSort(userId);
   var dayLists = [[]];
   var todoTime, remLength;
