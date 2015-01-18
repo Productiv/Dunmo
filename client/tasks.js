@@ -2,6 +2,7 @@
 Template.tasks.helpers({
   dayTasks: function() {
     var user = Meteor.user();
+    user && user.timeslots();
     return user && user.tasksByDay();
   }
 });

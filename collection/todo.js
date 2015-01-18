@@ -19,7 +19,7 @@ Todos.helpers({
     return Meteor.users.find(this.ownerId);
   },
 
-  // returns percentage between 0 and 1
+  // returns percentage between 0 and 100
   percentageCompleted: function() {
     return Math.floor((this.inputLength - this.remainingLength) / this.inputLength * 100);
   },

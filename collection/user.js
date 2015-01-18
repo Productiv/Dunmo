@@ -5,6 +5,7 @@ Meteor.users.helpers({
   },
 
   timeslots: function() {
+    // get average free time based on last week
     var lastWeek = Timeslots.find({
       ownerId: this._id,
       date: {
@@ -14,7 +15,6 @@ Meteor.users.helpers({
     });
 
     var avgLength;
-
     if (!lastWeek[0]) {
       avgLength = 4*60*60;
     } else {
@@ -24,50 +24,29 @@ Meteor.users.helpers({
       avgLength = total / lastWeek.length;
     };
 
-    var slots = Timeslots.find({
-      ownerId: this._id,
-      date: { $gte: Date.todayStart() }
-    }).fetch();
+    // get all the todos from today until infinity, sorted by date
+    var todos = Todos.find({ ownerId: this._id, dueAt: { $gte: Date.todayStart() } },
+                           {
+                             sort: [[ 'dueAt', 'asc' ]]
+                           });
 
-    if (!slots[0]) {
-      console.log("CREATING");
-      slots[0] = Timeslots.insert({
-            'ownerId': this._id,
-            'date': (new Date()),
-            'inputLength': avgLength,
-            'actualLength': avgLength
-          });
-    };
-
-    console.log("Slots: ",slots);
-
-    var slotsObj = _.object(_.map(slots, function(slot) {
-      return [ slot.date, slot ];
-    }));
-
-    console.log("SlotsObj: ",slotsObj);
-
-    var minDate = _.min(slots, 'date');
-    var maxDate = _.max(slots, 'date');
-    var currentDate = minDate;
-    var ret = [ currentDate ];
-
-    console.log(minDate,maxDate,ret);
-
-    while(currentDate < maxDate) {
-      currentDate.setDate(currentDate.getDate() + 1)
-      ret.push(currentDate);
+    // create all the timeslots from today until the furthest due date, sorted by date
+    var todaysTimeslot = Timeslots.find({ ownerId: this._id, date: new Date(Date.todayStart()) }).fetch()[0];
+    if(!todaysTimeslot) todaysTimeslot = { ownerId: this._id, date: new Date(Date.todayStart()), inputLength: avgLength };
+    var timeslots = [ todaysTimeslot ];
+    var startDate = new Date(Date.todayStart());
+    var endDate = _.last(todos) && _.last(todos).dueAt || new Date(Date.todayStart());
+    for(var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+      timeslots.push({
+        ownerId: this._id,
+        date: d,
+        inputLength: avgLength
+      });
     }
 
-    ret = _.map(ret, function(date) {
-      return slotsObj[date] || {
-        ownerId: this._id,
-        date: new Date(date),
-        inputLength: avgLength
-      };
-    });
+    console.log("Slots: ", timeslots);
 
-    return ret;
+    return timeslots;
   }, // end of user.timeslots()
 
   tasksByDay: function() {
