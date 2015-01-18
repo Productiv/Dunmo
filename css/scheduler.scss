@@ -3,7 +3,7 @@
 /*Page Effects*/
 
 .page {
-  padding-top: 60px;
+  padding-top: 75px;
 }
 
 /*Navigation*/
@@ -11,7 +11,7 @@
   margin-top: 10px;
   a {
     text-decoration: none;
-    color: green;
+    color: black;
   }
 }
 
@@ -40,6 +40,7 @@
   left: 0;
   text-align: center;
   margin: auto;
+  font-size: 20px;
   color: white !important;
   &:hover {
     cursor: default;
@@ -56,6 +57,9 @@
   }
 }
 
+.navbar-right {
+  float: right !important;
+}
 
 /*Task Items*/
 
