@@ -83,6 +83,16 @@ div#login-dropdown-list {
   float: right;
 }
 
+@media(max-width: 768px) {
+  .login {
+    margin: 0;
+  }
+
+  .navbar-nav {
+    margin-top: 9px;
+    margin-bottom: 0;
+  }
+}
 
 /*Task Items*/
 
