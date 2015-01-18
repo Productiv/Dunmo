@@ -35,6 +35,7 @@ Template.newTask.events({
 });
 
 confirm = function() {
+    event.preventDefault();
     // validation
     var itemsInvalid = false;
     $("div.form-group").removeClass("has-error");
@@ -67,5 +68,6 @@ confirm = function() {
       if(err) console.log(err);
       else console.log('id: ', id);
       Router.go('/tasks');
+      return false;
     });
 }
