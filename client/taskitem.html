@@ -1,13 +1,13 @@
 <template name="taskitem">
   <hr>
   <div class="row">
-    <div class="col-md-4 col-xs-4 title-display">
+    <div class="col-md-4 col-xs-3 title-display">
       {{title}}
     </div>
-    <div class="col-md-2 col-xs-2 importance-display">
+    <div class="col-md-2 col-xs-1 importance-display">
         <center><span class="{{importanceClass}}">{{importanceBangs}}</span></center>
     </div>
-    <div class="col-md-4 col-xs-4 percent-display">
+    <div class="col-md-3 col-xs-4 percent-display">
       <center>
         <div class="dialdiv">
             <input type="text" value="{{percentDone}}" data-width="50" data-height="50" class="dial">
@@ -17,5 +17,31 @@
     <div class="col-md-2 col-xs-2 length-display">
       <span class="pull-right">{{remainingLengthDisplay}}</span>
     </div>
+    <div class="btn-group-vertical col-md-1 col-xs-2 edit-complete" role="group">
+        <button type="button" class="btn btn-default" id="edit-task">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default" id="complete-task">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+        </button>
+    </div>
   </div>
+  <div class="modal fade" id="editModal">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Modal title</h4>
+              </div>
+              <div class="modal-body">
+                  <p>One fine body&hellip;</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 </template>
