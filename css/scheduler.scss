@@ -56,6 +56,22 @@
   }
 }
 
+/* Login */
+div#login-dropdown-list {
+    div#login-email-label-and-input {
+        margin-bottom: 10px;
+        input {
+            width: 190px;
+            display: inline-block;
+        }
+    }
+    div#login-password-label-and-input input {
+        width: 164px;
+        display: inline-block;
+    }
+    z-index: 9999;
+}
+
 /*Task Items*/
 
 .dialdiv {

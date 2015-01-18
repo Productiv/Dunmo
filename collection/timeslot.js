@@ -3,9 +3,9 @@
  * Timeslots
  * =========
  * ownerId : String
- * date : Date<nearest day>
- * totalLength : Number<seconds>
- * secondsWorked : Number<seconds>
+ * date : Date<year, month, day>
+ * inputLength : Number<seconds>
+ * actualLength : Number<seconds>
  *
  */
 
@@ -13,7 +13,7 @@ Timeslots = new Mongo.Collection('timeslots');
 
 Timeslots.helpers({
   secondsRemaining: function() {
-    return this.totalLength - this.secondsWorked;
+    return this.inputLength - this.actualLength;
   }
 });
 
