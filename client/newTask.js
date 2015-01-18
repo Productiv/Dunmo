@@ -62,7 +62,8 @@ confirm = function() {
     var todo = {};
     todo.title = $('#title').val();
     todo.dueAt = new Date($('#datetimepicker input').val());
-    todo.inputLength = $('#task-hours').val() * 60 * 60 + $('#task-minutes').val() * 60;
+    todo.inputLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
+    todo.remainingLength = todo.inputLength;
     todo.importance = $("div#importance-group label.active").children("input").eq(0).val()
     insertTodo(todo, function (err, id) {
       if(err) console.log(err);
