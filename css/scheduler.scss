@@ -8,17 +8,34 @@ $highImportance: #D42038;
 /*Page Effects*/
 
 .page {
-  padding-top: 60px;
+  padding-top: 75px;
 }
 
-/*Navigation*/
+/* Login */
 .login {
   margin-top: 10px;
   a {
     text-decoration: none;
-    color: green;
+    color: black;
   }
 }
+
+div#login-dropdown-list {
+  div#login-email-label-and-input {
+    margin-bottom: 10px;
+    input {
+      width: 190px;
+      display: inline-block;
+    }
+  }
+  div#login-password-label-and-input input {
+    width: 164px;
+    display: inline-block;
+  }
+  z-index: 9999;
+}
+
+/*Navigation*/
 
 .nav > li > a:hover,
 .nav > li > a:focus {
@@ -26,7 +43,7 @@ $highImportance: #D42038;
 }
 
 .navbar-custom {
-  background-color:rgb(104,184,43);
+  background-color: #42FF23;
   color:#ffffff;
   border-radius:0;
 }
@@ -45,6 +62,7 @@ $highImportance: #D42038;
   left: 0;
   text-align: center;
   margin: auto;
+  font-size: 20px;
   color: white !important;
   &:hover {
     cursor: default;
@@ -61,21 +79,10 @@ $highImportance: #D42038;
   }
 }
 
-/* Login */
-div#login-dropdown-list {
-    div#login-email-label-and-input {
-        margin-bottom: 10px;
-        input {
-            width: 190px;
-            display: inline-block;
-        }
-    }
-    div#login-password-label-and-input input {
-        width: 164px;
-        display: inline-block;
-    }
-    z-index: 9999;
+.navbar-right {
+  float: right;
 }
+
 
 /*Task Items*/
 
