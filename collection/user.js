@@ -59,7 +59,7 @@ Meteor.users.helpers({
             isDone: false,
             importance: 2,
             completedLength: 100,
-            totalLength: 3600,
+            totalLength: 3600
             // percentDone: Math.round((100/3600)*100)
           },
           {
@@ -68,7 +68,7 @@ Meteor.users.helpers({
             isDone: false,
             importance: 3,
             completedLength: 1000,
-            totalLength: 1800,
+            totalLength: 1800
             // percentDone: Math.round((1000/1800)*100)
           },
           {
@@ -77,7 +77,7 @@ Meteor.users.helpers({
             isDone: true,
             importance: 1,
             completedLength: 0,
-            totalLength: 4800,
+            totalLength: 4800
             // percentDone: Math.round((0/4800)*100)
           }
         ],
