@@ -83,15 +83,13 @@ Todos.helpers({
 });
 
 insertTodo = function (todo, callback) {
-	console.log(todo);
 	todo.title = todo.title || "New todo";
 	todo.isDone = todo.isDone || false;
 	todo.dueAt = todo.dueAt || Date.todayEnd();
 	todo.importance = todo.importance || 3;
 	todo.inputLength = todo.inputLength || 1800;
 	todo.remainingLength = todo.remainingLength || 1800;
-    todo.ownerId = Meteor.user()._id;
-	console.log(todo);
+  todo.ownerId = Meteor.user()._id;
 	return Todos.insert(todo, callback);
 };
 
@@ -156,31 +154,23 @@ userFillDays = function (userId) {
   if (!user) return;
   var userTimeslots = user.timeslots();
   var userTodosSorted = userTodosSort(userId);
-  console.log(userTimeslots);
-  console.log(userTodosSorted);
   var dayLists = [[]];
   var todoTime, remLength;
 
   userTimeslots.forEach(function (timeslot, index1) {
-    console.log("index1: ",index1);
     // var timeslots = _.findWhere(userTimeslots, { 'date': new Date(Date.todayStart()) });
     var todayTimeslot = userTimeslots[index1];
-    console.log("RAWR",todayTimeslot);
     remLength = 0;
     userTodosSorted.forEach(function (todo, index2) {
-      console.log("index2: ",index2);
-      console.log("todo: ",todo,"todo.remainingLength: ",todo.remainingLength);
       if ((todayTimeslot.inputLength -= (remLength = todo.remainingLength)) >= 0) {
         // Push this item to this day
         dayLists[index1].push(todo);
-        console.log(dayLists);
       } else if (todayTimeslot.inputLength < 0) {
         todayTimeslot.inputLength += remLength;
         return false;
       };
     });
   });
-  console.log("I'm drunk!!!!!!! :D",dayLists);
   return dayLists;
 }
 
@@ -222,7 +212,6 @@ userTodosSort_wGroup = function (userId) {
 };
 
 userTodosOrdered = function (userId) {
-	console.log(userTodos(userId).fetch());
 	return Todos.find({ ownerId: userId }, { sort: [[ 'dueAt', 'asc' ], [ 'importance', 'desc' ], [ 'remainingLength', 'asc' ]] });
 };
 
