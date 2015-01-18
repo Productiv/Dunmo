@@ -72,7 +72,7 @@ Todos.helpers({
 
         if ((check = due.getDate() - today.getDate()) == 0) {
           str = time;
-          
+
         } else if (check == 1) {
           str = "Tomorrow " + time;
 
@@ -239,8 +239,6 @@ secToTime = function(seconds) {
     var hours = 0;
     var days = 0;
     var str = "";
-    console.log(minutes, typeof minutes);
-    console.log(seconds, typeof seconds);
 
     while (minutes >= 60) {
         minutes -= 60;
