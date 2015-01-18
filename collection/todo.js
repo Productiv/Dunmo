@@ -247,9 +247,9 @@ secToTime = function(seconds) {
     };
 
     if (hours < 10) {
-        str += hours.toString() + ":";
+        str += Math.floor(hours).toString() + ":";
         if (minutes < 10) { str += "0"; };
-        str += minutes.toString();
+        str += Math.floor(minutes).toString();
 
     } else if (hours > 24) {
 
@@ -258,17 +258,18 @@ secToTime = function(seconds) {
             days += 1;
         };
 
-        str += days.toString() + ":";
+        str += Math.floor(days).toString() + ":";
         if (hours < 10) { str += "0"; };
-        str += hours.toString() + ":";
+        str += Math.floor(hours).toString() + ":";
         if (minutes < 10) { str += "0"; };
-        str += minutes.toString();
+        str += Math.floor(minutes).toString();
 
     } else {
 
-        str += hours.toString() + ":";
+        str += Math.floor(hours).toString() + ":";
         if (minutes < 10) { str += "0"; };
-        str += minutes.toString();
+        str += Math.floor(minutes).toString();
     };
     return str;
 }
+

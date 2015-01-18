@@ -1,3 +1,6 @@
+Template.tasks.rendered = function() {
+  $('.bootstrap-datetimepicker-widget').remove();
+};
 
 Template.tasks.helpers({
   dayTasks: function() {

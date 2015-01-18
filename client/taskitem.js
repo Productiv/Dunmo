@@ -1,11 +1,10 @@
 Template.taskitem.rendered = function() {
-  $(function() {
-    $(".dial").knob({
-      readOnly: true,
-      'fgColor': '#42FF23'
-    });
+  $(".dial").knob({
+    readOnly: true,
+    'fgColor': '#42FF23'
   });
-}
+  $('.dialdiv').attr('hidden', false);
+};
 
 Template.taskitem.helpers({
     importanceClass: function() {
