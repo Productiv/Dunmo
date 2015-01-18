@@ -50,6 +50,12 @@ Meteor.users.helpers({
     return timeslots;
   }, // end of user.timeslots()
 
+  updateTimeslot: function(timeToAdd) {
+    var id = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() })._id;
+    Timeslots.update(id, {$inc: { actualLength: timeToAdd }});
+
+  },
+
   tasksByDay: function() {
     console.log(userTodos(Meteor.user()));
     // return userTodos(Meteor.user());
