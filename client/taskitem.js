@@ -24,6 +24,6 @@ Template.taskitem.events({
         removeTodo(this._id);
     },
     "click button#edit-task": function(event) {
-
+        $("div#edit-modal button.confirm-edit-task").attr("id", this._id);
     }
 });

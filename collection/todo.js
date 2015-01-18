@@ -103,6 +103,7 @@ insertTodo = function (todo, callback) {
 updateTodo = function(_id, modifier, callback) {
   var keys = _.keys(modifier);
   if(!_.every(keys, isFirstChar('$'))) modifier = { $set: modifier };
+  console.log(modifier);
   if(!modifier.$set) modifier.$set = { updatedAt: (new Date()).getTime() };
   else modifier.$set.updatedAt = (new Date()).getTime();
   Todos.update(_id, modifier, callback);
