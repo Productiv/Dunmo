@@ -1,38 +1,38 @@
 <template name="taskitem">
-  <hr>
-  <div class="row">
-    <div class="col-md-4 col-xs-3 title-display">
-      {{title}}
-    </div>
-    <div class="col-md-2 col-xs-1 importance-display">
-        <center><span class="{{importanceClass}}">{{importanceBangs}}</span></center>
-    </div>
-    <div class="col-md-3 col-xs-4 percent-display">
-      <center>
-        <div class="dialdiv" hidden="true">
-            <input type="text" value="{{percentageCompleted}}" data-width="50" data-height="50" class="dial">
-        </div>
-      </center>
-    </div>
-    <div class="col-md-2 col-xs-2 length-display">
-      <div class="row">
-          <div class="col-xs-12">
-              <center>{{remainingLengthDisplay}}</center>
-          </div>
+<hr>
+<div class="row task-row" id="{{_id}}">
+  <div class="col-md-4 col-xs-3 title-display">
+    {{title}}
+  </div>
+  <div class="col-md-2 col-xs-1 importance-display">
+    <center><span class="{{importanceClass}}">{{importanceBangs}}</span></center>
+  </div>
+  <div class="col-md-3 col-xs-4 percent-display">
+    <center>
+      <div class="dialdiv" hidden="true">
+        <input type="text" value="{{percentageCompleted}}" data-width="50" data-height="50" class="dial">
       </div>
-      <div class="row due-date">
-          <div class="col-xs-12">
-              <center>due {{dueDateDisplay}}</center>
-          </div>
+    </center>
+  </div>
+  <div class="col-md-2 col-xs-2 length-display">
+    <div class="row">
+      <div class="col-xs-12">
+        <center>{{remainingLengthDisplay}}</center>
       </div>
     </div>
-    <div class="btn-group-vertical col-md-1 col-xs-2 edit-complete" role="group">
-        <button type="button" class="btn btn-default" id="edit-task" data-toggle="modal" data-target="#edit-modal">
-            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-        </button>
-        <button type="button" class="btn btn-default" id="complete-task">
-            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-        </button>
+    <div class="row due-date">
+      <div class="col-xs-12">
+        <center>due {{dueDateDisplay}}</center>
+      </div>
     </div>
   </div>
+  <div class="btn-group-vertical col-md-1 col-xs-2 edit-complete" role="group">
+    <button type="button" class="btn btn-default" id="edit-task" data-toggle="modal" data-target="#edit-modal">
+      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default" id="complete-task">
+      <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>
 </template>
