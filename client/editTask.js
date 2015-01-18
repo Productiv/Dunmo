@@ -1,27 +1,29 @@
 Template.editTask.rendered = function() {
+
     $(function () {
         $("#datetimepicker").datetimepicker({
             pick12HourFormat: true
         });
     });
-    $(function() {
+
+    $(function () {
         var taskHours = $('select#task-hours');
         for (var i = 0; i < 101; i++) {
             taskHours.append($("<option/>").val(i).text(i));
         }
-    });
-
-    $(function() {
-        var taskMinutes = $('select#task-minutes');
+        var taskMinutes = $('select#task-minutes')
         for (var i = 0; i < 60; i += 5) {
             taskMinutes.append($("<option/>") .val(i) .text(i));
         }
-        taskMinutes.val(30);
     });
 }
 
 Template.tasks.events({
     "click button.confirm-edit-task": function (event) {
+        var prevRemaining = findTodo(event.target.id).remainingLength;
+        var timeSpent = prevRemaining - $('#task-hours').val() * 60 * 60 + $('#task-minutes').val() * 60;
+        console.log("TIME: " + timeSpent);
+        Meteor.user().updateTimeslot(timeSpent);
         confirm();
     }
 
@@ -35,7 +37,7 @@ function confirm() {
         todo.title = $('#title').val();
     }
     if (!($("select#task-hours").val() == 0 && $("select#task-minutes").val() == 0)) {
-        todo.remainingLength = todo.remaingingLength - ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
+        todo.remainingLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
     }
     if ($("#datetimepicker input").val() != "") {
         todo.dueAt = new Date($('#datetimepicker input').val());
@@ -47,7 +49,8 @@ function confirm() {
     updateTodo(event.target.id, todo, function (err, id) {
         if(err) console.log(err);
         else console.log('id: ', id);
-        Router.go('/tasks');
+        $('#edit-modal').modal("toggle");
+        // Router.go('/tasks');
         // return false;
     });
 }

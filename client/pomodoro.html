@@ -1,0 +1,16 @@
+<template name="pomodoro">
+  <h1>{{title}} - in progress</h1>
+  {{> taskitem this}}
+  <div class="clock-wrapper" hidden="true">
+    <div class="clock"></div>
+  </div>
+  <div class="play-pause-container">
+    <div class="play-pause">
+      {{#if pause}}
+        <span class="glyphicon glyphicon-play"></span>
+      {{else}}
+        <span class="glyphicon glyphicon-pause"></span>
+      {{/if}}
+    </div>
+  </div>
+</template>
