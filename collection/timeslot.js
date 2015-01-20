@@ -2,17 +2,18 @@
 /*
  * Timeslots
  * =========
- * ownerId : String
- * date : Date<year, month, day>
- * inputLength : Number<seconds>
- * actualLength : Number<seconds>
+ * ownerId       : String
+ * date          : Date<year, month, day>
+ * timeSpent     : Number<seconds>
+ * timeRemaining : Number<seconds>
  *
  */
 
 Timeslots = new Mongo.Collection('timeslots');
 
 Timeslots.helpers({
-  secondsRemaining: function() {
-    return this.inputLength - this.actualLength;
+  totalTime: function() {
+    return this.timeRemaining + this.timeSpent;
   }
 });
+

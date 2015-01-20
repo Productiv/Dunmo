@@ -1,11 +1,22 @@
 
+/*
+ * User
+ * =========
+ * name : String
+ * email : String<unique>
+ *
+ */
+
 Meteor.users.helpers({
   todos: function() {
     return Todos.find({ ownerId: this._id });
   },
 
-  timeslots: function() {
-    // get average free time based on last week
+  //TODO: todosDoneOn(date), historical
+  //TODO: todosDueAt(date), based on due date
+
+  // get average free time based on past 7 days
+  averageFreetime: function() {
     var lastWeek = Timeslots.find({
       ownerId: this._id,
       date: {
@@ -15,56 +26,82 @@ Meteor.users.helpers({
     });
 
     var avgLength;
-    if (!lastWeek[0]) {
-      avgLength = 4*60*60;
+    if (lastWeek.length === 0) {
+      avgLength = 4*60*60; // number of seconds in 4 hours
     } else {
-      var total = _.reduce(lastWeek, function(sum, item) {
-        return sum + item.inputLength;
-      });
-      avgLength = total / lastWeek.length;
+      var lenths = _.pluck(lastWeek, 'inputLength');
+      avgLength = _.avg(lengths);
     };
 
+    return avgLength;
+  },
+
+  timeslots: function() {
+    var user = this;
+    var avgFreetime = user.averageFreetime();
+
     // get all the todos from today until infinity, sorted by date
-    var todos = Todos.find({ ownerId: this._id, dueAt: { $gte: Date.todayStart().getTime() } },
-                           {
-                             sort: [[ 'dueAt', 'asc' ]]
-                           }).fetch();
+    // var todos = Todos.find({ ownerId: user._id, dueAt: { $gte: Date.todayStart().getTime() } },
+    //                        {
+    //                          sort: [[ 'dueAt', 'asc' ]]
+    //                        }).fetch();
+
+    // get all unfinished todos
+    var todos = Todos.find({ ownerId: user._id, isDone: false }, { sort: [[ 'dueAt', 'asc' ]] }).fetch();
 
     // create all the timeslots from today until the furthest due date, sorted by date
-    var todaysTimeslot = Timeslots.find({ ownerId: this._id, date: Date.todayStart() }).fetch()[0];
+    var todaysTimeslot = Timeslots.findOne({ ownerId: user._id, date: Date.todayStart() });
     if(!todaysTimeslot) {
-      todaysTimeslot = { ownerId: this._id, date: Date.todayStart(), inputLength: avgLength, actualLength: 0 };
+      todaysTimeslot = { ownerId: user._id, date: Date.todayStart(), timeRemaining: avgFreetime, timeSpent: 0 };
       Timeslots.insert(todaysTimeslot);
     }
     var timeslots = [ todaysTimeslot ];
     var startDate = Date.todayStart();
-    if (!_.last(todos)) return timeslots;
+    if (todos.length === 0) return timeslots;
     else var endDate = _.last(todos).dueAt;
 
     for(var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
       timeslots.push({
-        ownerId: this._id,
+        ownerId: user._id,
         date: d,
-        inputLength: avgLength
+        timeRemaining: avgFreetime,
+        timeSpent: 0
       });
     }
 
     return timeslots;
   }, // end of user.timeslots()
 
-  updateTimeslot: function(timeToAdd) {
-    var id = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() })._id;
-    Timeslots.update(id, {$inc: { actualLength: parseInt(timeToAdd) }});
+  todaysTimeslot: function() {
+    return Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() });
   },
 
-  freeTime: function() {
-    var timeslot = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() });
-    return secToTime(timeslot.secondsRemaining());
+  // if newTime is provided, updates, otherwise it doesn't change
+  // returns timeRemaining today
+  timeRemaining: function(newTime) {
+    var slot = this.todaysTimeslot();
+    if(newTime) Timeslots.update(slot._id, { $set: { timeRemaining: newTime }});
+    return newTime || slot.timeRemaining;
   },
 
-  changeFreeTime: function(newTime) {
-    var id = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() })._id;
-    Timeslots.update(id, { $set: { inputLength: newTime } });
+  // if newTime is provided, updates, otherwise it doesn't change
+  // returns timeSpent today
+  timeSpent: function(newTime) {
+    var slot = this.todaysTimeslot();
+    if(newTime) Timeslots.update(slot._id, { $set: { timeSpent: newTime }});
+    return newTime || slot.timeSpent;
+  },
+
+  incrementTimeRemaining: function(seconds) {
+    var slot = this.todaysTimeslot();
+    Timeslots.update(slot._id, { $inc: { timeRemaining: seconds }});
+    return slot.timeRemaining + seconds;
+  },
+
+  incrementTimeSpent: function(seconds) {
+    var slot = this.todaysTimeslot();
+    Timeslots.update(slot._id, { $inc: { timeSpent: seconds }});
+    return slot.timeSpent + seconds;
   },
 
   tasksByDay: function() {

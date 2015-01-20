@@ -1,46 +1,46 @@
 
 Template.dayTaskGroup.rendered = function() {
-  Session.set('editing-today-freetime', false);
+  Session.set('editing', false);
 };
 
 Template.dayTaskGroup.helpers({
   date: function() {
-    console.log(this);
+    console.log('date: ', this.timeslot && this.timeslot.date);
     return "Today";
   },
 
   tasks: function() {
-    return this;
+    return this.tasks;
   },
 
-  timeslot: function() {
-    return Meteor.user().freeTime();
+  timeRemaining: function() {
+    return Meteor.user().timeRemaining();
   },
 
   editing: function() {
-    return Session.get('editing-today-freetime');
+    return Session.get('editing');
   }
 });
 
 Template.dayTaskGroup.events({
-  'click .timeslot': function(e) {
+  'click .timeRemaining': function(e) {
     console.log('e.target: ', e.target);
-    console.log(Session.set('editing-today-freetime', true));
+    console.log(Session.set('editing', 'timeRemaining'));
     setTimeout(render.bind(this), 300);
   },
 
-  'click .free-time-submit': function(e) {
+  'click .submit': function(e) {
     console.log('e.target: ', e.target);
     confirm();
-    console.log(Session.set('editing-today-freetime', false));
+    console.log(Session.set('editing', false));
   }
 });
 
 function render() {
-  var freetime = Meteor.user().freeTime();
-  console.log('free: ', freetime);
-  var hr = parseInt(freetime.substr(0, freetime.indexOf(':')));
-  var minstr = freetime.substr(freetime.indexOf(':')+1, freetime.length);
+  var timeRemaining = Meteor.user().timeRemaining()
+  console.log('free: ', timeRemaining);
+  var hr = parseInt(timeRemaining.substr(0, freetime.indexOf(':')));
+  var minstr = freetime.substr(timeRemaining.indexOf(':')+1, timeRemaining.length);
   console.log('minstr: ', minstr);
   var min = parseInt(minstr);
   console.log('min: ', min);
@@ -53,7 +53,7 @@ function render() {
 
   $(function() {
     var taskHours = $('select#task-hours');
-    for (var i = 0; i < 101; i++) {
+    for (var i = 0; i < 24; i++) {
       taskHours.append($("<option/>").val(i).text(i));
     }
     taskHours.val(hr);
@@ -62,25 +62,14 @@ function render() {
   $(function() {
     var taskMinutes = $('select#task-minutes')
     for (var i = 0; i < 60; i += 5) {
-      taskMinutes.append($("<option/>") .val(i) .text(i));
+      taskMinutes.append($("<option/>").val(i).text(i));
     }
     taskMinutes.val(min);
   });
 };
 
 function confirm() {
-  // validation
-  var itemsInvalid = false;
-  $("div.form-group").removeClass("has-error");
-  if ($("select#task-hours").val() == 0 && $("select#task-minutes").val() == 0) {
-    $("div#length-group").addClass("has-error");
-    itemsInvalid = true;
-  }
-  // check if any items were invalid
-  if (itemsInvalid) return false;
-
-  // add todo
-  var inputLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
-  Meteor.user().changeFreeTime(inputLength);
+  var remaining = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
+  Meteor.user().timeRemaining(remaining);
 };
 

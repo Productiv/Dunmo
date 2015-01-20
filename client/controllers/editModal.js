@@ -15,10 +15,10 @@ Template.editModal.events({
     var todoId = $(e.target).parents('.modal').attr('data-todo-id');
     console.log('todoId: ', todoId);
     console.log('this: ', this);
-    var prevRemaining = findTodo(todoId).remainingLength;
-    var timeSpent = prevRemaining - $('#task-hours').val() * 60 * 60 + $('#task-minutes').val() * 60;
-    console.log('TIME: ' + timeSpent);
-    Meteor.user().updateTimeslot(timeSpent);
+    var prevRemaining = findTodo(todoId).timeRemaining;
+    var spent = prevRemaining - $('#task-hours').val() * 60 * 60 + $('#task-minutes').val() * 60;
+    console.log('TIME: ' + spent);
+    Meteor.user().timeSpent(spent);
     confirmEditTask(todoId);
   }
 });
