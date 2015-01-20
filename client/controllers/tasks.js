@@ -21,24 +21,9 @@ Template.tasks.events({
     console.log('target: ', $target);
     $todo = $target.parents('.task-row');
     console.log($todo.attr('id'));
-    if($target.hasClass('glyphicon') || $target.hasClass('btn')) return false;
+    if($target.hasClass('glyphicon') || $target.hasClass('btn')) return;
     else Router.go('/pomodoro/' + $todo.attr('id'));
-  }
+  },
+
 });
 
-Template.tasksNav.events({
-  'click #newTaskBtn': function() {
-    location.href = '/tasks/new';
-  }
-});
-
-Template.newTaskNav.events({
-  'click #tasks': function() {
-    location.href = '/tasks';
-  }
-});
-
-Template.loginButtons.rendered = function() {
-  $('.login-link-text').html('<i class="glyphicon glyphicon-user"></i>');
-  $('.navbar .login').show();
-};
