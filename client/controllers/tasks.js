@@ -7,7 +7,6 @@ Template.tasks.helpers({
     var userId = Meteor.userId();
     if (!userId) { return []; };
     var thing = userFillDays(userId);
-    console.log(thing);
     return thing;
   }
 });
