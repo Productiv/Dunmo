@@ -45,43 +45,8 @@ Todos.helpers({
   dueDateDisplay: function() {
     var due = this.dueAt;
     var today = new Date();
-    var bits = due.toString().split(" ");
-    var s = " ";
-    var str = "";
-    var res = "";
-    var check = 0;
 
-    var fullSplit = bits[4].split(":");
-    var baseSplit = [fullSplit[0],fullSplit[1]];
-    var hr = parseInt(baseSplit[0]);
-
-    if (hr > 12) {        hr -= 12; str = "pm"; }
-    else if (hr == 0) {   hr += 12; str = "am"; }
-    else if (hr < 12) {   str = "am";   }
-    else {                str = "pm";   };
-
-    var time = hr + ":" + baseSplit[1];
-
-    str = bits[0] + s + bits[1] + s + bits[2] + s + bits[3];
-
-    if (due.getFullYear() == today.getFullYear()) {
-      str = bits[0] + s + bits[1] + s + bits[2];
-
-      if (due.getMonth() == today.getMonth()) {
-        str = bits[0] + s + bits[2];
-
-        if ((check = due.getDate() - today.getDate()) == 0) {
-          str = time;
-
-        } else if (check == 1) {
-          str = "Tomorrow " + time;
-
-        } else if (check < 7) {
-          str = bits[0] + s + time;
-        };
-      };
-    };
-    return str;
+    return moment(due).from(today);
   },
 
   remainingLengthDisplay: function() {

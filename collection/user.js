@@ -59,7 +59,8 @@ Meteor.users.helpers({
 
   freeTime: function() {
     var timeslot = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() });
-    return secToTime(timeslot.secondsRemaining());
+    var rem = timeslot.secondsRemaining();
+    return durationObjDisplay(secondsToDurationObj(rem - (rem % 60)));
   },
 
   changeFreeTime: function(newTime) {
