@@ -1,7 +1,8 @@
 Template.newTask.rendered = function() {
   $(function () {
     $("#datetimepicker").datetimepicker({
-      pick12HourFormat: true
+      pick12HourFormat: true,
+      defaultDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
     });
   });
   $(function() {

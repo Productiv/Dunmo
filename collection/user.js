@@ -9,8 +9,8 @@ Meteor.users.helpers({
     var lastWeek = Timeslots.find({
       ownerId: this._id,
       date: {
-        $gte: Date.sevenDaysAgoStart(),
-        $lt: Date.todayStart()
+        $gte: Date.sevenDaysAgoStart().getTime(),
+        $lt: Date.todayStart().getTime()
       }
     });
 
@@ -25,19 +25,19 @@ Meteor.users.helpers({
     };
 
     // get all the todos from today until infinity, sorted by date
-    var todos = Todos.find({ ownerId: this._id, dueAt: { $gte: Date.todayStart() } },
+    var todos = Todos.find({ ownerId: this._id, dueAt: { $gte: Date.todayStart().getTime() } },
                            {
                              sort: [[ 'dueAt', 'asc' ]]
                            }).fetch();
 
     // create all the timeslots from today until the furthest due date, sorted by date
-    var todaysTimeslot = Timeslots.find({ ownerId: this._id, date: new Date(Date.todayStart()) }).fetch()[0];
+    var todaysTimeslot = Timeslots.find({ ownerId: this._id, date: Date.todayStart() }).fetch()[0];
     if(!todaysTimeslot) {
-      todaysTimeslot = { ownerId: this._id, date: new Date(Date.todayStart()), inputLength: avgLength, actualLength: 0 };
+      todaysTimeslot = { ownerId: this._id, date: Date.todayStart(), inputLength: avgLength, actualLength: 0 };
       Timeslots.insert(todaysTimeslot);
     }
     var timeslots = [ todaysTimeslot ];
-    var startDate = new Date(Date.todayStart());
+    var startDate = Date.todayStart();
     if (!_.last(todos)) return timeslots;
     else var endDate = _.last(todos).dueAt;
 
@@ -53,17 +53,18 @@ Meteor.users.helpers({
   }, // end of user.timeslots()
 
   updateTimeslot: function(timeToAdd) {
-    var id = Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) })._id;
+    var id = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() })._id;
     Timeslots.update(id, {$inc: { actualLength: parseInt(timeToAdd) }});
   },
 
   freeTime: function() {
-    var timeslot = Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) });
-    return secToTime(timeslot.inputLength - timeslot.actualLength);
+    var timeslot = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() });
+    var rem = timeslot.secondsRemaining();
+    return durationObjDisplay(secondsToDurationObj(rem - (rem % 60)));
   },
 
   changeFreeTime: function(newTime) {
-    var id = Timeslots.findOne({ ownerId: this._id, date: new Date(Date.todayStart()) })._id;
+    var id = Timeslots.findOne({ ownerId: this._id, date: Date.todayStart() })._id;
     Timeslots.update(id, { $set: { inputLength: newTime } });
   },
 
@@ -104,3 +105,4 @@ Meteor.users.helpers({
     ];
   }
 });
+

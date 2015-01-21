@@ -9,6 +9,7 @@ Router.route('/', function () {
 Router.route('/tasks', function () {
   this.render('tasks');
   this.render('tasksNav', { to: 'navbar' });
+  this.render('editModal', { to: 'modal' });
 });
 
 Router.route('/tasks/new', function () {
@@ -17,11 +18,11 @@ Router.route('/tasks/new', function () {
 });
 
 Router.route('/pomodoro/:id', function () {
-  this.render('pomodoro', {
-    data: function() {
-      return Todos.findOne(this.params.id);
-    }
-  });
+  var data = function() {
+    return Todos.findOne(this.params.id);
+  };
+  this.render('pomodoro', { data: data });
   this.render('tasksNav', { to: 'navbar' });
+  this.render('editModal', { to: 'modal', data: data });
 });
 
