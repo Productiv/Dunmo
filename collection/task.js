@@ -15,12 +15,29 @@
 Tasks = new Mongo.Collection("tasks");
 
 Tasks.helpers({
+
   owner: function() {
     return Meteor.users.find(this.ownerId);
   },
 
   totalTime: function() {
     return this.timeRemaining + this.timeSpent;
+  },
+
+  spendTime: function(time) {
+    this.incrementTimeSpent(time);
+    this.incrementTimeRemaining(- time);
+    this.owner().spendTime(time);
+  },
+
+  incrementTimeRemaining: function(seconds) {
+    Tasks.update(this._id, { $inc: { timeRemaining: seconds }});
+    return this.timeRemaining + seconds;
+  },
+
+  incrementTimeSpent: function(seconds) {
+    Tasks.update(this._id, { $inc: { timeSpent: seconds }});
+    return this.timeSpent + seconds;
   },
 
   // returns percentage between 0 and 100
@@ -47,7 +64,13 @@ Tasks.helpers({
 
   timeRemainingDisplay: function() {
     return secToTime(this.timeRemaining);
+  },
+
+  markDone: function(done) {
+    if(done === undefined) done = true;
+    Tasks.update(this._id, { $set: { isDone: done } });
   }
+
 });
 
 insertTask = function (task, callback) {

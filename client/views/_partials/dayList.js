@@ -12,8 +12,14 @@ Template.dayList.helpers({
     return this.todos;
   },
 
+  hasTasks: function() {
+    return this.todos.length > 0;
+  },
+
   timeRemaining: function() {
-    return secToTime(Meteor.user().timeRemaining());
+    var user = Meteor.user();
+    if(!user) return 0;
+    else      return user.timeRemaining();
   },
 
   editing: function() {

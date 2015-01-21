@@ -1,0 +1,52 @@
+<template name="dayList">
+<div class="day-tasks-container">
+  <div class="day-title row">
+    <div class="col-md-12">
+      <h2>
+        <span class="title pull-left">{{date}}</span>
+        {{#unless editing}}
+          <span class="timeRemaining pull-right">
+            {{timeRemaining}}
+          </span>
+        {{/unless}}
+      </h2>
+    </div>
+  </div>
+  {{#if editing}}
+    <div class="row">
+      <div class="form-group time-remaining" id="length-group">
+
+        <div class="col-xs-8 col-sm-4">
+          <select class="form-control" name="task-hours" id="task-hours">
+          </select>
+        </div>
+        <label class="col-xs-4 col-sm-1">hours</label>
+
+        <div class="col-xs-8 col-sm-4">
+          <select class="form-control" name="task-minutes" id="task-minutes">
+          </select>
+        </div>
+        <label class="col-xs-4 col-sm-1">mins</label>
+
+        <div class="col-xs-12 col-sm-2">
+          <button class="submit btn btn-default">Save</button>
+        </div>
+
+      </div>
+    </div>
+  {{/if}}
+
+  <hr>
+
+  <div class="tasks">
+    {{#if hasTasks}}
+      {{#each tasks}}
+        {{> taskItem}}
+        <hr>
+      {{/each}}
+    {{else}}
+      <h1 class="notice"><small> Nothing to do here! :) </small></h1>
+    {{/if}}
+  </div>
+</div>
+</template>

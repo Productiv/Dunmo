@@ -18,10 +18,8 @@ Template.pomodoro.helpers({
 
 Template.pomodoro.events({
   'click .back': function(e) {
-    var time = clock.getTime();
-    var remaining = time - this.timeRemaining;
-    Meteor.user().incrementTimeRemaining(remaining);
-    Tasks.update(this._id, { $set: { timeRemaining:  } });
+    var time = clock.getTime().time - this.timeSpent;
+    this.spendTime(time);
     window.location.href = '/';
   },
 
@@ -38,10 +36,9 @@ Template.pomodoro.events({
 
   'click .complete-task': function (event) {
     $('pomodoro-container').hide();
-    var time = clock.getTime();
-    var remaining = time - this.timeRemaining;
-    this.timeRemaining(this.timeRemaining);
-    removeTask(this._id);
+    var time = clock.getTime().time - this.timeSpent;
+    this.spendTime(time);
+    this.markDone();
     window.location.href = '/';
   }
 });

@@ -48,9 +48,10 @@ Meteor.users.helpers({
   },
 
   todaysList: function() {
-    var todaysDayList = DayLists.findOne({ ownerId: this._id, date: Date.todayStart() });
+    var user = this;
+    var todaysDayList = DayLists.findOne({ ownerId: user._id, date: Date.todayStart() });
     if(!todaysDayList) {
-      todaysDayList = { ownerId: user._id, date: Date.todayStart(), timeRemaining: this.averageFreetime(), timeSpent: 0 };
+      todaysDayList = { ownerId: user._id, date: Date.todayStart(), timeRemaining: user.averageFreetime(), timeSpent: 0 };
       DayLists.insert(todaysDayList);
     }
     return todaysDayList;
@@ -89,7 +90,7 @@ Meteor.users.helpers({
   // returns timeRemaining today
   timeRemaining: function(newTime) {
     var dayList = this.todaysList();
-    if(newTime) Daylists.update(dayList._id, { $set: { timeRemaining: newTime }});
+    if(newTime) DayLists.update(dayList._id, { $set: { timeRemaining: newTime }});
     return newTime || dayList.timeRemaining;
   },
 
@@ -97,20 +98,25 @@ Meteor.users.helpers({
   // returns timeSpent today
   timeSpent: function(newTime) {
     var dayList = this.todaysList();
-    if(newTime) Daylists.update(dayList._id, { $set: { timeSpent: newTime }});
+    if(newTime) DayLists.update(dayList._id, { $set: { timeSpent: newTime }});
     return newTime || dayList.timeSpent;
   },
 
   incrementTimeRemaining: function(seconds) {
     var dayList = this.todaysList();
-    Daylists.update(dayList._id, { $inc: { timeRemaining: seconds }});
+    DayLists.update(dayList._id, { $inc: { timeRemaining: seconds }});
     return dayList.timeRemaining + seconds;
   },
 
   incrementTimeSpent: function(seconds) {
     var dayList = this.todaysList();
-    Daylists.update(dayList._id, { $inc: { timeSpent: seconds }});
+    DayLists.update(dayList._id, { $inc: { timeSpent: seconds }});
     return dayList.timeSpent + seconds;
+  },
+
+  spendTime: function(time) {
+    this.incrementTimeSpent(time);
+    this.incrementTimeRemaining(- time);
   },
 
   sortedTasks: function() {
