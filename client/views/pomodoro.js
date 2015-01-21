@@ -3,9 +3,9 @@ var clock;
 Template.pomodoro.rendered = function() {
   clock = $('.clock').FlipClock();
   Session.set('pause', false);
-  var data = this.data;
-  if(!data) return;
-  var time = data.inputLength - data.remainingLength;
+  var task = this.data;
+  if(!task) return;
+  var time = task.timeSpent
   clock.setTime(time);
   $('.clock-wrapper').attr('hidden', false);
 };
@@ -19,9 +19,9 @@ Template.pomodoro.helpers({
 Template.pomodoro.events({
   'click .back': function(e) {
     var time = clock.getTime();
-    var remaining = this.inputLength - time;
-    Meteor.user().updateTimeslot(remaining - this.remainingLength);
-    Todos.update(this._id, { $set: { remainingLength: remaining } });
+    var remaining = time - this.timeRemaining;
+    Meteor.user().incrementTimeRemaining(remaining);
+    Tasks.update(this._id, { $set: { timeRemaining:  } });
     window.location.href = '/';
   },
 
@@ -39,9 +39,9 @@ Template.pomodoro.events({
   'click .complete-task': function (event) {
     $('pomodoro-container').hide();
     var time = clock.getTime();
-    var remaining = this.inputLength - time;
-    Meteor.user().updateTimeslot(this.remainingLength);
-    removeTodo(this._id);
+    var remaining = time - this.timeRemaining;
+    this.timeRemaining(this.timeRemaining);
+    removeTask(this._id);
     window.location.href = '/';
   }
 });

@@ -2,6 +2,7 @@ var tasks = [
   {
     title: 'task 1',
     dueAt: new Date(),
+
     isDone: false,
     importance: 2,
     inputLength: 3600,

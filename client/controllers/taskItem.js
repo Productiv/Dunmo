@@ -28,11 +28,11 @@ Template.taskItem.events({
 
   "click .complete": function(e) {
     Meteor.user().incrementTimeRemaining(this.timeRemaining);
-    removeTodo(this._id);
+    removeTask(this._id);
   },
 
   "click .edit": function(e) {
-    $("#editModal").attr("data-todo-id", this._id);
+    $("#editModal").attr("data-task-id", this._id);
   },
 
   "hover #due-date": function (event) {

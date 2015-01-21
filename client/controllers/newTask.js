@@ -2,6 +2,7 @@ Template.newTask.rendered = function() {
   $(function () {
     $("#datetimepicker").datetimepicker({
       pick12HourFormat: true,
+      // TODO: date.tomorrow() ?
       defaultDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
     });
   });
@@ -17,7 +18,6 @@ Template.newTask.rendered = function() {
     for (var i = 0; i < 60; i += 5) {
       taskMinutes.append($("<option/>") .val(i) .text(i));
     }
-    taskMinutes.val(30);
   });
 }
 
@@ -57,16 +57,16 @@ function confirm() {
   // check if any items were invalid
   if (itemsInvalid) return false;
 
-  // add todo
-  var todo = {};
-  todo.title = $('#title').val();
-  todo.dueAt = new Date($('#datetimepicker input').val());
-  todo.inputLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
-  todo.remainingLength = todo.inputLength;
-  todo.importance = $("#importance-group label.active").children("input").eq(0).val()
-  insertTodo(todo, function (err, id) {
+  // add task
+  var task = {};
+  task.title = $('#title').val();
+  task.dueAt = new Date($('#datetimepicker input').val());
+  task.timeRemaining = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
+  task.importance = $("#importance-group label.active").children("input").eq(0).val()
+  insertTask(task, function (err, id) {
     if(err) console.log(err);
     else    console.log('id: ', id);
     Router.go('/tasks');
   });
 }
+

@@ -25,11 +25,11 @@ Tasks.helpers({
 
   // returns percentage between 0 and 100
   percentageCompleted: function() {
-    return Math.floor((this.timeRemaining) / this.totalTime() * 100);
+    return Math.floor((this.timeRemaining) / this.totalTime()) * 100;
   },
 
   importanceBangs: function() {
-    if (this.importance == 1) {
+    if (this.importance === 1) {
       return "!";
     } else if (this.importance == 2) {
       return "!!";
@@ -55,7 +55,7 @@ insertTask = function (task, callback) {
 	task.isDone = task.isDone || false;
 	task.dueAt  = task.dueAt  || Date.todayEnd();
 	task.importance    = task.importance    || 3;
-	task.timeSpent     = task.timeSpent     || 1800;
+	task.timeSpent     = task.timeSpent     || 0;
 	task.timeRemaining = task.timeRemaining || 1800;
   task.ownerId       = task.ownerId       || Meteor.user()._id;
 	return Tasks.insert(task, callback);

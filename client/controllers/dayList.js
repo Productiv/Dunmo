@@ -5,12 +5,11 @@ Template.dayList.rendered = function() {
 
 Template.dayList.helpers({
   date: function() {
-    console.log('date: ', this.timeslot && this.timeslot.date);
-    return "Today";
+    return moment(this.date).from(Date.todayStart());
   },
 
   tasks: function() {
-    return this.tasks;
+    return this.todos;
   },
 
   timeRemaining: function() {

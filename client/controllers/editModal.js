@@ -2,23 +2,23 @@ Template.editModal.rendered = function() {
   $('#editModal').on('show.bs.modal', function(e) {
     var $modal = $(e.target);
     console.log('modal: ', $modal);
-    var todoId = $modal.attr('data-todo-id');
-    console.log('open edit modal, todoId: ', todoId);
-    var todo = findTodo(todoId);
-    console.log('open edit modal, todo: ', todo);
+    var taskId = $modal.attr('data-task-id');
+    console.log('open edit modal, taskId: ', taskId);
+    var task = findTask(taskId);
+    console.log('open edit modal, task: ', task);
     // fill fields with data
   });
 };
 
 Template.editModal.events({
   'click .confirm': function (e) {
-    var todoId = $(e.target).parents('.modal').attr('data-todo-id');
-    console.log('todoId: ', todoId);
+    var taskId = $(e.target).parents('.modal').attr('data-task-id');
+    console.log('taskId: ', taskId);
     console.log('this: ', this);
-    var prevRemaining = findTodo(todoId).timeRemaining;
+    var prevRemaining = findTask(taskId).timeRemaining;
     var spent = prevRemaining - $('#task-hours').val() * 60 * 60 + $('#task-minutes').val() * 60;
     console.log('TIME: ' + spent);
     Meteor.user().timeSpent(spent);
-    confirmEditTask(todoId);
+    confirmEditTask(taskId);
   }
 });

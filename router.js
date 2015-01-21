@@ -19,7 +19,7 @@ Router.route('/tasks/new', function () {
 
 Router.route('/pomodoro/:id', function () {
   var data = function() {
-    return Todos.findOne(this.params.id);
+    return Tasks.findOne(this.params.id);
   };
   this.render('pomodoro', { data: data });
   this.render('tasksNav', { to: 'navbar' });

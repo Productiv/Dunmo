@@ -9,7 +9,7 @@
 
 Meteor.users.helpers({
   tasks: function() {
-    return Tasks.find({ ownerId: this._id });
+    return Tasks.find({ ownerId: this._id }).fetch();
   },
 
   todos: function() {
@@ -48,7 +48,7 @@ Meteor.users.helpers({
   },
 
   todaysList: function() {
-    var todaysDaylist = DayLists.findOne({ ownerId: this._id, date: Date.todayStart() });
+    var todaysDayList = DayLists.findOne({ ownerId: this._id, date: Date.todayStart() });
     if(!todaysDayList) {
       todaysDayList = { ownerId: user._id, date: Date.todayStart(), timeRemaining: this.averageFreetime(), timeSpent: 0 };
       DayLists.insert(todaysDayList);
@@ -69,14 +69,17 @@ Meteor.users.helpers({
     if (tasks.length === 0) return dayLists;
     else var endDate = _.last(tasks).dueAt;
 
-    for(var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    var d = startDate;
+    d.setDate(d.getDate() + 1);
+    while(d <= endDate) {
       // task: grab existing dayLists from db
       dayLists.push({
         ownerId: this._id,
-        date: d,
+        date: new Date(d),
         timeRemaining: averageFreetime,
         timeSpent: 0
       });
+      d.setDate(d.getDate() + 1);
     }
 
     return dayLists;
@@ -111,34 +114,34 @@ Meteor.users.helpers({
   },
 
   sortedTasks: function() {
-    return _.sortBy(_.sortBy(_.sortBy(this.tasks(), 'timeRemaining'), 'importance'), function(task) {
-      var dueDate = new Date(task.dueAt);
-      dueDate.setHours(0,0,0,0);
-      return dueDate;
-    });
+    return basicSort(this.tasks());
   },
 
-  fillDays: function() {
-    var user = this;
-    var userTimeslots = user.dayLists();
-    var userTasksSorted = user.sortedTasks();
-    var dayLists = [[]];
-    var taskTime, remLength;
+  sortedTodos: function() {
+    return basicSort(this.todos());
+  },
 
-    userTimeslots.forEach(function (timeslot, index1) {
-      // var timeslots = _.findWhere(userTimeslots, { 'date': new Date(Date.todayStart()) });
-      var todayTimeslot = userTimeslots[index1];
-      remLength = 0;
-      userTasksSorted.forEach(function (task, index2) {
-        if ((todayTimeslot.timeSpent -= (remLength = task.timeRemaining)) >= 0) {
-          // Push this item to this day
-          dayLists[index1].push(task);
-        } else if (todayTimeslot.timeSpent < 0) {
-          todayTimeslot.timeSpent += remLength;
-          return false;
-        };
+  filledDayLists: function() {
+    var user = this;
+    var dayLists = user.dayLists();
+    var todos = user.sortedTodos();
+    var timeRemaining;
+
+    dayLists.forEach(function(dayList) {
+      dayList.todos = [];
+      timeRemaining = dayList.timeRemaining;
+      var t = todos;
+      t.forEach(function(todo, index) {
+        if(timeRemaining - todo.timeRemaining >= 0) {
+          dayList.todos.push(todo);
+          _.remove(todos, { '_id': todo._id });
+          timeRemaining -= todo.timeRemaining;
+        }
       });
     });
+
+    console.log(dayLists);
+
     return dayLists;
   }
 
@@ -211,6 +214,16 @@ userTasksByIndexBy = function(uid, sortBy, sortOrder) {
       [sortBy, sortOrder],
       ['index', 'asc']
     ]
+  });
+};
+
+// input: collection of tasks
+// return: input collection, sorted by due, importance, and length, in that order
+basicSort = function(tasks) {
+  return _.sortBy(_.sortBy(_.sortBy(tasks, 'timeRemaining'), 'importance'), function(task) {
+    var dueDate = new Date(task.dueAt);
+    dueDate.setHours(0,0,0,0);
+    return dueDate;
   });
 };
 

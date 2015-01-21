@@ -19,24 +19,24 @@ Template.editTask.rendered = function() {
 
 };
 
-confirmEditTask = function(todoId) {
+confirmEditTask = function(taskId) {
   // event.preventDefault();
   // validation
-  var todo = {};
+  var task = {};
   if ($("#title").val() != "") {
-    todo.title = $('#title').val();
+    task.title = $('#title').val();
   }
   if (!($("#task-hours").val() == 0 && $("#task-minutes").val() == 0)) {
-    todo.remainingLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
+    task.remainingLength = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
   }
   if ($("#datetimepicker input").val() != "") {
-    todo.dueAt = new Date($('#datetimepicker input').val());
+    task.dueAt = new Date($('#datetimepicker input').val());
   }
   if ($("div#importance-group label.active").length != 0) {
-    todo.importance = $("#importance-group label.active").children("input").eq(0).val();
+    task.importance = $("#importance-group label.active").children("input").eq(0).val();
   }
 
-  updateTodo(todoId, todo, function (err, id) {
+  updateTask(taskId, task, function (err, id) {
     if(err) console.log(err);
     else    console.log('id: ', id);
     $('#editModal').modal('hide');

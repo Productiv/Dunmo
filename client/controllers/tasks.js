@@ -1,13 +1,16 @@
+
 Template.tasks.rendered = function() {
   $('.bootstrap-datetimepicker-widget').remove();
 };
 
 Template.tasks.helpers({
-  dayTasks: function() {
+
+  dayLists: function() {
     var user = Meteor.user();
     if(!user) return [];
-    else      return user.dayLists();
+    else      return user.filledDayLists();
   }
+
 });
 
 Template.tasks.events({
@@ -18,9 +21,9 @@ Template.tasks.events({
 
   'click .task-row:not(.glyphicon)': function(e) {
     $target = $(e.target);
-    $todo = $target.parents('.task-row');
+    $task = $target.parents('.task-row');
     if($target.hasClass('glyphicon') || $target.hasClass('btn')) return;
-    else Router.go('/pomodoro/' + $todo.attr('id'));
+    else Router.go('/pomodoro/' + $task.attr('id'));
   }
 
 });
