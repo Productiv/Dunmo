@@ -4,7 +4,7 @@
 $lowImportance: #20D4BC;
 $medImportance: #F29830;
 $highImportance: #D42038;
-$coyoteGreen: #42FF23;
+$dunmoGreen: #68B82B;
 
 /*Page Effects*/
 
@@ -48,7 +48,7 @@ div#login-dropdown-list {
 }
 
 .navbar-custom {
-  background-color: $coyoteGreen;
+  background-color: $dunmoGreen;
   color:#ffffff;
   border-radius:0;
 }
@@ -125,6 +125,9 @@ div#login-dropdown-list {
 
 .dialdiv {
   margin-top: -10px;
+  width: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .task-row {
@@ -182,6 +185,8 @@ div.btn-group-justified label {
     }
 }
 
+/* Pomodoro */
+
 .clock-wrapper {
   margin-top: 40px;
   width: 100%;
@@ -212,4 +217,3 @@ div.btn-group-justified label {
     padding-left: 10px;
   }
 }
-
