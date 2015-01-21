@@ -145,7 +145,7 @@ userFillDays = function (userId) {
     });
   });
   return dayLists;
-}
+};
 
 userTodosSort = function (userId) {
   var userTodos = Todos.find({ ownerId: userId }).fetch();
