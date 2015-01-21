@@ -1,12 +1,12 @@
-<template name="dayTaskGroup">
+<template name="dayList">
 <div class="day-tasks-container">
   <div class="day-title row">
     <div class="col-md-12">
       <h2>
         <span class="title pull-left">Today</span>
         {{#unless editing}}
-          <span class="timeslot pull-right">
-            {{timeslot}}
+          <span class="timeRemaining pull-right">
+            {{timeRemaining}}
           </span>
         {{/unless}}
       </h2>
@@ -14,7 +14,7 @@
   </div>
   {{#if editing}}
   <div class="row">
-    <div class="form-group" id="length-group">
+    <div class="form-group time-remaining" id="length-group">
 
       <div class="col-xs-8 col-sm-4">
         <select class="form-control" name="task-hours" id="task-hours">
@@ -29,7 +29,7 @@
       <label class="col-xs-4 col-sm-1">mins</label>
 
       <div class="col-xs-12 col-sm-2">
-        <button class="free-time-submit btn btn-default">Save</button>
+        <button class="submit btn btn-default">Save</button>
       </div>
 
     </div>
@@ -38,7 +38,7 @@
 
   <div class="tasks">
     {{#each tasks}}
-    {{> taskitem}}
+      {{> taskItem}}
     {{/each}}
   </div>
 </div>

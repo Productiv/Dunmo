@@ -67,6 +67,6 @@ function confirm() {
   insertTodo(todo, function (err, id) {
     if(err) console.log(err);
     else    console.log('id: ', id);
-    return false;
+    Router.go('/tasks');
   });
 }

@@ -1,12 +1,17 @@
-Template.taskitem.rendered = function() {
+
+Template.taskItem.rendered = function() {
+
   $(".dial").knob({
     readOnly: true,
     'fgColor': '#68B82B'
   });
+
   $('.dialdiv').attr('hidden', false);
+
 };
 
-Template.taskitem.helpers({
+Template.taskItem.helpers({
+
   importanceClass: function() {
     if (this.importance == 1) {
       return "lowImportance";
@@ -16,17 +21,23 @@ Template.taskitem.helpers({
       return "highImportance";
     }
   }
+
 });
 
 Template.taskitem.events({
-    "click .complete": function(e) {
-        Meteor.user().updateTimeslot(this.remainingLength);
-        removeTodo(this._id);
-    },
-    "click .edit": function(e) {
-        $("#editModal").attr("data-todo-id", this._id);
-    },
-    "hover #due-date": function (event) {
-        // body...
-    }
+
+  "click .complete": function(e) {
+    Meteor.user().updateTimeslot(this.remainingLength);
+    removeTodo(this._id);
+  },
+
+  "click .edit": function(e) {
+    $("#editModal").attr("data-todo-id", this._id);
+  },
+
+  "hover #due-date": function (event) {
+    // body...
+  }
+
 });
+

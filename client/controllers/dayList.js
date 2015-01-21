@@ -1,9 +1,9 @@
 
-Template.dayTaskGroup.rendered = function() {
+Template.dayList.rendered = function() {
   Session.set('editing', false);
 };
 
-Template.dayTaskGroup.helpers({
+Template.dayList.helpers({
   date: function() {
     console.log('date: ', this.timeslot && this.timeslot.date);
     return "Today";
@@ -14,7 +14,7 @@ Template.dayTaskGroup.helpers({
   },
 
   timeRemaining: function() {
-    return Meteor.user().timeRemaining();
+    return secToTime(Meteor.user().timeRemaining());
   },
 
   editing: function() {
@@ -22,7 +22,7 @@ Template.dayTaskGroup.helpers({
   }
 });
 
-Template.dayTaskGroup.events({
+Template.dayList.events({
   'click .timeRemaining': function(e) {
     console.log('e.target: ', e.target);
     console.log(Session.set('editing', 'timeRemaining'));
@@ -37,10 +37,10 @@ Template.dayTaskGroup.events({
 });
 
 function render() {
-  var timeRemaining = Meteor.user().timeRemaining()
+  var timeRemaining = secToTime(Meteor.user().timeRemaining());
   console.log('free: ', timeRemaining);
-  var hr = parseInt(timeRemaining.substr(0, freetime.indexOf(':')));
-  var minstr = freetime.substr(timeRemaining.indexOf(':')+1, timeRemaining.length);
+  var hr = parseInt(timeRemaining.substr(0, timeRemaining.indexOf(':')));
+  var minstr = timeRemaining.substr(timeRemaining.indexOf(':')+1, timeRemaining.length);
   console.log('minstr: ', minstr);
   var min = parseInt(minstr);
   console.log('min: ', min);

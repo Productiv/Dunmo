@@ -4,9 +4,9 @@ Template.tasks.rendered = function() {
 
 Template.tasks.helpers({
   dayTasks: function() {
-    var userId = Meteor.userId();
-    if (!userId) return [];
-    else         return userFillDays(userId);
+    var user = Meteor.user();
+    if(!user) return [];
+    else      return user.dayLists();
   }
 });
 
