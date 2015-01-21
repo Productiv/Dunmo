@@ -24,10 +24,10 @@ Template.taskItem.helpers({
 
 });
 
-Template.taskitem.events({
+Template.taskItem.events({
 
   "click .complete": function(e) {
-    Meteor.user().updateTimeslot(this.remainingLength);
+    Meteor.user().incrementTimeRemaining(this.timeRemaining);
     removeTodo(this._id);
   },
 
