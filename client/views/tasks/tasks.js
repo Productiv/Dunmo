@@ -8,7 +8,11 @@ Template.tasks.helpers({
   dayLists: function() {
     var user = Meteor.user();
     if(!user) return [];
-    else      return user.filledDayLists();
+    else {
+      var lists = user.filledDayLists();
+      console.log('user.filledDayLists(): ', user.filledDayLists());
+      return lists;
+    }
   }
 
 });

@@ -138,9 +138,14 @@ Meteor.users.helpers({
     var timeRemaining;
     var splitTasks;
 
+    console.log('todos: ', todos);
+
     dayLists.forEach(function(dayList) {
       dayList.todos = [];
-      timeRemaining = dayList.timeRemaining;
+      timeRemaining = dayList.timeRemaining.lengthInMs / 1000;
+
+      console.log('timeRemaining: ', timeRemaining);
+
       var t = todos;
       t.forEach(function(todo, index) {
         if(timeRemaining - todo.timeRemaining >= 0) {
@@ -155,6 +160,7 @@ Meteor.users.helpers({
         };
       });
     });
+
     return dayLists;
   }
 
