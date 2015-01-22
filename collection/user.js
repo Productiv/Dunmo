@@ -161,6 +161,10 @@ Meteor.users.helpers({
       });
     });
 
+    dayLists = _.select(dayLists, function(list) {
+      return list.todos && list.todos.length > 0;
+    });
+
     return dayLists;
   }
 

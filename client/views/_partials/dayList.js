@@ -5,7 +5,7 @@ Template.dayList.rendered = function() {
 
 Template.dayList.helpers({
   date: function() {
-    return moment(this.date).from(Date.todayStart());
+    return moment(this.date).calendar(true);
   },
 
   tasks: function() {

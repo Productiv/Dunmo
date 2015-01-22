@@ -23,10 +23,11 @@ Template.tasks.events({
     location.href = '/tasks/new';
   },
 
-  'click .task-row:not(.glyphicon)': function(e) {
+  'click .task-row:not(.action)': function(e) {
     $target = $(e.target);
-    $task = $target.parents('.task-row');
-    if($target.hasClass('glyphicon') || $target.hasClass('btn')) return;
+    $task = $target.closest('.task-row');
+    console.log('$task: ', $task)
+    if($target.hasClass('action') || $target.hasClass('btn')) return;
     else Router.go('/pomodoro/' + $task.attr('id'));
   }
 
