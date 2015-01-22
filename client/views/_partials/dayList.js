@@ -1,6 +1,6 @@
 
 Template.dayList.rendered = function() {
-  Session.set('editing', false);
+  Session.set('editing#' + this._id, false);
 };
 
 Template.dayList.helpers({
@@ -17,33 +17,28 @@ Template.dayList.helpers({
   },
 
   timeRemainingStr: function() {
-    var remaining = this.timeRemaining;
-    console.log('remaining: ', remaining);
-    var str = "4h 0m 0s";
-    return remaining.toPrettyStr();
+    return this.timeRemaining.toPrettyStr();
   },
 
   editing: function() {
-    return Session.get('editing');
+    return Session.get('editing#' + this._id);
   }
 });
 
 Template.dayList.events({
   'click .timeRemaining': function(e) {
-    console.log('e.target: ', e.target);
-    console.log(Session.set('editing', 'timeRemaining'));
+    Session.set('editing#' + this._id, 'timeRemaining');
     setTimeout(render.bind(this), 300);
   },
 
   'click .submit': function(e) {
-    console.log('e.target: ', e.target);
-    confirm();
-    console.log(Session.set('editing', false));
+    confirm.call(this);
+    Session.set('editing#' + this._id, false);
   }
 });
 
 function render() {
-  var timeRemaining = Meteor.user().timeRemaining();
+  var timeRemaining = fromMilliseconds(Meteor.user().timeRemaining(this.date));
   var minutesUnit = 5;
   var hr = timeRemaining.hours;
   var min = Math.ceil(timeRemaining.minutes / minutesUnit) * minutesUnit;
@@ -59,7 +54,6 @@ function render() {
     for (var i = 0; i < 24; i++) {
       taskHours.append($("<option/>").val(i).text(i));
     }
-    console.log('hr: ', hr);
     taskHours.val(hr);
   });
 
@@ -68,13 +62,18 @@ function render() {
     for (var i = 0; i < 60; i += minutesUnit) {
       taskMinutes.append($("<option/>").val(i).text(i));
     }
-    console.log('min: ', min);
     taskMinutes.val(min);
   });
 };
 
 function confirm() {
-  var remaining = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
-  Meteor.user().timeRemaining(remaining);
+  var hr = $('#task-hours').val();
+  var min = $('#task-minutes').val();
+  console.log('hr, min: ', hr, min);
+  var remaining = ((hr * 60 * 60) + (min * 60)) * 1000;
+  console.log('remaining: ', remaining);
+  var user = Meteor.user();
+  var date = this.date;
+  console.log('user, date: ', user, date);
+  user.timeRemaining(date, remaining);
 };
-

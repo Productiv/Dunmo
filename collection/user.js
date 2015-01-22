@@ -61,6 +61,23 @@ Meteor.users.helpers({
     return todaysDayList;
   },
 
+  newDayList: function(date) {
+    var id = DayLists.insert({
+      ownerId: this._id,
+      date: date,
+      timeRemaining: this.averageFreetime(),
+      timeSpent: 0
+    });
+
+    return findOneDayList(id);
+  },
+
+  dayList: function(date) {
+    var list = findOneDayList({ownerId: this._id, date: date});
+    if(!list) list = this.newDayList(date);
+    return list;
+  },
+
   dayLists: function() {
     var averageFreetime = this.averageFreetime();
 
@@ -86,22 +103,21 @@ Meteor.users.helpers({
       });
       d.setDate(d.getDate() + 1);
     }
-    console.log(dayLists);
     return dayLists;
   }, // end of user.dayLists()
 
   // if newTime is provided, updates, otherwise it doesn't change
-  // returns timeRemaining today
-  timeRemaining: function(newTime) {
-    var dayList = this.todaysList();
+  // returns timeRemaining today as Duration
+  timeRemaining: function(date, newTime) {
+    var dayList = this.dayList(date);
     if(newTime) DayLists.update(dayList._id, { $set: { timeRemaining: newTime }});
-    return newTime || dayList.timeRemaining;
+    return fromMilliseconds(newTime) || dayList.timeRemaining;
   },
 
   // if newTime is provided, updates, otherwise it doesn't change
   // returns timeSpent today
-  timeSpent: function(newTime) {
-    var dayList = this.todaysList();
+  timeSpent: function(date, newTime) {
+    var dayList = this.dayList(date);
     if(newTime) DayLists.update(dayList._id, { $set: { timeSpent: newTime }});
     return newTime || dayList.timeSpent;
   },
@@ -138,13 +154,9 @@ Meteor.users.helpers({
     var timeRemaining;
     var splitTasks;
 
-    console.log('todos: ', todos);
-
     dayLists.forEach(function(dayList) {
       dayList.todos = [];
       timeRemaining = dayList.timeRemaining.lengthInMs / 1000;
-
-      console.log('timeRemaining: ', timeRemaining);
 
       var t = todos;
       t.forEach(function(todo, index) {
@@ -165,25 +177,25 @@ Meteor.users.helpers({
       return list.todos && list.todos.length > 0;
     });
 
-    // var overdue = {};
-    // dayLists.forEach(function(list) {
-    //   list.todos.forEach(function(todo) {
-    //     if(todo.dueAt < list.date) {
-    //       if(overdue[todo._id]) {
-    //         overdue[todo._id].timeRemaining += todo.timeRemaining;
-    //       } else {
-    //         todo.overdue = true;
-    //         overdue[todo._id] = todo;
-    //       }
-    //     }
-    //   });
-    // });
-    // overdue = _.sortBy(_.values(overdue), 'dueAt');
-    // 
-    // overdue.forEach(todo, function (todo) {
-    //   dayList = _.find(dayLists, { 'date': todo.dueAt });
-    //   dayList.todos.push(todo);
-    // });
+    var overdue = {};
+    dayLists.forEach(function(list) {
+      list.todos.forEach(function(todo) {
+        if(todo.dueAt < list.date) {
+          if(overdue[todo._id]) {
+            overdue[todo._id].timeRemaining += todo.timeRemaining;
+          } else {
+            todo.overdue = true;
+            overdue[todo._id] = todo;
+          }
+        }
+      });
+    });
+    overdue = _.sortBy(_.values(overdue), 'dueAt');
+
+    overdue.forEach(function (todo) {
+      dayList = _.find(dayLists, { 'date': todo.dueAt });
+      dayList.todos.push(todo);
+    });
 
     return dayLists;
   }

@@ -1,10 +1,14 @@
-@import '../.meteor/local/build/programs/server/assets/packages/reywood_bootstrap3-sass/bootstrap';
+@import '../../.meteor/local/build/programs/server/assets/packages/reywood_bootstrap3-sass/bootstrap';
 
 /* SCSS variables */
-$lowImportance: #20D4BC;
-$medImportance: #F29830;
-$highImportance: #D42038;
-$dunmoGreen: #68B82B;
+$lowImportance:   #20d4bc;
+$medImportance:   #f29830;
+$highImportance:  #d42038;
+$color-primary:   #1fd100;
+$color-secondary: #ffef07;
+$color-tertiary:  #e51914;
+$color-default:   #c9ccca;
+$color-dark:      #3e403f;
 
 /*Page Effects*/
 
@@ -48,7 +52,7 @@ div#login-dropdown-list {
 }
 
 .navbar-custom {
-  background-color: $dunmoGreen;
+  background-color: $color-primary;
   color:#ffffff;
   border-radius:0;
 }
