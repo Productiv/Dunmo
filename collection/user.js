@@ -165,6 +165,12 @@ Meteor.users.helpers({
       return list.todos && list.todos.length > 0;
     });
 
+    // overdue = overdue.values().sortBy('dueAt');
+    // overdue.forEach(todo, function (todo) {
+    //   dayList = _.find(dayLists, { 'date': todo.dueAt });
+    //   dayList.todos.push(todo);
+    // });
+
     return dayLists;
   }
 
