@@ -165,6 +165,23 @@ Meteor.users.helpers({
       return list.todos && list.todos.length > 0;
     });
 
+    // var overdue = {};
+    // dayLists.forEach(function(list) {
+    //   list.todos.forEach(function(todo) {
+    //     if(todo.dueAt < list.date) {
+    //       if(overdue[todo._id]) {
+    //         overdue[todo._id].timeRemaining += todo.timeRemaining;
+    //       } else {
+    //         todo.overdue = true;
+    //         overdue[todo._id] = todo;
+    //       }
+    //     }
+    //   });
+    // });
+    // overdue = _.sortBy(_.values(overdue), 'dueAt');
+
+    // "ret" Overdue
+
     return dayLists;
   }
 
