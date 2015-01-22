@@ -27,8 +27,8 @@ Template.taskItem.helpers({
 Template.taskItem.events({
 
   "click .complete": function(e) {
-    Meteor.user().incrementTimeRemaining(this.timeRemaining);
-    removeTask(this._id);
+    this.spendTime(this.timeRemaining);
+    this.markDone();
   },
 
   "click .edit": function(e) {
