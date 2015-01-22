@@ -69,6 +69,23 @@ Tasks.helpers({
   markDone: function(done) {
     if(done === undefined) done = true;
     Tasks.update(this._id, { $set: { isDone: done } });
+  },
+
+  splitTaskBySec: function(remaining) {
+    return this.splitTaskByMilliSec(remaining*1000);
+  },
+
+  splitTaskByMilliSec: function(remaining) {
+    var secsRemaining = remaining/1000;
+    var first = _.clone(this, true);
+    var second = _.clone(this, true);
+
+    first.timeRemaining = remaining/1000;
+    second.timeRemaining -= remaining/1000;
+    console.log(first);
+    console.log(second);
+
+    return [first, second];
   }
 
 });

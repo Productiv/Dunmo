@@ -86,7 +86,7 @@ Meteor.users.helpers({
       });
       d.setDate(d.getDate() + 1);
     }
-
+    console.log(dayLists);
     return dayLists;
   }, // end of user.dayLists()
 
@@ -136,6 +136,7 @@ Meteor.users.helpers({
     var dayLists = user.dayLists();
     var todos = user.sortedTodos();
     var timeRemaining;
+    var splitTasks;
 
     dayLists.forEach(function(dayList) {
       dayList.todos = [];
@@ -146,12 +147,14 @@ Meteor.users.helpers({
           dayList.todos.push(todo);
           _.remove(todos, { '_id': todo._id });
           timeRemaining -= todo.timeRemaining;
-        }
+        } else if (timeRemaining > 0) {
+          splitTasks = todo.splitTaskBySec(timeRemaining);
+          dayList.todos.push(splitTasks[0]);
+          timeRemaining -= todo.timeRemaining;
+          todos[index] = splitTasks[1];
+        };
       });
     });
-
-    console.log(dayLists);
-
     return dayLists;
   }
 
