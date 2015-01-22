@@ -16,10 +16,18 @@ Template.dayList.helpers({
     return this.todos.length > 0;
   },
 
-  timeRemaining: function() {
+  timeRemainingStr: function() {
     var user = Meteor.user();
-    if(!user) return 0;
-    else      return user.timeRemaining();
+    if(!user) return fromSeconds(0).toAbbrevDetailStr();
+    else {
+      var remaining = this.timeRemaining;
+      console.log('rem: ', remaining);
+      var duration = fromSeconds(remaining);
+      console.log('dur: ', duration);
+      var output = duration.toAbbrevDetailStr();
+      console.log('out: ', output);
+      return output;
+    }
   },
 
   editing: function() {

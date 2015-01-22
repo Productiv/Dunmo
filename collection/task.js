@@ -62,8 +62,8 @@ Tasks.helpers({
     return moment(due).from(today);
   },
 
-  timeRemainingDisplay: function() {
-    return secToTime(this.timeRemaining);
+  timeRemainingStr: function() {
+    return fromSeconds(this.timeRemaining()).toAbbrevDetailStr()
   },
 
   markDone: function(done) {
