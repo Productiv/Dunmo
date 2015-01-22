@@ -43,13 +43,10 @@ Template.dayList.events({
 });
 
 function render() {
-  var timeRemaining = secToTime(Meteor.user().timeRemaining());
-  console.log('free: ', timeRemaining);
-  var hr = parseInt(timeRemaining.substr(0, timeRemaining.indexOf(':')));
-  var minstr = timeRemaining.substr(timeRemaining.indexOf(':')+1, timeRemaining.length);
-  console.log('minstr: ', minstr);
-  var min = parseInt(minstr);
-  console.log('min: ', min);
+  var timeRemaining = Meteor.user().timeRemaining();
+  var minutesUnit = 5;
+  var hr = timeRemaining.hours;
+  var min = Math.ceil(timeRemaining.minutes / minutesUnit) * minutesUnit;
 
   $(function () {
     $("#datetimepicker").datetimepicker({
@@ -62,14 +59,16 @@ function render() {
     for (var i = 0; i < 24; i++) {
       taskHours.append($("<option/>").val(i).text(i));
     }
+    console.log('hr: ', hr);
     taskHours.val(hr);
   });
 
   $(function() {
     var taskMinutes = $('select#task-minutes')
-    for (var i = 0; i < 60; i += 5) {
+    for (var i = 0; i < 60; i += minutesUnit) {
       taskMinutes.append($("<option/>").val(i).text(i));
     }
+    console.log('min: ', min);
     taskMinutes.val(min);
   });
 };

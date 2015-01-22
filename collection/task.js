@@ -43,7 +43,7 @@ Tasks.helpers({
 
   // returns percentage between 0 and 100
   percentageCompleted: function() {
-    return Math.floor((this.timeRemaining) / this.totalTime()) * 100;
+    return Math.floor((this.timeSpent) / this.totalTime() * 100);
   },
 
   importanceBangs: function() {

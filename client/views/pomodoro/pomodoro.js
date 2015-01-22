@@ -17,9 +17,13 @@ Template.pomodoro.helpers({
 });
 
 Template.pomodoro.events({
-  'click .back': function(e) {
+  'click .save': function(e) {
     var time = clock.getTime().time - this.timeSpent;
     this.spendTime(time);
+    window.location.href = '/';
+  },
+
+  'click .cancel': function(e) {
     window.location.href = '/';
   },
 
@@ -34,7 +38,7 @@ Template.pomodoro.events({
     }
   },
 
-  'click .complete-task': function (event) {
+  'click .complete': function (event) {
     $('pomodoro-container').hide();
     var time = clock.getTime().time - this.timeSpent;
     this.spendTime(time);
