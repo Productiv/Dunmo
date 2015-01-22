@@ -17,17 +17,10 @@ Template.dayList.helpers({
   },
 
   timeRemainingStr: function() {
-    var user = Meteor.user();
-    if(!user) return fromSeconds(0).toAbbrevDetailStr();
-    else {
-      var remaining = this.timeRemaining;
-      console.log('rem: ', remaining);
-      var duration = fromSeconds(remaining);
-      console.log('dur: ', duration);
-      var output = duration.toAbbrevDetailStr();
-      console.log('out: ', output);
-      return output;
-    }
+    var remaining = this.timeRemaining;
+    console.log('remaining: ', remaining);
+    var str = "4h 0m 0s";
+    return remaining.toPrettyStr();
   },
 
   editing: function() {

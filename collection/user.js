@@ -24,13 +24,13 @@ Meteor.users.helpers({
   //task: tasksDueAt(date), based on due date
 
   lastWeeksDayLists: function() {
-    return lastWeek = DayLists.find({
+    return lastWeek = fetchDayLists({
       ownerId: this._id,
       date: {
         $gte: Date.sevenDaysAgoStart().getTime(),
         $lt: Date.todayStart().getTime()
       }
-    }).fetch();
+    });
   },
 
   // get average free time based on past 7 days
@@ -40,16 +40,20 @@ Meteor.users.helpers({
     if (lastWeek.length === 0) {
       avgLength = 4*60*60; // number of seconds in 4 hours
     } else {
-      var lenths = _.pluck(lastWeek, 'inputLength');
+      var lenths = _.map(_.pluck(lastWeek, 'timeSpent'), function(dur) {
+        return dur.lengthInMs;
+      });
       avgLength = _.avg(lengths);
     };
+
+    avgLength = fromSeconds(avgLength);
 
     return avgLength;
   },
 
   todaysList: function() {
     var user = this;
-    var todaysDayList = DayLists.findOne({ ownerId: user._id, date: Date.todayStart() });
+    var todaysDayList = findOneDayList({ ownerId: user._id, date: Date.todayStart() });
     if(!todaysDayList) {
       todaysDayList = { ownerId: user._id, date: Date.todayStart(), timeRemaining: user.averageFreetime(), timeSpent: 0 };
       DayLists.insert(todaysDayList);
