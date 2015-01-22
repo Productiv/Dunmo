@@ -17,7 +17,7 @@ Tasks = new Mongo.Collection("tasks");
 Tasks.helpers({
 
   owner: function() {
-    return Meteor.users.find(this.ownerId);
+    return Meteor.users.findOne(this.ownerId);
   },
 
   totalTime: function() {
@@ -27,6 +27,7 @@ Tasks.helpers({
   spendTime: function(time) {
     this.incrementTimeSpent(time);
     this.incrementTimeRemaining(- time);
+    console.log('this.owner(): ', this.owner());
     this.owner().spendTime(time);
   },
 
@@ -63,7 +64,7 @@ Tasks.helpers({
   },
 
   timeRemainingStr: function() {
-    return fromSeconds(this.timeRemaining()).toAbbrevDetailStr()
+    return fromSeconds(this.timeRemaining).toPrettyStr()
   },
 
   markDone: function(done) {
