@@ -27,7 +27,6 @@ Tasks.helpers({
   spendTime: function(time) {
     this.incrementTimeSpent(time);
     this.incrementTimeRemaining(- time);
-    console.log('this.owner(): ', this.owner());
     this.owner().spendTime(time);
   },
 
@@ -83,8 +82,6 @@ Tasks.helpers({
 
     first.timeRemaining = remaining/1000;
     second.timeRemaining -= remaining/1000;
-    console.log(first);
-    console.log(second);
 
     return [first, second];
   }
@@ -131,4 +128,3 @@ tasksByIndex = function(selector) {
 allTasks = function() {
   return Tasks.find();
 };
-

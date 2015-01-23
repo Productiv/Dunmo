@@ -9,19 +9,34 @@
  *
  */
 
-var durationFields = ['timeSpent', 'timeRemaining']
+var durationFields = ['timeSpent', 'timeRemaining'];
+
+fieldsToMilliseconds = function(doc) {
+  if(!doc) return null;
+  durationFields.forEach(function(attr) {
+    if(typeof doc[attr] === 'object') {
+      doc[attr] = doc[attr].lengthInMs;
+    }
+  });
+  return doc;
+};
+
+fieldsToDuration = function(doc) {
+  if(!doc) return null;
+  durationFields.forEach(function(attr) {
+    if(typeof doc[attr] === 'number') {
+      doc[attr] = fromMilliseconds(doc[attr]);
+    }
+  });
+  return doc;
+};
 
 DayLists = new Mongo.Collection('dayLists');
 
 DayLists.before.insert(function(userId, doc) {
   doc.createdAt = Date.now();
 
-  durationFields.forEach(function(attr) {
-    if(typeof doc[attr] === 'object') {
-      doc[attr] = doc[attr].lengthInMs();
-      console.log(attr + ': ', doc[attr]);
-    }
-  });
+  doc = fieldsToMilliseconds(doc);
 
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
 
@@ -37,23 +52,15 @@ DayLists.helpers({
 fetchDayLists = function(selector, options) {
   var lists = _.clone(DayLists.find(selector, options).fetch(), true);
   lists = _.map(lists, function(doc) {
-    durationFields.forEach(function(attr) {
-      if(typeof doc[attr] === 'number') {
-        doc[attr] = fromSeconds(doc[attr]);
-      }
-    });
+    doc = fieldsToDuration(doc);
     return doc;
   });
   return lists;
 };
 
-findOneDayList = function(id) {
-  var doc = _.clone(DayLists.findOne(id), true);
-  durationFields.forEach(function(attr) {
-    if(typeof doc[attr] === 'number') {
-      doc[attr] = fromSeconds(doc[attr]);
-    }
-  });
-  console.log('doc after: ', doc);
+findOneDayList = function(selector) {
+  var list = DayLists.findOne(selector);
+  var doc = _.clone(list, true);
+  doc = fieldsToDuration(doc);
   return doc;
 };

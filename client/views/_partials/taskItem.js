@@ -20,6 +20,11 @@ Template.taskItem.helpers({
     } else {
       return "highImportance";
     }
+  },
+
+  overdueClass: function() {
+    if(this.isOverdue) return "overdue";
+    else             return "";
   }
 
 });

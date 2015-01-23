@@ -61,6 +61,23 @@ Meteor.users.helpers({
     return todaysDayList;
   },
 
+  newDayList: function(date) {
+    var id = DayLists.insert({
+      ownerId: this._id,
+      date: date,
+      timeRemaining: this.averageFreetime(),
+      timeSpent: 0
+    });
+
+    return findOneDayList(id);
+  },
+
+  dayList: function(date) {
+    var list = findOneDayList({ownerId: this._id, date: date});
+    if(!list) list = this.newDayList(date);
+    return list;
+  },
+
   dayLists: function() {
     var averageFreetime = this.averageFreetime();
 
@@ -86,22 +103,21 @@ Meteor.users.helpers({
       });
       d.setDate(d.getDate() + 1);
     }
-    console.log(dayLists);
     return dayLists;
   }, // end of user.dayLists()
 
   // if newTime is provided, updates, otherwise it doesn't change
-  // returns timeRemaining today
-  timeRemaining: function(newTime) {
-    var dayList = this.todaysList();
+  // returns timeRemaining today as Duration
+  timeRemaining: function(date, newTime) {
+    var dayList = this.dayList(date);
     if(newTime) DayLists.update(dayList._id, { $set: { timeRemaining: newTime }});
-    return newTime || dayList.timeRemaining;
+    return fromMilliseconds(newTime) || dayList.timeRemaining;
   },
 
   // if newTime is provided, updates, otherwise it doesn't change
   // returns timeSpent today
-  timeSpent: function(newTime) {
-    var dayList = this.todaysList();
+  timeSpent: function(date, newTime) {
+    var dayList = this.dayList(date);
     if(newTime) DayLists.update(dayList._id, { $set: { timeSpent: newTime }});
     return newTime || dayList.timeSpent;
   },
@@ -137,26 +153,65 @@ Meteor.users.helpers({
     var todos = user.sortedTodos();
     var timeRemaining;
     var splitTasks;
-
-    console.log('todos: ', todos);
+    // var t;
+    var overdueTasks = {};
 
     dayLists.forEach(function(dayList) {
       dayList.todos = [];
       timeRemaining = dayList.timeRemaining.lengthInMs / 1000;
 
-      console.log('timeRemaining: ', timeRemaining);
-
       var t = todos;
       t.forEach(function(todo, index) {
-        if(timeRemaining - todo.timeRemaining >= 0) {
-          dayList.todos.push(todo);
-          _.remove(todos, { '_id': todo._id });
-          timeRemaining -= todo.timeRemaining;
-        } else if (timeRemaining > 0) {
-          splitTasks = todo.splitTaskBySec(timeRemaining);
-          dayList.todos.push(splitTasks[0]);
-          timeRemaining -= todo.timeRemaining;
-          todos[index] = splitTasks[1];
+        if (todo.dueAt <= dayList.date) {  // if overdue
+          if (timeRemaining - todo.timeRemaining >= 0) {
+            console.log("I'm inside the if (tR-todo.tR>=0)");
+            // normal
+            dayList.todos.push(todo);
+            _.remove(todos, { '_id': todo._id });
+            timeRemaining -= todo.timeRemaining;
+          } else if (timeRemaining > 0) {
+            console.log("I'm inside the if (tR<0)");
+            // fill first chunk, then overdue remainder
+            splitTasks = todo.splitTaskBySec(timeRemaining);
+            dayList.todos.push(splitTasks[0]);
+            timeRemaining -= todo.timeRemaining;
+            // push overdue remainder
+            todos.splice(index,1);
+            splitTasks[1].isOverdue = true;
+            if(overdueTasks[splitTasks[1]._id]) {
+              overdueTasks[splitTasks[1]._id].timeRemaining += splitTasks[1].timeRemaining;
+            } else {
+              splitTasks[1].overdueTasks = true;
+              overdueTasks[splitTasks[1]._id] = splitTasks[1];
+            };
+            dayList.todos.push(splitTasks[1]);
+          } else {
+            console.log("I'm inside the ELSE");
+            // overdue all (remaining)
+            todos.splice(index,1);
+            todo.isOverdue = true;
+            if(overdueTasks[todo._id]) {
+              overdueTasks[todo._id].timeRemaining += todo.timeRemaining;
+            } else {
+              todo.overdueTasks = true;
+              overdueTasks[todo._id] = todo;
+            };
+            dayList.todos.push(todo);
+          };
+        } else {
+          console.log("I'm not gonna panic, I swear!");
+          if (timeRemaining - todo.timeRemaining >= 0) {
+            // normal
+            dayList.todos.push(todo);
+            _.remove(todos, { '_id': todo._id });
+            timeRemaining -= todo.timeRemaining;
+          } else if (timeRemaining > 0) {
+            // fill first chunk normally
+            splitTasks = todo.splitTaskBySec(timeRemaining);
+            dayList.todos.push(splitTasks[0]);
+            timeRemaining -= todo.timeRemaining;
+            todos[index] = splitTasks[1];
+          };
         };
       });
     });
@@ -164,29 +219,27 @@ Meteor.users.helpers({
     dayLists = _.select(dayLists, function(list) {
       return list.todos && list.todos.length > 0;
     });
+    
+    dayLists = lodash.compact(dayLists);
+    overdueTasks = _.sortBy(_.values(overdueTasks), 'dueAt');
 
-    var overdue = {};
-    dayLists.forEach(function(list) {
-      list.todos.forEach(function(todo) {
-        if(todo.dueAt < list.date) {
-          if(overdue[todo._id]) {
-            overdue[todo._id].timeRemaining += todo.timeRemaining;
-          } else {
-            todo.overdue = true;
-            overdue[todo._id] = todo;
-          }
-        }
+    console.log("overdueTasks: ", overdueTasks);
+    console.log("dayLists", dayLists);
+    overdueTasks.forEach(function (todo) {
+      console.log("todo (in loop): ", todo);
+      var dueAt = todo.dueAt;
+      console.log("dueAt: ", dueAt);
+      dueAt.setHours(0,0,0,0);
+      console.log("dueAt: ", dueAt);
+      console.log("dayLists: ", dayLists);
+      dayLists = dayLists.map(function(list) {
+        if(list.date === dueAt) list.todos.push(todo);
+        return list;
       });
     });
-    overdue = _.sortBy(_.values(overdue), 'dueAt');
-    console.log("overdue: ", overdue);
-    
-    overdue.forEach(function (todo) {
-      console.log("todo: ", todo);
-      var dayList = _.findWhere(dayLists, { 'date': todo.dueAt });
-      console.log("dayList: ", dayList);
-      dayList.todos.push(todo);
-    });
+    console.log("dayLists: ", dayLists);
+    console.log("overdueTasks: ", overdueTasks);
+
     return dayLists;
   }
 

@@ -10,7 +10,6 @@ Template.tasks.helpers({
     if(!user) return [];
     else {
       var lists = user.filledDayLists();
-      console.log('user.filledDayLists(): ', user.filledDayLists());
       return lists;
     }
   }
@@ -26,7 +25,6 @@ Template.tasks.events({
   'click .task-row:not(.action)': function(e) {
     $target = $(e.target);
     $task = $target.closest('.task-row');
-    console.log('$task: ', $task)
     if($target.hasClass('action') || $target.hasClass('btn')) return;
     else Router.go('/pomodoro/' + $task.attr('id'));
   }
