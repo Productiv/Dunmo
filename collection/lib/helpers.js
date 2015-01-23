@@ -15,7 +15,7 @@ fieldsToDuration = function(doc) {
   if(!doc) return null;
   durationFields.forEach(function(attr) {
     if(typeof doc[attr] === 'number') {
-      doc[attr] = fromMilliseconds(doc[attr]);
+      doc[attr] = new Duration(doc[attr]);
     }
   });
   return doc;
