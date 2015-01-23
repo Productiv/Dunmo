@@ -38,7 +38,10 @@ Template.dayList.events({
 });
 
 function render() {
-  var timeRemaining = fromMilliseconds(Meteor.user().timeRemaining(this.date));
+  var date = this.date;
+  var user = Meteor.user();
+  var timeRemaining = user.timeRemaining(date);
+  console.log('timeRemaining: ', timeRemaining);
   var minutesUnit = 5;
   var hr = timeRemaining.hours;
   var min = Math.ceil(timeRemaining.minutes / minutesUnit) * minutesUnit;
