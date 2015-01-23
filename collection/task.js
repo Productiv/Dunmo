@@ -46,7 +46,7 @@ Tasks.helpers({
   },
 
   importanceBangs: function() {
-    if (this.importance === 1) {
+    if (this.importance == 1) {
       return "!";
     } else if (this.importance == 2) {
       return "!!";
