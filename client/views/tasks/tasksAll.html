@@ -1,0 +1,18 @@
+<template name="tasksAll">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>All Tasks</h1>
+        <hr>
+        {{#if tasks}}
+          {{#each tasks}}
+            {{> taskItem}}
+            <hr>
+          {{/each}}
+        {{else}}
+          {{> noTasks}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>
