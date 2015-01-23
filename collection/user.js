@@ -9,15 +9,15 @@
 
 Meteor.users.helpers({
   tasks: function() {
-    return Tasks.find({ ownerId: this._id }).fetch();
+    return fetchTasks({ ownerId: this._id }, { sort: [[ 'dueAt', 'asc' ]] });
   },
 
   todos: function() {
-    return Tasks.find({ownerId: this._id, isDone: false }, { sort: [[ 'dueAt', 'asc' ]] }).fetch();
+    return fetchTasks({ownerId: this._id, isDone: false }, { sort: [[ 'dueAt', 'asc' ]] });
   },
 
   done: function() {
-    return Tasks.find({ownerId: this._id, isDone: true }, { sort: [[ 'dueAt', 'asc' ]] }).fetch();
+    return fetchTasks({ownerId: this._id, isDone: true }, { sort: [[ 'dueAt', 'asc' ]] });
   },
 
   //task: tasksDoneOn(date), historical
@@ -33,7 +33,8 @@ Meteor.users.helpers({
     });
   },
 
-  // get average free time based on past 7 days
+  // TODO averageTimeSpent
+  // get average free time (Duration object) based on past 7 days
   averageFreetime: function() {
     var lastWeek = this.lastWeeksDayLists();
     var avgLength;
@@ -41,7 +42,8 @@ Meteor.users.helpers({
       avgLength = 4*60*60; // number of seconds in 4 hours
     } else {
       var lenths = _.map(_.pluck(lastWeek, 'timeSpent'), function(dur) {
-        return dur.lengthInMs;
+        console.log('dur: ', dur);
+        return dur.toSeconds();
       });
       avgLength = _.avg(lengths);
     };
@@ -51,14 +53,14 @@ Meteor.users.helpers({
     return avgLength;
   },
 
-  todaysList: function() {
+  todaysFreetime: function() {
     var user = this;
-    var todaysDayList = findOneDayList({ ownerId: user._id, date: Date.todayStart() });
-    if(!todaysDayList) {
-      todaysDayList = { ownerId: user._id, date: Date.todayStart(), timeRemaining: user.averageFreetime(), timeSpent: 0 };
-      DayLists.insert(todaysDayList);
+    var todaysFreetime = findOneDayList({ ownerId: user._id, date: Date.todayStart() });
+    if(!todaysFreetime) {
+      todaysFreetime = { ownerId: user._id, date: Date.todayStart(), timeRemaining: user.averageFreetime(), timeSpent: 0 };
+      DayLists.insert(todaysFreetime);
     }
-    return todaysDayList;
+    return todaysFreetime;
   },
 
   newDayList: function(date) {
@@ -78,24 +80,24 @@ Meteor.users.helpers({
     return list;
   },
 
-  dayLists: function() {
+  freetimes: function() {
     var averageFreetime = this.averageFreetime();
 
     // get all unfinished tasks
     var tasks = this.todos();
 
     // create all the dayLists from today until the furthest due date, sorted by date
-    var todaysDayList = this.todaysList();
-    var dayLists = [ todaysDayList ];
+    var todaysFreetime = this.todaysFreetime();
+    var freetimes = [ todaysFreetime ];
     var startDate = Date.todayStart();
-    if (tasks.length === 0) return dayLists;
+    if (tasks.length === 0) return freetimes;
     else var endDate = _.last(tasks).dueAt;
 
     var d = startDate;
     d.setDate(d.getDate() + 1);
     while(d <= endDate) {
       // task: grab existing dayLists from db
-      dayLists.push({
+      freetimes.push({
         ownerId: this._id,
         date: new Date(d),
         timeRemaining: averageFreetime,
@@ -103,7 +105,7 @@ Meteor.users.helpers({
       });
       d.setDate(d.getDate() + 1);
     }
-    return dayLists;
+    return freetimes;
   }, // end of user.dayLists()
 
   // if newTime is provided, updates, otherwise it doesn't change
@@ -147,110 +149,90 @@ Meteor.users.helpers({
     return basicSort(this.todos());
   },
 
-  filledDayLists: function() {
-    var user = this;
-    var dayLists = user.dayLists();
-    var todos = user.sortedTodos();
-    var timeRemaining;
-    var splitTasks;
-    // var t;
-    var overdueTasks = {};
+  todoList: function() {
+    var user      = this;
+    var freetimes = user.freetimes();
+    var todos     = user.sortedTodos();
 
-    dayLists.forEach(function(dayList) {
-      dayList.todos = [];
-      timeRemaining = dayList.timeRemaining.lengthInMs / 1000;
-
-      var t = todos;
-      t.forEach(function(todo, index) {
-        if (todo.dueAt <= dayList.date) {  // if overdue
-          if (timeRemaining - todo.timeRemaining >= 0) {
-            console.log("I'm inside the if (tR-todo.tR>=0)");
-            // normal
-            dayList.todos.push(todo);
-            _.remove(todos, { '_id': todo._id });
-            timeRemaining -= todo.timeRemaining;
-          } else if (timeRemaining > 0) {
-            console.log("I'm inside the if (tR<0)");
-            // fill first chunk, then overdue remainder
-            splitTasks = todo.splitTaskBySec(timeRemaining);
-            dayList.todos.push(splitTasks[0]);
-            timeRemaining -= todo.timeRemaining;
-            // push overdue remainder
-            todos.splice(index,1);
-            splitTasks[1].isOverdue = true;
-            if(overdueTasks[splitTasks[1]._id]) {
-              overdueTasks[splitTasks[1]._id].timeRemaining += splitTasks[1].timeRemaining;
-            } else {
-              splitTasks[1].overdueTasks = true;
-              overdueTasks[splitTasks[1]._id] = splitTasks[1];
-            };
-            dayList.todos.push(splitTasks[1]);
-          } else {
-            console.log("I'm inside the ELSE");
-            // overdue all (remaining)
-            todos.splice(index,1);
-            todo.isOverdue = true;
-            if(overdueTasks[todo._id]) {
-              overdueTasks[todo._id].timeRemaining += todo.timeRemaining;
-            } else {
-              todo.overdueTasks = true;
-              overdueTasks[todo._id] = todo;
-            };
-            dayList.todos.push(todo);
-          };
-        } else {
-          console.log("I'm not gonna panic, I swear!");
-          if (timeRemaining - todo.timeRemaining >= 0) {
-            // normal
-            dayList.todos.push(todo);
-            _.remove(todos, { '_id': todo._id });
-            timeRemaining -= todo.timeRemaining;
-          } else if (timeRemaining > 0) {
-            // fill first chunk normally
-            splitTasks = todo.splitTaskBySec(timeRemaining);
-            dayList.todos.push(splitTasks[0]);
-            timeRemaining -= todo.timeRemaining;
-            todos[index] = splitTasks[1];
-          };
-        };
-      });
-    });
-
-    dayLists = _.select(dayLists, function(list) {
-      return list.todos && list.todos.length > 0;
-    });
-
-    dayLists = lodash.compact(dayLists);
-    overdueTasks = _.sortBy(_.values(overdueTasks), 'dueAt');
-
-    console.log("overdueTasks: ", overdueTasks);
-    console.log("dayLists", dayLists);
-    overdueTasks.forEach(function (todo) {
-      console.log("todo (in loop): ", todo);
-      var dueAt = todo.dueAt;
-      console.log("dueAt: ", dueAt);
-      dueAt.setHours(0,0,0,0);
-      console.log("dueAt: ", dueAt);
-      console.log("dayLists: ", dayLists);
-      dayLists = dayLists.map(function(list) {
-        if(list.date === dueAt) list.todos.push(todo);
-        return list;
-      });
-    });
-    overdueTasks = _.sortBy(_.values(overdueTasks), 'dueAt');
-
-    overdueTasks.forEach(function (todo) {
-      dayList = lodash.find(dayLists, { 'date': todo.dueAt });
-      dayList.todos.push(todo);
-    });
-    console.log("dayLists: ", dayLists);
-    console.log("overdueTasks: ", overdueTasks);
+    dayLists = user.generateTodoList(freetimes, todos, 'greedy');
 
     return dayLists;
+  },
+
+  generateTodoList: function(freetimes, todos, algorithm) {
+    if(algorithm !== 'greedy') {
+      console.log(algorithm, ' not implemented, use \'greedy\'');
+      return [];
+    }
+
+    var user = this;
+
+    var todoList  = lodash.map(freetimes, function(freetime) {
+      var ret     = user.generateDayList(freetime, todos);
+      var dayList = ret[0];
+      todos       = ret[1];
+      return dayList;
+    });
+
+    return todoList;
+  },
+
+  generateDayList: function(freetime, todos) {
+    var dayList   = lodash.clone(freetime);
+    var remaining = lodash.clone(dayList.timeRemaining);
+    dayList.todos = [];
+
+    while(remaining.toSeconds() > 0 && todos.length > 0) { // TODO: remaining.toTaskInterval() > 0 ?
+      var ret   = this.appendTodos(dayList, todos, remaining);
+      dayList   = ret[0];
+      todos     = ret[1];
+      remaining = ret[2];
+    }
+
+    return [ dayList, todos ];
+  },
+
+  appendTodos: function(dayList, todos, remaining) {
+    if(todos.length === 0) return [ dayList, todos, remaining ];
+    var todo = todos[0];
+
+    // TODO: what about overdue items on the first day?
+    // TODO: todo.timeRemaining.toTaskInterval() > remaining.toTaskInterval() ?
+    if(todo.timeRemaining.toSeconds() > remaining.toSeconds()) {
+      var ret   = todo.split(remaining);
+      todo      = ret[0];
+      dayList.todos.push(todo);
+      todos[0]  = ret[1];
+      remaining = ret[2];
+    } else {
+      dayList.todos.push(todo);
+      todos.shift();
+      remaining = fromSeconds(remaining.toSeconds() - todo.timeRemaining.toSeconds()); // TODO: Duration
+    }
+
+    if(remaining <= 0) {
+      var ret = this.appendOverdue(dayList, todos);
+      dayList = ret[0];
+      todos   = ret[1];
+    }
+
+    return [ dayList, todos, remaining ];
+  },
+
+  // assume dayList is "full"
+  appendOverdue: function(dayList, tasks) {
+    var task = tasks[0];
+
+    while(task && task.dueAt <= dayList.date) {
+      task.overdue = true;
+      dayList.tasks.push(task);
+      task = tasks.shift();
+    }
+
+    return [ dayList, tasks ]
   }
 
 });
-
 
 userTasksSort_wGroup = function (userId) {
   var userTasks = Tasks.find({ ownerId: userId }).fetch();

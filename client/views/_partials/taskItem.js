@@ -13,12 +13,23 @@ Template.taskItem.rendered = function() {
 Template.taskItem.helpers({
 
   importanceClass: function() {
+    console.log('this.timeRemainingStr: ', this.timeRemainingStr);
     if (this.importance == 1) {
       return "lowImportance";
     } else if (this.importance == 2) {
       return "mediumImportance";
     } else {
       return "highImportance";
+    }
+  },
+
+  importanceBangs: function() {
+    if (this.importance == 1) {
+      return "!";
+    } else if (this.importance == 2) {
+      return "!!";
+    } else {
+      return "!!!";
     }
   },
 

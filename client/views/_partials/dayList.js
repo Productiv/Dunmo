@@ -17,7 +17,7 @@ Template.dayList.helpers({
   },
 
   timeRemainingStr: function() {
-    return this.timeRemaining.toPrettyStr();
+    return this.timeRemaining.toAbbrevDetailStr();
   },
 
   editing: function() {

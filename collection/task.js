@@ -14,6 +14,13 @@
 
 Tasks = new Mongo.Collection("tasks");
 
+DayLists.before.insert(function(userId, doc) {
+  doc.createdAt = Date.now();
+  doc = fieldsToMilliseconds(doc);
+  //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
+  return doc;
+});
+
 Tasks.helpers({
 
   owner: function() {
@@ -45,16 +52,6 @@ Tasks.helpers({
     return Math.floor((this.timeSpent) / this.totalTime() * 100);
   },
 
-  importanceBangs: function() {
-    if (this.importance == 1) {
-      return "!";
-    } else if (this.importance == 2) {
-      return "!!";
-    } else {
-      return "!!!";
-    }
-  },
-
   dueAtDisplay: function() {
     var due = this.dueAt;
     var today = new Date();
@@ -63,7 +60,7 @@ Tasks.helpers({
   },
 
   timeRemainingStr: function() {
-    return fromSeconds(this.timeRemaining).toPrettyStr()
+    return fromSeconds(this.timeRemaining).toAbbrevDetailStr()
   },
 
   markDone: function(done) {
@@ -77,13 +74,24 @@ Tasks.helpers({
 
   splitTaskByMilliSec: function(remaining) {
     var secsRemaining = remaining/1000;
-    var first = _.clone(this, true);
-    var second = _.clone(this, true);
+    var first = lodash.cloneDeep(this);
+    var second = lodash.cloneDeep(this);
 
     first.timeRemaining = remaining/1000;
     second.timeRemaining -= remaining/1000;
 
     return [first, second];
+  },
+
+  // input: duration of first task in output
+  split: function(dur) {
+    var first = lodash.clone(this);
+    first.timeRemaining = dur;
+
+    var second = lodash.clone(this);
+    second.timeRemaining = fromSeconds(this.timeRemaining.toSeconds() - dur.toSeconds()); // TODO duration.diff
+
+    return [ first, second ];
   }
 
 });
@@ -111,8 +119,15 @@ removeTask = function(_id) {
   Tasks.remove(_id);
 };
 
-findTask = function(_id) {
-  return Tasks.findOne(_id);
+fetchTasks = function(selector, options) {
+  var ary = Tasks.find(selector, options).fetch();
+  return lodash.map(ary, fieldsToDuration);
+};
+
+findOneTask = function(selector) {
+  var item = Tasks.findOne(selector);
+  doc      = fieldsToDuration(doc);
+  return doc;
 };
 
 findTasks = function(ids) {

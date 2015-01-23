@@ -9,37 +9,12 @@
  *
  */
 
-var durationFields = ['timeSpent', 'timeRemaining'];
-
-fieldsToMilliseconds = function(doc) {
-  if(!doc) return null;
-  durationFields.forEach(function(attr) {
-    if(typeof doc[attr] === 'object') {
-      doc[attr] = doc[attr].lengthInMs;
-    }
-  });
-  return doc;
-};
-
-fieldsToDuration = function(doc) {
-  if(!doc) return null;
-  durationFields.forEach(function(attr) {
-    if(typeof doc[attr] === 'number') {
-      doc[attr] = fromMilliseconds(doc[attr]);
-    }
-  });
-  return doc;
-};
-
 DayLists = new Mongo.Collection('dayLists');
 
 DayLists.before.insert(function(userId, doc) {
   doc.createdAt = Date.now();
-
   doc = fieldsToMilliseconds(doc);
-
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
-
   return doc;
 });
 
@@ -50,17 +25,12 @@ DayLists.helpers({
 });
 
 fetchDayLists = function(selector, options) {
-  var lists = _.clone(DayLists.find(selector, options).fetch(), true);
-  lists = _.map(lists, function(doc) {
-    doc = fieldsToDuration(doc);
-    return doc;
-  });
-  return lists;
+  var ary = DayLists.find(selector, options).fetch();
+  return lodash.map(ary, fieldsToDuration);
 };
 
 findOneDayList = function(selector) {
-  var list = DayLists.findOne(selector);
-  var doc = _.clone(list, true);
-  doc = fieldsToDuration(doc);
+  var doc  = DayLists.findOne(selector);
+  doc      = fieldsToDuration(doc);
   return doc;
 };
