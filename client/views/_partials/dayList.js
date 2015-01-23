@@ -24,21 +24,26 @@ Template.dayList.helpers({
   },
 
   editing: function() {
-    return Session.get('editing');
+    return Session.get('editing#' + this._id);
+  },
+
+  dayListIsToday: function() {
+    return this.date.isToday();
   }
 });
 
 Template.dayList.events({
   'click .timeRemaining': function(e) {
+    if ((this._id)) {};
     console.log('e.target: ', e.target);
-    console.log(Session.set('editing', 'timeRemaining'));
+    console.log(Session.set('editing#' + this._id, 'timeRemaining'));
     setTimeout(render.bind(this), 300);
   },
 
   'click .submit': function(e) {
     console.log('e.target: ', e.target);
     confirm();
-    console.log(Session.set('editing', false));
+    console.log(Session.set('editing#' + this._id, false));
   }
 });
 

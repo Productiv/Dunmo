@@ -165,26 +165,28 @@ Meteor.users.helpers({
       return list.todos && list.todos.length > 0;
     });
 
-    // var overdue = {};
-    // dayLists.forEach(function(list) {
-    //   list.todos.forEach(function(todo) {
-    //     if(todo.dueAt < list.date) {
-    //       if(overdue[todo._id]) {
-    //         overdue[todo._id].timeRemaining += todo.timeRemaining;
-    //       } else {
-    //         todo.overdue = true;
-    //         overdue[todo._id] = todo;
-    //       }
-    //     }
-    //   });
-    // });
-    // overdue = _.sortBy(_.values(overdue), 'dueAt');
-    // 
-    // overdue.forEach(todo, function (todo) {
-    //   dayList = _.find(dayLists, { 'date': todo.dueAt });
-    //   dayList.todos.push(todo);
-    // });
-
+    var overdue = {};
+    dayLists.forEach(function(list) {
+      list.todos.forEach(function(todo) {
+        if(todo.dueAt < list.date) {
+          if(overdue[todo._id]) {
+            overdue[todo._id].timeRemaining += todo.timeRemaining;
+          } else {
+            todo.overdue = true;
+            overdue[todo._id] = todo;
+          }
+        }
+      });
+    });
+    overdue = _.sortBy(_.values(overdue), 'dueAt');
+    console.log("overdue: ", overdue);
+    
+    overdue.forEach(function (todo) {
+      console.log("todo: ", todo);
+      var dayList = _.findWhere(dayLists, { 'date': todo.dueAt });
+      console.log("dayList: ", dayList);
+      dayList.todos.push(todo);
+    });
     return dayLists;
   }
 
