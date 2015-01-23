@@ -23,7 +23,7 @@ Template.taskItem.helpers({
   },
 
   overdueClass: function() {
-    if(this.overdue) return "overdue";
+    if(this.isOverdue) return "overdue";
     else             return "";
   }
 
