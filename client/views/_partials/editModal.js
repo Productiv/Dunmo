@@ -27,7 +27,6 @@ Template.editModal.rendered = function() {
     }
 
     var timeRemaining = task.timeRemaining; // Duration
-    timeRemaining = fromSeconds(timeRemaining);
     var hr = timeRemaining.hours;
     var min = 5 * Math.round(timeRemaining.minutes / 5);
     if(min > 55) {

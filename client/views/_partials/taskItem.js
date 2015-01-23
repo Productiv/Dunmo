@@ -13,7 +13,7 @@ Template.taskItem.rendered = function() {
 Template.taskItem.helpers({
 
   importanceClass: function() {
-    console.log('this.timeRemainingStr: ', this.timeRemainingStr);
+    console.log('this.timeRemainingStr(): ', this.timeRemainingStr());
     if (this.importance == 1) {
       return "lowImportance";
     } else if (this.importance == 2) {
@@ -43,7 +43,7 @@ Template.taskItem.helpers({
 Template.taskItem.events({
 
   "click .complete": function(e) {
-    this.spendTime(this.timeRemaining);
+    this.spendTime(this.timeRemaining.toMilliseconds());
     this.markDone();
   },
 

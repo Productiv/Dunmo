@@ -7,16 +7,16 @@ Template.newTask.rendered = function() {
     });
   });
   $(function() {
-    var taskHours = $('#task-hours');
+    var $taskHours = $('#task-hours');
     for (var i = 0; i < 101; i++) {
-      taskHours.append($("<option/>").val(i).text(i));
+      $taskHours.append($("<option/>").val(i).text(i));
     }
   });
 
   $(function() {
-    var taskMinutes = $('#task-minutes')
+    var $taskMinutes = $('#task-minutes')
     for (var i = 0; i < 60; i += 5) {
-      taskMinutes.append($("<option/>") .val(i) .text(i));
+      $taskMinutes.append($("<option/>") .val(i) .text(i));
     }
   });
 }
