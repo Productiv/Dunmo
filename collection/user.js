@@ -153,6 +153,8 @@ Meteor.users.helpers({
     var todos = user.sortedTodos();
     var timeRemaining;
     var splitTasks;
+    // var t;
+    var overdueTasks = {};
 
     dayLists.forEach(function(dayList) {
       dayList.todos = [];
@@ -160,15 +162,56 @@ Meteor.users.helpers({
 
       var t = todos;
       t.forEach(function(todo, index) {
-        if(timeRemaining - todo.timeRemaining >= 0) {
-          dayList.todos.push(todo);
-          _.remove(todos, { '_id': todo._id });
-          timeRemaining -= todo.timeRemaining;
-        } else if (timeRemaining > 0) {
-          splitTasks = todo.splitTaskBySec(timeRemaining);
-          dayList.todos.push(splitTasks[0]);
-          timeRemaining -= todo.timeRemaining;
-          todos[index] = splitTasks[1];
+        if (todo.dueAt <= dayList.date) {  // if overdue
+          if (timeRemaining - todo.timeRemaining >= 0) {
+            console.log("I'm inside the if (tR-todo.tR>=0)");
+            // normal
+            dayList.todos.push(todo);
+            _.remove(todos, { '_id': todo._id });
+            timeRemaining -= todo.timeRemaining;
+          } else if (timeRemaining > 0) {
+            console.log("I'm inside the if (tR<0)");
+            // fill first chunk, then overdue remainder
+            splitTasks = todo.splitTaskBySec(timeRemaining);
+            dayList.todos.push(splitTasks[0]);
+            timeRemaining -= todo.timeRemaining;
+            // push overdue remainder
+            todos.splice(index,1);
+            splitTasks[1].isOverdue = true;
+            if(overdueTasks[splitTasks[1]._id]) {
+              overdueTasks[splitTasks[1]._id].timeRemaining += splitTasks[1].timeRemaining;
+            } else {
+              splitTasks[1].overdueTasks = true;
+              overdueTasks[splitTasks[1]._id] = splitTasks[1];
+            };
+            dayList.todos.push(splitTasks[1]);
+          } else {
+            console.log("I'm inside the ELSE");
+            // overdue all (remaining)
+            todos.splice(index,1);
+            todo.isOverdue = true;
+            if(overdueTasks[todo._id]) {
+              overdueTasks[todo._id].timeRemaining += todo.timeRemaining;
+            } else {
+              todo.overdueTasks = true;
+              overdueTasks[todo._id] = todo;
+            };
+            dayList.todos.push(todo);
+          };
+        } else {
+          console.log("I'm not gonna panic, I swear!");
+          if (timeRemaining - todo.timeRemaining >= 0) {
+            // normal
+            dayList.todos.push(todo);
+            _.remove(todos, { '_id': todo._id });
+            timeRemaining -= todo.timeRemaining;
+          } else if (timeRemaining > 0) {
+            // fill first chunk normally
+            splitTasks = todo.splitTaskBySec(timeRemaining);
+            dayList.todos.push(splitTasks[0]);
+            timeRemaining -= todo.timeRemaining;
+            todos[index] = splitTasks[1];
+          };
         };
       });
     });
@@ -177,25 +220,31 @@ Meteor.users.helpers({
       return list.todos && list.todos.length > 0;
     });
 
-    var overdue = {};
-    dayLists.forEach(function(list) {
-      list.todos.forEach(function(todo) {
-        if(todo.dueAt < list.date) {
-          if(overdue[todo._id]) {
-            overdue[todo._id].timeRemaining += todo.timeRemaining;
-          } else {
-            todo.overdue = true;
-            overdue[todo._id] = todo;
-          }
-        }
+    dayLists = lodash.compact(dayLists);
+    overdueTasks = _.sortBy(_.values(overdueTasks), 'dueAt');
+
+    console.log("overdueTasks: ", overdueTasks);
+    console.log("dayLists", dayLists);
+    overdueTasks.forEach(function (todo) {
+      console.log("todo (in loop): ", todo);
+      var dueAt = todo.dueAt;
+      console.log("dueAt: ", dueAt);
+      dueAt.setHours(0,0,0,0);
+      console.log("dueAt: ", dueAt);
+      console.log("dayLists: ", dayLists);
+      dayLists = dayLists.map(function(list) {
+        if(list.date === dueAt) list.todos.push(todo);
+        return list;
       });
     });
-    overdue = _.sortBy(_.values(overdue), 'dueAt');
+    overdueTasks = _.sortBy(_.values(overdueTasks), 'dueAt');
 
-    overdue.forEach(function (todo) {
+    overdueTasks.forEach(function (todo) {
       dayList = lodash.find(dayLists, { 'date': todo.dueAt });
       dayList.todos.push(todo);
     });
+    console.log("dayLists: ", dayLists);
+    console.log("overdueTasks: ", overdueTasks);
 
     return dayLists;
   }
