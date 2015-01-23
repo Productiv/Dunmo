@@ -27,29 +27,39 @@ Tasks.helpers({
     return Meteor.users.findOne(this.ownerId);
   },
 
+  // returns totalTime in seconds
   totalTime: function() {
-    return this.timeRemaining + this.timeSpent;
+    var remaining = this.timeRemaining;
+    var spent     = this.timeSpent;
+    return new Duration(remaining.toSeconds() + spent.toSeconds());
   },
 
-  spendTime: function(time) {
-    this.incrementTimeSpent(time);
-    this.incrementTimeRemaining(- time);
-    this.owner().spendTime(time);
+  spendTime: function(milliseconds) {
+    this.incrementTimeSpent(milliseconds);
+    this.incrementTimeRemaining(- milliseconds);
+    this.owner().spendTime(milliseconds);
   },
 
-  incrementTimeRemaining: function(seconds) {
-    Tasks.update(this._id, { $inc: { timeRemaining: seconds }});
-    return this.timeRemaining + seconds;
+  incrementTimeRemaining: function(milliseconds) {
+    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
+    var current = this.timeRemaining.toMilliseconds();
+    return new Duration(current + milliseconds);
   },
 
-  incrementTimeSpent: function(seconds) {
-    Tasks.update(this._id, { $inc: { timeSpent: seconds }});
-    return this.timeSpent + seconds;
+  incrementTimeSpent: function(milliseconds) {
+    Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
+    var current = this.timeSpent.toMilliseconds();
+    return new Duration(current + milliseconds);
   },
 
   // returns percentage between 0 and 100
   percentageCompleted: function() {
-    return Math.floor((this.timeSpent) / this.totalTime() * 100);
+    var spent = this.timeSpent;
+    spent     = spent.toMilliseconds();
+    var total = this.totalTime().toMilliseconds();
+    console.log('spent: ', spent);
+    console.log('total: ', total);
+    return Math.floor(spent / total * 100);
   },
 
   dueAtDisplay: function() {
@@ -60,7 +70,9 @@ Tasks.helpers({
   },
 
   timeRemainingStr: function() {
-    return fromSeconds(this.timeRemaining).toAbbrevDetailStr()
+    var remaining = new Duration(this.timeRemaining);
+    console.log('this.timeRemaining: ', this.timeRemaining);
+    return remaining.toAbbrevDetailStr()
   },
 
   markDone: function(done) {
@@ -74,8 +86,8 @@ Tasks.helpers({
 
   splitTaskByMilliSec: function(remaining) {
     var secsRemaining = remaining/1000;
-    var first = lodash.cloneDeep(this);
-    var second = lodash.cloneDeep(this);
+    var first = R.cloneDeep(this);
+    var second = R.cloneDeep(this);
 
     first.timeRemaining = remaining/1000;
     second.timeRemaining -= remaining/1000;
@@ -85,10 +97,10 @@ Tasks.helpers({
 
   // input: duration of first task in output
   split: function(dur) {
-    var first = lodash.clone(this);
+    var first = R.cloneDeep(this);
     first.timeRemaining = dur;
 
-    var second = lodash.clone(this);
+    var second = R.cloneDeep(this);
     second.timeRemaining = fromSeconds(this.timeRemaining.toSeconds() - dur.toSeconds()); // TODO duration.diff
 
     return [ first, second ];
@@ -102,8 +114,9 @@ insertTask = function (task, callback) {
 	task.dueAt  = task.dueAt  || Date.todayEnd();
 	task.importance    = task.importance    || 3;
 	task.timeSpent     = task.timeSpent     || 0;
-	task.timeRemaining = task.timeRemaining || 1800;
+	task.timeRemaining = task.timeRemaining || fromSeconds(30 * 60);
   task.ownerId       = task.ownerId       || Meteor.user()._id;
+  task = fieldsToMilliseconds(task);
 	return Tasks.insert(task, callback);
 };
 
@@ -126,8 +139,9 @@ fetchTasks = function(selector, options) {
 
 findOneTask = function(selector) {
   var item = Tasks.findOne(selector);
-  doc      = fieldsToDuration(doc);
-  return doc;
+  console.log('item: ', item);
+  item     = fieldsToDuration(item);
+  return item;
 };
 
 findTasks = function(ids) {

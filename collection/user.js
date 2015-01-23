@@ -124,21 +124,23 @@ Meteor.users.helpers({
     return newTime || dayList.timeSpent;
   },
 
-  incrementTimeRemaining: function(seconds) {
+  incrementTimeRemaining: function(milliseconds) {
     var dayList = this.todaysList();
-    DayLists.update(dayList._id, { $inc: { timeRemaining: seconds }});
-    return dayList.timeRemaining + seconds;
+    DayLists.update(dayList._id, { $inc: { timeRemaining: milliseconds }});
+    var current = dayList.timeRemaining.toMilliseconds();
+    return new Duration(current + milliseconds);
   },
 
-  incrementTimeSpent: function(seconds) {
+  incrementTimeSpent: function(milliseconds) {
     var dayList = this.todaysList();
-    DayLists.update(dayList._id, { $inc: { timeSpent: seconds }});
-    return dayList.timeSpent + seconds;
+    DayLists.update(dayList._id, { $inc: { timeSpent: milliseconds }});
+    var current = dayList.timeSpent.toMilliseconds();
+    return new Duration(current + milliseconds);
   },
 
-  spendTime: function(time) {
-    this.incrementTimeSpent(time);
-    this.incrementTimeRemaining(- time);
+  spendTime: function(milliseconds) {
+    this.incrementTimeSpent(milliseconds);
+    this.incrementTimeRemaining(- milliseconds);
   },
 
   sortedTasks: function() {
@@ -178,15 +180,18 @@ Meteor.users.helpers({
   },
 
   generateDayList: function(freetime, todos) {
-    var dayList   = lodash.clone(freetime);
-    var remaining = lodash.clone(dayList.timeRemaining);
+    var dayList   = R.cloneDeep(freetime);
+    var remaining = R.cloneDeep(dayList.timeRemaining);
     dayList.todos = [];
+
+    console.log('remaining: ', remaining);
 
     while(remaining.toSeconds() > 0 && todos.length > 0) { // TODO: remaining.toTaskInterval() > 0 ?
       var ret   = this.appendTodos(dayList, todos, remaining);
       dayList   = ret[0];
       todos     = ret[1];
       remaining = ret[2];
+      console.log('remaining: ', remaining);
     }
 
     return [ dayList, todos ];
@@ -195,6 +200,11 @@ Meteor.users.helpers({
   appendTodos: function(dayList, todos, remaining) {
     if(todos.length === 0) return [ dayList, todos, remaining ];
     var todo = todos[0];
+    todo.timeRemaining = new Duration(todo.timeRemaining);
+
+    console.log('todo.timeRemaining: ', todo.timeRemaining);
+
+    console.log('todo.timeRemaining.toSeconds(): ', todo.timeRemaining.toSeconds());
 
     // TODO: what about overdue items on the first day?
     // TODO: todo.timeRemaining.toTaskInterval() > remaining.toTaskInterval() ?
@@ -203,18 +213,23 @@ Meteor.users.helpers({
       todo      = ret[0];
       dayList.todos.push(todo);
       todos[0]  = ret[1];
-      remaining = ret[2];
+      remaining = new Duration(0);
+      console.log('remaining: ', remaining);
     } else {
       dayList.todos.push(todo);
       todos.shift();
       remaining = fromSeconds(remaining.toSeconds() - todo.timeRemaining.toSeconds()); // TODO: Duration
     }
 
+    console.log('remaining: ', remaining);
+
     if(remaining <= 0) {
       var ret = this.appendOverdue(dayList, todos);
       dayList = ret[0];
       todos   = ret[1];
     }
+
+    // remaining = remaining || new Duration(0);
 
     return [ dayList, todos, remaining ];
   },
@@ -233,33 +248,6 @@ Meteor.users.helpers({
   }
 
 });
-
-userTasksSort_wGroup = function (userId) {
-  var userTasks = Tasks.find({ ownerId: userId }).fetch();
-
-  var dateGrouped = _.sortBy(
-    _.pairs(
-      _.groupBy(userTasks, function (task) {
-        var dueDate = new Date(task.dueAt);
-        dueDate.setHours(0,0,0,0);
-        return dueDate;
-      })
-    ), function (pair) {
-      return Date.parse(pair[0]);
-    });
-
-  var dateGroupedTimeSorted = _.map(dateGrouped, function(pair) {
-    pair[1] = _.sortBy(pair[1], 'timeRemaining').reverse();
-    return pair;
-  });
-
-  var dateGroupedTimeSortedImportanceSorted = _.map(dateGroupedTimeSorted, function(pair) {
-    pair[1] = _.sortBy(pair[1], 'importance').reverse();
-    return pair;
-  });
-
-  return dateGroupedTimeSortedImportanceSorted;
-};
 
 userTasksOrdered = function (userId) {
 	return Tasks.find({ ownerId: userId }, { sort: [[ 'dueAt', 'asc' ], [ 'importance', 'desc' ], [ 'timeRemaining', 'asc' ]] });

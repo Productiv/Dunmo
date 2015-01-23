@@ -35,7 +35,7 @@ Template.newTask.events({
 
 function confirm() {
   event.preventDefault();
-  // validation
+  // TODO seperate validation
   var itemsInvalid = false;
   $(".form-group").removeClass("has-error");
   if ($("#title").val() == "") {
@@ -61,7 +61,9 @@ function confirm() {
   var task = {};
   task.title = $('#title').val();
   task.dueAt = new Date($('#datetimepicker input').val());
-  task.timeRemaining = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
+  var hr = $('#task-hours').val() * 60 * 60;
+  var min = $('#task-minutes').val() * 60;
+  task.timeRemaining = fromSeconds( hr + min );
   task.importance = $("#importance-group label.active").children("input").eq(0).val()
   insertTask(task, function (err, id) {
     if(err) console.log(err);

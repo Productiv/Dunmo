@@ -35,7 +35,7 @@ Template.taskItem.helpers({
 
   overdueClass: function() {
     if(this.isOverdue) return "overdue";
-    else             return "";
+    else               return "";
   }
 
 });
