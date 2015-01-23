@@ -22,11 +22,10 @@ Template.tasks.events({
     location.href = '/tasks/new';
   },
 
-  'click .task-row:not(.action)': function(e) {
+  'click .task-row .dialdiv': function(e) {
     $target = $(e.target);
     $task = $target.closest('.task-row');
-    if($target.hasClass('action') || $target.hasClass('btn')) return;
-    else Router.go('/pomodoro/' + $task.attr('id'));
+    Router.go('/pomodoro/' + $task.attr('id'));
   }
 
 });

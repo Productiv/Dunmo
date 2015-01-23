@@ -1,5 +1,7 @@
-.task-row:hover {
-  cursor: pointer;
+.task-row {
+  .dialdiv:hover, input:hover {
+    cursor: pointer;
+  }
 }
 
 .task-row.overdue {
