@@ -193,7 +193,7 @@ Meteor.users.helpers({
     overdue = _.sortBy(_.values(overdue), 'dueAt');
 
     overdue.forEach(function (todo) {
-      dayList = _.find(dayLists, { 'date': todo.dueAt });
+      dayList = lodash.find(dayLists, { 'date': todo.dueAt });
       dayList.todos.push(todo);
     });
 

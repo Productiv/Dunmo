@@ -22,6 +22,10 @@ Template.dayList.helpers({
 
   editing: function() {
     return Session.get('editing#' + this._id);
+  },
+
+  dayListIsToday: function() {
+    return this.date.isToday();
   }
 });
 
