@@ -7,7 +7,15 @@ Router.route('/', function () {
 });
 
 Router.route('/tasks', function () {
+  Session.set('page', 'tasks');
   this.render('tasks');
+  this.render('tasksNav', { to: 'navbar' });
+  this.render('editModal', { to: 'modal' });
+});
+
+Router.route('/tasks/all', function () {
+  Session.set('page', 'tasksAll');
+  this.render('tasksAll');
   this.render('tasksNav', { to: 'navbar' });
   this.render('editModal', { to: 'modal' });
 });
