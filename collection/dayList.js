@@ -20,7 +20,7 @@ DayLists.before.insert(function(userId, doc) {
 
 DayLists.helpers({
   totalTime: function() {
-    return this.timeRemaining + this.timeSpent;
+    return this.timeRemaining.toMilliseconds() + this.timeSpent.toMilliseconds();
   }
 });
 

@@ -16,7 +16,7 @@ Meteor.users.helpers({
     return fetchTasks({ownerId: this._id, isDone: false }, { sort: [[ 'dueAt', 'asc' ]] });
   },
 
-  done: function() {
+  doneTasks: function() {
     return fetchTasks({ownerId: this._id, isDone: true }, { sort: [[ 'dueAt', 'asc' ]] });
   },
 
@@ -24,7 +24,7 @@ Meteor.users.helpers({
   //task: tasksDueAt(date), based on due date
 
   lastWeeksDayLists: function() {
-    return lastWeek = fetchDayLists({
+    return fetchDayLists({
       ownerId: this._id,
       date: {
         $gte: Date.sevenDaysAgoStart().getTime(),
@@ -34,104 +34,117 @@ Meteor.users.helpers({
   },
 
   // TODO averageTimeSpent
-  // get average free time (Duration object) based on past 7 days
+  // output: average free time (Duration object) based on past 7 days
   averageFreetime: function() {
     var lastWeek = this.lastWeeksDayLists();
     var avgLength;
     if (lastWeek.length === 0) {
-      avgLength = 4*60*60; // number of seconds in 4 hours
+      avgLength = 4*60*60*1000; // number of milliseconds in 4 hours
     } else {
-      var lenths = _.map(_.pluck(lastWeek, 'timeSpent'), function(dur) {
-        console.log('dur: ', dur);
-        return dur.toSeconds();
+      var lenths = _.map(_.pluck(lastWeek, 'timeSpent'), function(duration) {
+        return duration.toMilliseconds();
       });
       avgLength = _.avg(lengths);
     };
 
-    avgLength = fromSeconds(avgLength);
-
-    return avgLength;
+    return new Duration(avgLength);
   },
 
   todaysFreetime: function() {
-    var user = this;
-    var todaysFreetime = findOneDayList({ ownerId: user._id, date: Date.todayStart() });
-    if(!todaysFreetime) {
-      todaysFreetime = { ownerId: user._id, date: Date.todayStart(), timeRemaining: user.averageFreetime(), timeSpent: 0 };
-      DayLists.insert(todaysFreetime);
-    }
-    return todaysFreetime;
-  },
-
-  newDayList: function(date) {
-    var id = DayLists.insert({
-      ownerId: this._id,
-      date: date,
-      timeRemaining: this.averageFreetime(),
-      timeSpent: 0
-    });
-
-    return findOneDayList(id);
   },
 
   dayList: function(date) {
-    var list = findOneDayList({ownerId: this._id, date: date});
-    if(!list) list = this.newDayList(date);
-    return list;
+    var user = this;
+    var dayList = findOneDayList({ ownerId: user._id, date: date });
+
+    if(!dayList) {
+      var id = DayLists.insert({
+        ownerId: user._id,
+        date: date,
+        timeRemaining: user.averageFreetime(),
+        timeSpent: new Duration(0)
+      });
+      dayList = findOneDayList(id);
+    }
+
+    return dayList;
   },
 
   freetimes: function() {
     var averageFreetime = this.averageFreetime();
 
     // get all unfinished tasks
-    var tasks = this.todos();
+    var todos = this.todos();
 
     // create all the dayLists from today until the furthest due date, sorted by date
-    var todaysFreetime = this.todaysFreetime();
-    var freetimes = [ todaysFreetime ];
     var startDate = Date.todayStart();
-    if (tasks.length === 0) return freetimes;
-    else var endDate = _.last(tasks).dueAt;
+    var todaysFreetime = this.dayList(startDate);
+    var freetimes = [ todaysFreetime ];
+    if (todos.length === 0) return freetimes;
+    else var endDate = _.last(todos).dueAt;
 
     var d = startDate;
     d.setDate(d.getDate() + 1);
     while(d <= endDate) {
-      // task: grab existing dayLists from db
+      // TODO: grab existing dayLists from db
       freetimes.push({
         ownerId: this._id,
         date: new Date(d),
         timeRemaining: averageFreetime,
-        timeSpent: 0
+        timeSpent: Duration(0)
       });
       d.setDate(d.getDate() + 1);
     }
+
     return freetimes;
-  }, // end of user.dayLists()
-
-  // if newTime is provided, updates, otherwise it doesn't change
-  // returns timeRemaining today as Duration
-  timeRemaining: function(date, newTime) {
-    var dayList = this.dayList(date);
-    if(newTime) DayLists.update(dayList._id, { $set: { timeRemaining: newTime }});
-    return fromMilliseconds(newTime) || dayList.timeRemaining;
   },
 
-  // if newTime is provided, updates, otherwise it doesn't change
-  // returns timeSpent today
-  timeSpent: function(date, newTime) {
+  // returns timeRemaining on date as Duration
+  timeRemaining: function(date, milliseconds) {
+    if(typeof date === 'number') {
+      milliseconds = date;
+      date = null;
+    }
+    if(!date) date = Date.todayStart();
     var dayList = this.dayList(date);
-    if(newTime) DayLists.update(dayList._id, { $set: { timeSpent: newTime }});
-    return newTime || dayList.timeSpent;
+    if(milliseconds) {
+      DayLists.update(dayList._id, { $set: { timeRemaining: milliseconds }});
+      return new duration(milliseconds);
+    } else return dayList.timeRemaining;
   },
 
-  incrementTimeRemaining: function(milliseconds) {
-    var dayList = this.todaysList();
+  // returns timeSpent on date as Duration
+  timeSpent: function(date, milliseconds) {
+    if(typeof date === 'number') {
+      milliseconds = date;
+      date = null;
+    }
+    if(!date) date = Date.todayStart();
+    var dayList = this.dayList(date);
+    if(milliseconds) {
+      DayLists.update(dayList._id, { $set: { timeSpent: milliseconds }});
+      return new duration(milliseconds);
+    } else return dayList.timeSpent;
+  },
+
+  incrementTimeRemaining: function(date, milliseconds) {
+    if(typeof date === 'number') {
+      milliseconds = date;
+      date = null;
+    }
+    if(!date) date = Date.todayStart();
+    var dayList = this.dayList(date);
     DayLists.update(dayList._id, { $inc: { timeRemaining: milliseconds }});
     var current = dayList.timeRemaining.toMilliseconds();
     return new Duration(current + milliseconds);
   },
 
-  incrementTimeSpent: function(milliseconds) {
+  incrementTimeSpent: function(date, milliseconds) {
+    if(typeof date === 'number') {
+      milliseconds = date;
+      date = null;
+    }
+    if(!date) date = Date.todayStart();
     var dayList = this.todaysList();
     DayLists.update(dayList._id, { $inc: { timeSpent: milliseconds }});
     var current = dayList.timeSpent.toMilliseconds();
@@ -139,8 +152,8 @@ Meteor.users.helpers({
   },
 
   spendTime: function(milliseconds) {
-    this.incrementTimeSpent(milliseconds);
-    this.incrementTimeRemaining(- milliseconds);
+    this.incrementTimeSpent(Date.todayStart(), milliseconds);
+    this.incrementTimeRemaining(Date.todayStart(), -milliseconds);
   },
 
   sortedTasks: function() {
@@ -156,6 +169,8 @@ Meteor.users.helpers({
     var freetimes = user.freetimes();
     var todos     = user.sortedTodos();
 
+    console.log('todos: ', todos);
+
     dayLists = user.generateTodoList(freetimes, todos, 'greedy');
 
     return dayLists;
@@ -170,40 +185,48 @@ Meteor.users.helpers({
     var user = this;
 
     var todoList  = lodash.map(freetimes, function(freetime) {
-      var ret     = user.generateDayList(freetime, todos);
-      var dayList = ret[0];
-      todos       = ret[1];
-      return dayList;
+      console.log('freetime: ', freetime);
+      console.log('todos: ', todos);
+      if(todos.length > 0) {
+        var ret     = user.generateDayList(freetime, todos);
+        var dayList = ret[0];
+        todos       = ret[1];
+        console.log('dayList: ', dayList);
+        return dayList;
+      } else {
+        return null;
+      }
     });
 
-    return todoList;
+    return lodash.compact(todoList);
   },
 
   generateDayList: function(freetime, todos) {
+    var user      = this;
     var dayList   = R.cloneDeep(freetime);
-    var remaining = R.cloneDeep(dayList.timeRemaining);
+    var remaining = R.cloneDeep(freetime.timeRemaining);
     dayList.todos = [];
 
-    console.log('remaining: ', remaining);
-
     while(remaining.toSeconds() > 0 && todos.length > 0) { // TODO: remaining.toTaskInterval() > 0 ?
-      var ret   = this.appendTodos(dayList, todos, remaining);
+      var ret   = user.appendTodo(dayList, todos, remaining);
       dayList   = ret[0];
       todos     = ret[1];
       remaining = ret[2];
-      console.log('remaining: ', remaining);
+    }
+
+    if(todos.length > 0) {
+      var ret = this.appendOverdue(dayList, todos);
+      dayList = ret[0];
+      todos   = ret[1];
     }
 
     return [ dayList, todos ];
   },
 
-  appendTodos: function(dayList, todos, remaining) {
-    if(todos.length === 0) return [ dayList, todos, remaining ];
+  appendTodo: function(dayList, todos, remaining) {
     var todo = todos[0];
-    todo.timeRemaining = new Duration(todo.timeRemaining);
 
     console.log('todo.timeRemaining: ', todo.timeRemaining);
-
     console.log('todo.timeRemaining.toSeconds(): ', todo.timeRemaining.toSeconds());
 
     // TODO: what about overdue items on the first day?
@@ -211,25 +234,15 @@ Meteor.users.helpers({
     if(todo.timeRemaining.toSeconds() > remaining.toSeconds()) {
       var ret   = todo.split(remaining);
       todo      = ret[0];
-      dayList.todos.push(todo);
       todos[0]  = ret[1];
+      dayList.todos.push(todo);
       remaining = new Duration(0);
-      console.log('remaining: ', remaining);
     } else {
       dayList.todos.push(todo);
       todos.shift();
-      remaining = fromSeconds(remaining.toSeconds() - todo.timeRemaining.toSeconds()); // TODO: Duration
+      remaining = remaining.toMilliseconds() - todo.timeRemaining.toMilliseconds();
+      remaining = new Duration(remaining); // TODO: Duration operations
     }
-
-    console.log('remaining: ', remaining);
-
-    if(remaining <= 0) {
-      var ret = this.appendOverdue(dayList, todos);
-      dayList = ret[0];
-      todos   = ret[1];
-    }
-
-    // remaining = remaining || new Duration(0);
 
     return [ dayList, todos, remaining ];
   },
@@ -238,10 +251,11 @@ Meteor.users.helpers({
   appendOverdue: function(dayList, tasks) {
     var task = tasks[0];
 
-    while(task && task.dueAt <= dayList.date) {
+    while(task && (task.dueAt <= dayList.date)) {
       task.overdue = true;
       dayList.tasks.push(task);
-      task = tasks.shift();
+      tasks.shift();
+      task = tasks[0];
     }
 
     return [ dayList, tasks ]
@@ -294,10 +308,21 @@ userTasksByIndexBy = function(uid, sortBy, sortOrder) {
 // input: collection of tasks
 // return: input collection, sorted by due, importance, and length, in that order
 basicSort = function(tasks) {
-  return _.sortBy(_.sortBy(_.sortBy(tasks, 'timeRemaining'), 'importance'), function(task) {
+  console.log('tasks: ', tasks);
+  tasks = _.sortBy(tasks, 'timeRemaining', function(duration) {
+    return duration.toSeconds();
+  });
+
+  tasks = _.sortBy(tasks, 'importance');
+
+  tasks = _.sortBy(tasks, function(task) {
     var dueDate = new Date(task.dueAt);
     dueDate.setHours(0,0,0,0);
     return dueDate;
   });
+
+  console.log('tasks: ', tasks);
+
+  return tasks;
 };
 
