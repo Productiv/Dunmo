@@ -23,7 +23,7 @@ confirmEditTask = function(taskId) {
     task.title = $('.title').val();
   }
   if (!($(".task-hours").val() == 0 && $(".task-minutes").val() == 0)) {
-    task.timeRemaining = ($('.task-hours').val() * 60 * 60) + ($('.task-minutes').val() * 60);
+    task.timeRemaining = fromSeconds(($('.task-hours').val() * 60 * 60) + ($('.task-minutes').val() * 60));
   }
   if ($("#datetimepicker input").val() != "") {
     task.dueAt = new Date($('#datetimepicker input').val());
