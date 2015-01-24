@@ -145,7 +145,7 @@ Meteor.users.helpers({
       date = null;
     }
     if(!date) date = Date.todayStart();
-    var dayList = this.todaysList();
+    var dayList = this.dayList(date);
     DayLists.update(dayList._id, { $inc: { timeSpent: milliseconds }});
     var current = dayList.timeSpent.toMilliseconds();
     return new Duration(current + milliseconds);
