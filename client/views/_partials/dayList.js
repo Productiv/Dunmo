@@ -61,7 +61,8 @@ function render() {
     for (var i = 0; i < 24; i++) {
       taskHours.append($("<option/>").val(i).text(i));
     }
-    taskHours.val(hr);
+    var thing = taskHours.val(hr);
+    console.log("thing: ", thing);
   });
 
   $(function() {

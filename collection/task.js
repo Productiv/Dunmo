@@ -14,8 +14,8 @@
 
 Tasks = new Mongo.Collection("tasks");
 
-DayLists.before.insert(function(userId, doc) {
-  doc.createdAt = Date.now();
+Tasks.before.insert(function(userId, doc) {
+  doc.createdAt = new Date();
   doc = fieldsToMilliseconds(doc);
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
   return doc;
@@ -27,11 +27,11 @@ Tasks.helpers({
     return Meteor.users.findOne(this.ownerId);
   },
 
-  // returns totalTime in seconds
+  // returns totalTime
   totalTime: function() {
-    var remaining = this.timeRemaining;
-    var spent     = this.timeSpent;
-    return new Duration(remaining.toSeconds() + spent.toSeconds());
+    var remaining = this.timeRemaining.toMilliseconds();
+    var spent     = this.timeSpent.toMilliseconds();
+    return new Duration(remaining + spent);
   },
 
   spendTime: function(milliseconds) {
@@ -54,8 +54,7 @@ Tasks.helpers({
 
   // returns percentage between 0 and 100
   percentageCompleted: function() {
-    var spent = this.timeSpent;
-    spent     = spent.toMilliseconds();
+    var spent = this.timeSpent.toMilliseconds();;
     var total = this.totalTime().toMilliseconds();
     console.log('spent: ', spent);
     console.log('total: ', total);
@@ -63,16 +62,12 @@ Tasks.helpers({
   },
 
   dueAtDisplay: function() {
-    var due = this.dueAt;
-    var today = new Date();
-
-    return moment(due).from(today);
+    var today = Date.now();
+    return moment(this.dueAt).from(today);
   },
 
   timeRemainingStr: function() {
-    var remaining = new Duration(this.timeRemaining);
-    console.log('this.timeRemaining: ', this.timeRemaining);
-    return remaining.toAbbrevDetailStr()
+    return this.timeRemaining.toAbbrevDetailStr();
   },
 
   markDone: function(done) {
@@ -80,66 +75,58 @@ Tasks.helpers({
     Tasks.update(this._id, { $set: { isDone: done } });
   },
 
-  splitTaskBySec: function(remaining) {
-    return this.splitTaskByMilliSec(remaining*1000);
-  },
+  // input:  duration of first task in output
+  // output: pair of tasks
+  split: function(duration) {
+    if(duration.toMilliseconds() > this.timeRemaining.toMilliseconds()) {
+      console.log('task split error: duration exceeds timeRemaining');
+      return [ null, R.cloneDeep(this) ];
+    }
 
-  splitTaskByMilliSec: function(remaining) {
-    var secsRemaining = remaining/1000;
-    var first = R.cloneDeep(this);
-    var second = R.cloneDeep(this);
+    var firstTask = R.cloneDeep(this);
+    firstTask.timeRemaining = new Duration(duration);
 
-    first.timeRemaining = remaining/1000;
-    second.timeRemaining -= remaining/1000;
+    var secondTask = R.cloneDeep(this);
+    var remaining  = this.timeRemaining.toMilliseconds() - duration.toMilliseconds();
+    secondTask.timeRemaining =  new Duration(remaining);
 
-    return [first, second];
-  },
+    // TODO: set timeSpent also
 
-  // input: duration of first task in output
-  split: function(dur) {
-    var first = R.cloneDeep(this);
-    first.timeRemaining = dur;
-
-    var second = R.cloneDeep(this);
-    second.timeRemaining = fromSeconds(this.timeRemaining.toSeconds() - dur.toSeconds()); // TODO duration.diff
-
-    return [ first, second ];
+    return [ firstTask, secondTask ];
   }
 
 });
 
 insertTask = function (task, callback) {
-	task.title  = task.title  || "New task";
-	task.isDone = task.isDone || false;
-	task.dueAt  = task.dueAt  || Date.todayEnd();
+  task.createdAt     = new Date();
+	task.title         = task.title         || "New task";
+	task.isDone        = task.isDone        || false;
+	task.dueAt         = task.dueAt         || Date.todayEnd();
 	task.importance    = task.importance    || 3;
-	task.timeSpent     = task.timeSpent     || 0;
+	task.timeSpent     = task.timeSpent     || new Duration(0);
 	task.timeRemaining = task.timeRemaining || fromSeconds(30 * 60);
-  task.ownerId       = task.ownerId       || Meteor.user()._id;
+  task.ownerId       = task.ownerId       || Meteor.userId();
   task = fieldsToMilliseconds(task);
+  console.log('task: ', task);
 	return Tasks.insert(task, callback);
 };
 
 updateTask = function(_id, modifier, callback) {
   var keys = _.keys(modifier);
   if(!_.some(keys, isFirstChar('$'))) modifier = { $set: modifier };
-  if(!modifier.$set) modifier.$set = { updatedAt: (new Date()).getTime() };
-  else modifier.$set.updatedAt = (new Date()).getTime();
+  if(!modifier.$set) modifier.$set = { updatedAt: new Date() };
+  else modifier.$set.updatedAt = new Date();
   Tasks.update(_id, modifier, callback);
-};
-
-removeTask = function(_id) {
-  Tasks.remove(_id);
 };
 
 fetchTasks = function(selector, options) {
   var ary = Tasks.find(selector, options).fetch();
+  console.log('ary: ', ary);
   return lodash.map(ary, fieldsToDuration);
 };
 
 findOneTask = function(selector) {
   var item = Tasks.findOne(selector);
-  console.log('item: ', item);
   item     = fieldsToDuration(item);
   return item;
 };
@@ -152,8 +139,4 @@ findTasks = function(ids) {
 tasksByIndex = function(selector) {
   if(!selector) selector = {};
   return Tasks.find(selector, { sort: [[ 'index', 'asc' ]] });
-};
-
-allTasks = function() {
-  return Tasks.find();
 };
