@@ -28,7 +28,7 @@ Tasks.helpers({
   },
 
   totalTime: function() {
-    return this.timeRemaining + this.timeSpent;
+    return this.timeRemaining._lengthInMs + this.timeSpent._lengthInMs;
   },
 
   spendTime: function(time) {
@@ -49,7 +49,7 @@ Tasks.helpers({
 
   // returns percentage between 0 and 100
   percentageCompleted: function() {
-    return Math.floor((this.timeSpent) / this.totalTime() * 100);
+    return Math.floor((this.timeSpent._lengthInMs) / this.totalTime() * 100);
   },
 
   dueAtDisplay: function() {
