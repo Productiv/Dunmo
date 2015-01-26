@@ -130,6 +130,10 @@ findOneTask = function(selector) {
   return doc;
 };
 
+findTask = function(id) {
+  return Tasks.findOne({ _id: id});
+}
+
 findTasks = function(ids) {
   if(!ids) return;
   return Tasks.find({ _id: { $in: ids } });
