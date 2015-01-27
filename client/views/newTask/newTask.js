@@ -7,16 +7,16 @@ Template.newTask.rendered = function() {
     });
   });
   $(function() {
-    var taskHours = $('#task-hours');
+    var $taskHours = $('#task-hours');
     for (var i = 0; i < 101; i++) {
-      taskHours.append($("<option/>").val(i).text(i));
+      $taskHours.append($("<option/>").val(i).text(i));
     }
   });
 
   $(function() {
-    var taskMinutes = $('#task-minutes')
+    var $taskMinutes = $('#task-minutes')
     for (var i = 0; i < 60; i += 5) {
-      taskMinutes.append($("<option/>") .val(i) .text(i));
+      $taskMinutes.append($("<option/>") .val(i) .text(i));
     }
   });
 }
@@ -35,7 +35,7 @@ Template.newTask.events({
 
 function confirm() {
   event.preventDefault();
-  // validation
+  // TODO seperate validation
   var itemsInvalid = false;
   $(".form-group").removeClass("has-error");
   if ($("#title").val() == "") {
@@ -61,8 +61,10 @@ function confirm() {
   var task = {};
   task.title = $('#title').val();
   task.dueAt = new Date($('#datetimepicker input').val());
-  task.timeRemaining = ($('#task-hours').val() * 60 * 60) + ($('#task-minutes').val() * 60);
-  task.importance = $("#importance-group label.active").children("input").eq(0).val()
+  var hr = $('#task-hours').val() * 60 * 60;
+  var min = $('#task-minutes').val() * 60;
+  task.timeRemaining = fromSeconds( hr + min );
+  task.importance = $("#importance-group label.active").children("input").eq(0).val();
   insertTask(task, function (err, id) {
     if(err) console.log(err);
     else    console.log('id: ', id);

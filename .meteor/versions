@@ -37,7 +37,6 @@ iron:router@1.0.7
 iron:url@1.0.7
 jquery@1.11.3
 json@1.0.2
-kevohagan:ramda@0.1.2
 launch-screen@1.0.1
 less@1.0.12
 livedata@1.0.12

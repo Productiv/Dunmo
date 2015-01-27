@@ -5,7 +5,7 @@ Template.pomodoro.rendered = function() {
   Session.set('pause', false);
   var task = this.data;
   if(!task) return;
-  var time = task.timeSpent
+  var time = task.timeSpent.toSeconds();
   clock.setTime(time);
   $('.clock-wrapper').attr('hidden', false);
 };
@@ -18,7 +18,8 @@ Template.pomodoro.helpers({
 
 Template.pomodoro.events({
   'click .save': function(e) {
-    var time = clock.getTime().time - this.timeSpent;
+    var time = clock.getTime().time - (new Duration(this.timeSpent).toSeconds());
+    time = time * 1000;
     this.spendTime(time);
     window.location.href = '/';
   },
@@ -40,8 +41,8 @@ Template.pomodoro.events({
 
   'click .complete': function (event) {
     $('pomodoro-container').hide();
-    var time = clock.getTime().time - this.timeSpent;
-    this.spendTime(time);
+    var time = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
+    this.spendTime(time * 1000);
     this.markDone();
     window.location.href = '/';
   }
