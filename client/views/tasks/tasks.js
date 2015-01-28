@@ -20,10 +20,6 @@ Template.tasks.helpers({
 
 Template.tasks.events({
 
-  'click #newTaskBtn': function() {
-    location.href = '/tasks/new';
-  },
-
   'click .task-row .dialdiv': function(e) {
     $target = $(e.target);
     $task = $target.closest('.task-row');

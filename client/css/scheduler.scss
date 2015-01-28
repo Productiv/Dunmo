@@ -9,9 +9,26 @@ $color-secondary: #ffef07;
 $color-tertiary:  #e51914;
 $color-default:   #c9ccca;
 $color-dark:      #3e403f;
+$color-grey:      #777;
+$color-link:      #2a6496;
+
+/* Helpers */
+.smaller {
+  font-weight: normal;
+  line-height: 1;
+  color: $color-grey;
+  font-size: 45%;
+
+  a {
+    color: $color-link;
+  }
+}
+
+.black {
+  color: black;
+}
 
 /*Page Effects*/
-
 .page {
   padding-top: 75px;
 }
@@ -158,21 +175,6 @@ div#login-dropdown-list {
         font-size: 16px;
     }
 }
-
-// @media(max-width: 400px) {
-//     div.edit-complete button {
-//         padding: 4px;
-//     }
-//     div.importance-display {
-//         padding: 0px;
-//     }
-// }
-//
-// @media(max-width: 330px) {
-//     div.edit-complete button {
-//         padding: 2px;
-//     }
-// }
 
 /* New Task Page */
 div.btn-group-justified label {
