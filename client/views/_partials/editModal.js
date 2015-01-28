@@ -5,7 +5,7 @@ Template.editModal.rendered = function() {
     console.log('modal: ', $modal);
     var taskId = $modal.attr('data-task-id');
     console.log('open edit modal, taskId: ', taskId);
-    var task = findTask(taskId);
+    var task = findOneTask(taskId);
     console.log('open edit modal, task: ', task);
 
     // fill fields with data
