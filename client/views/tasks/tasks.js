@@ -12,7 +12,6 @@ Template.tasks.helpers({
     if(!user) return [];
     else {
       var list = user.todoList();
-      console.log('list: ', list);
       return list;
     }
   }

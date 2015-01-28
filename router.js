@@ -20,7 +20,6 @@ Router.route('/tasks/new', function () {
 Router.route('/pomodoro/:id', function () {
   var data = function() {
     var task = findOneTask(this.params.id);
-    console.log('task: ', task);
     return task;
   };
   this.render('pomodoro', { data: data });

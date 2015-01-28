@@ -56,8 +56,6 @@ Tasks.helpers({
   percentageCompleted: function() {
     var spent = this.timeSpent.toMilliseconds();;
     var total = this.totalTime().toMilliseconds();
-    console.log('spent: ', spent);
-    console.log('total: ', total);
     return Math.floor(spent / total * 100);
   },
 
@@ -79,7 +77,6 @@ Tasks.helpers({
   // output: pair of tasks
   split: function(duration) {
     if(duration.toMilliseconds() > this.timeRemaining.toMilliseconds()) {
-      console.log('task split error: duration exceeds timeRemaining');
       return [ null, R.cloneDeep(this) ];
     }
 
@@ -107,7 +104,6 @@ insertTask = function (task, callback) {
 	task.timeRemaining = task.timeRemaining || fromSeconds(30 * 60);
   task.ownerId       = task.ownerId       || Meteor.userId();
   task = fieldsToMilliseconds(task);
-  console.log('task: ', task);
 	return Tasks.insert(task, callback);
 };
 
@@ -121,7 +117,6 @@ updateTask = function(_id, modifier, callback) {
 
 fetchTasks = function(selector, options) {
   var ary = Tasks.find(selector, options).fetch();
-  console.log('ary: ', ary);
   return lodash.map(ary, fieldsToDuration);
 };
 
