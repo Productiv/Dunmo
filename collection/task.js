@@ -139,3 +139,21 @@ tasksByIndex = function(selector) {
   if(!selector) selector = {};
   return Tasks.find(selector, { sort: [[ 'index', 'asc' ]] });
 };
+
+// input: collection of tasks
+// return: input collection, sorted by due, importance, and length, in that order
+basicSort = function(tasks) {
+  tasks = _.sortBy(tasks, 'timeRemaining', function(duration) {
+    return duration.toSeconds();
+  });
+
+  tasks = _.sortBy(tasks, 'importance');
+
+  tasks = _.sortBy(tasks, function(task) {
+    var dueDate = new Date(task.dueAt);
+    dueDate.setHours(0,0,0,0);
+    return dueDate;
+  });
+
+  return tasks;
+};

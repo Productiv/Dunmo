@@ -177,8 +177,6 @@ Meteor.users.helpers({
     var freetimes = user.freetimes();
     var todos     = user.sortedTodos();
 
-    console.log('todos: ', todos);
-
     dayLists = user._generateTodoList(freetimes, todos, 'greedy');
 
     return dayLists;
@@ -194,13 +192,10 @@ Meteor.users.helpers({
     var user = this;
 
     var todoList  = lodash.map(freetimes, function(freetime) {
-      console.log('freetime: ', freetime);
-      console.log('todos: ', todos);
       if(todos.length > 0) {
         var ret     = user._generateDayList(freetime, todos);
         var dayList = ret[0];
         todos       = ret[1];
-        console.log('dayList: ', dayList);
         return dayList;
       } else {
         return null;
