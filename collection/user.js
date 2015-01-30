@@ -120,7 +120,7 @@ Meteor.users.helpers({
     var dayList = this.dayList(date);
     if(milliseconds) {
       DayLists.update(dayList._id, { $set: { timeRemaining: milliseconds }});
-      return new duration(milliseconds);
+      return new Duration(milliseconds);
     } else return dayList.timeRemaining;
   },
 
