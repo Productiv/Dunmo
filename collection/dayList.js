@@ -19,8 +19,26 @@ DayLists.before.insert(function(userId, doc) {
 });
 
 DayLists.helpers({
+  owner: function() {
+    return Meteor.users.findOne(this.ownerId);
+  },
+
   totalTime: function() {
     return this.timeRemaining.toMilliseconds() + this.timeSpent.toMilliseconds();
+  },
+
+  setTimeRemaining: function(milliseconds) {
+    Tasks.update(this._id, { $set: { timeRemaining: milliseconds }});
+  },
+
+  setTimeSpent: function(milliseconds) {
+    Tasks.update(this._id, { $set: { timeSpent: milliseconds }});
+  },
+
+  fetchTodos: function() {
+    var user = this.owner();
+    var date = this.date;
+    return user.todoList(date);
   }
 });
 

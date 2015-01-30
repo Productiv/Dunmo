@@ -52,6 +52,14 @@ Tasks.helpers({
     return new Duration(current + milliseconds);
   },
 
+  setTimeRemaining: function(milliseconds) {
+    Tasks.update(this._id, { $set: { timeRemaining: milliseconds }});
+  },
+
+  setTimeSpent: function(milliseconds) {
+    Tasks.update(this._id, { $set: { timeSpent: milliseconds }});
+  },
+
   // returns percentage between 0 and 100
   percentageCompleted: function() {
     var spent = this.timeSpent.toMilliseconds();;

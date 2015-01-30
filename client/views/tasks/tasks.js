@@ -5,13 +5,12 @@ Template.tasks.rendered = function() {
 
 Template.tasks.helpers({
 
-
-
   dayLists: function() {
     var user = Meteor.user();
     if(!user) return [];
     else {
       var list = user.todoList();
+      console.log('list: ', list);
       return list;
     }
   }
