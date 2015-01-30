@@ -118,6 +118,7 @@ Meteor.users.helpers({
     }
     if(!date) date = Date.todayStart();
     var dayList = this.dayList(date);
+    console.log('dayList: ', dayList);
     if(milliseconds) {
       DayLists.update(dayList._id, { $set: { timeRemaining: milliseconds }});
       return new duration(milliseconds);
@@ -132,6 +133,7 @@ Meteor.users.helpers({
     }
     if(!date) date = Date.todayStart();
     var dayList = this.dayList(date);
+    console.log('dayList: ', dayList);
     if(milliseconds) {
       DayLists.update(dayList._id, { $set: { timeSpent: milliseconds }});
       return new duration(milliseconds);
@@ -163,8 +165,8 @@ Meteor.users.helpers({
   },
 
   spendTime: function(milliseconds) {
-    this.incrementTimeSpent(Date.todayStart(), milliseconds);
-    this.incrementTimeRemaining(Date.todayStart(), -milliseconds);
+    this.incrementTimeSpent(milliseconds);
+    this.incrementTimeRemaining(-milliseconds);
   },
 
   // output: A list of dayLists, each filled with todos. Todos are sorted by
@@ -256,7 +258,7 @@ Meteor.users.helpers({
   // assume dayList is "full"
   _appendOverdue: function(dayList, todos) {
     var todo = todos[0];
-    
+
     while(todo && (todo.dueAt <= dayList.date.endOfDay())) {
       todo.isOverdue = true;
       dayList.todos.push(todo);

@@ -41,14 +41,14 @@ Tasks.helpers({
   },
 
   incrementTimeRemaining: function(milliseconds) {
-    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
     var current = this.timeRemaining.toMilliseconds();
+    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
     return new Duration(current + milliseconds);
   },
 
   incrementTimeSpent: function(milliseconds) {
-    Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
     var current = this.timeSpent.toMilliseconds();
+    Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
     return new Duration(current + milliseconds);
   },
 
@@ -97,6 +97,14 @@ Tasks.helpers({
   }
 
 });
+
+Tasks._findOne = Tasks.findOne;
+
+Tasks.findOne = function(selector, options) {
+  var item = Tasks._findOne(selector, options);
+  item     = fieldsToDuration(item);
+  return item;
+};
 
 insertTask = function (task, callback) {
   task.createdAt     = new Date();
