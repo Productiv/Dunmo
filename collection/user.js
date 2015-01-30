@@ -240,16 +240,16 @@ Meteor.users.helpers({
       var ret   = todo.split(remaining);
       todo      = ret[0];
       todos[0]  = ret[1];
-      dayList.todos.push(todo);
       remaining = new Duration(0);
     } else {
-      dayList.todos.push(todo);
       todos.shift();
       remaining = remaining.toMilliseconds() - todo.timeRemaining.toMilliseconds();
       remaining = new Duration(remaining); // TODO: Duration operations
     }
 
-    if (todo.title === "Paco!") {console.log("todos: ", todos);}
+    if(todo.dueAt < Date.now()) todo.isOverdue = true;
+
+    dayList.todos.push(todo);
 
     return [ dayList, todos, remaining ];
   },
