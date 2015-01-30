@@ -35,6 +35,14 @@ Template.taskItem.helpers({
   overdueClass: function() {
     if(this.isOverdue) return "overdue";
     else               return "";
+  },
+
+  timeRemainingStr: function() {
+    console.log("this.title, this.overdue: ", this.title, this.overdue);
+    var remaining;
+    if(this.isOverdue) annotation = "overdue";
+    else               annotation = "remaining";
+    return this.timeRemainingStr() + " " + annotation;
   }
 
 });
