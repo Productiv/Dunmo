@@ -213,6 +213,8 @@ Meteor.users.helpers({
     dayList.todos = [];
 
     while(remaining.toSeconds() > 0 && todos.length > 0) { // TODO: remaining.toTaskInterval() > 0 ?
+      if (todos[0].title === "Paco!") {console.log("dayList: ", dayList);
+            console.log("todos: ", todos);}
       var ret   = user._appendTodo(dayList, todos, remaining);
       dayList   = ret[0];
       todos     = ret[1];
@@ -234,6 +236,8 @@ Meteor.users.helpers({
 
     // TODO: what about overdue items on the first day?
     // TODO: todo.timeRemaining.toTaskInterval() > remaining.toTaskInterval() ?
+    if (todo.title === "Paco!") {console.log("todo.timeRemaining.toSeconds(): ", todo.timeRemaining.toSeconds());
+        console.log("remaining.toSeconds(): ", remaining.toSeconds());}
     if(todo.timeRemaining.toSeconds() > remaining.toSeconds()) {
       var ret   = todo.split(remaining);
       todo      = ret[0];
@@ -247,22 +251,27 @@ Meteor.users.helpers({
       remaining = new Duration(remaining); // TODO: Duration operations
     }
 
+    if (todo.title === "Paco!") {console.log("todos: ", todos);}
+
     return [ dayList, todos, remaining ];
   },
 
   // a private helper function for todoList
   // assume dayList is "full"
-  _appendOverdue: function(dayList, tasks) {
-    var task = tasks[0];
+  _appendOverdue: function(dayList, todos) {
+    var todo = todos[0];
+    console.log("dayList: ", dayList);
+    console.log("todos: ", todos);
 
-    while(task && (task.dueAt <= dayList.date)) {
-      task.overdue = true;
-      dayList.tasks.push(task);
-      tasks.shift();
-      task = tasks[0];
+    while(todo && (todo.dueAt <= dayList.date.endOfDay())) {
+      todo.overdue = true;
+      // console.log("dayList: ", dayList);
+      dayList.todos.push(todo);
+      todos.shift();
+      todo = todos[0];
     }
 
-    return [ dayList, tasks ]
+    return [ dayList, todos ]
   }
 
 });
