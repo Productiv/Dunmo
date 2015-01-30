@@ -82,10 +82,14 @@ Tasks.helpers({
 
     var firstTask = R.cloneDeep(this);
     firstTask.timeRemaining = new Duration(duration);
+    // firstTask.id = this._id;
+    // firstTask._id = new Mongo.ObjectID();
 
     var secondTask = R.cloneDeep(this);
     var remaining  = this.timeRemaining.toMilliseconds() - duration.toMilliseconds();
     secondTask.timeRemaining =  new Duration(remaining);
+    // secondTask.id = this._id;
+    // secondTask._id = new Mongo.ObjectID();
 
     // TODO: set timeSpent also
 
