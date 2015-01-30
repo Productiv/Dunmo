@@ -38,7 +38,6 @@ Template.taskItem.helpers({
   },
 
   timeRemainingStr: function() {
-    console.log("this.title, this.overdue: ", this.title, this.overdue);
     var remaining;
     if(this.isOverdue) annotation = "overdue";
     else               annotation = "remaining";
@@ -56,6 +55,7 @@ Template.taskItem.events({
 
   "click .edit": function(e) {
     $("#editModal").attr("data-task-id", this._id);
+    // Blaze.render(editTask);
   },
 
   "hover #due-date": function (event) {

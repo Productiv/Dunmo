@@ -118,7 +118,6 @@ Meteor.users.helpers({
     }
     if(!date) date = Date.todayStart();
     var dayList = this.dayList(date);
-    console.log('dayList: ', dayList);
     if(milliseconds) {
       DayLists.update(dayList._id, { $set: { timeRemaining: milliseconds }});
       return new duration(milliseconds);
@@ -133,7 +132,6 @@ Meteor.users.helpers({
     }
     if(!date) date = Date.todayStart();
     var dayList = this.dayList(date);
-    console.log('dayList: ', dayList);
     if(milliseconds) {
       DayLists.update(dayList._id, { $set: { timeSpent: milliseconds }});
       return new duration(milliseconds);
@@ -187,7 +185,6 @@ Meteor.users.helpers({
   // a private helper function for todoList
   _generateTodoList: function(freetimes, todos, algorithm) {
     if(algorithm !== 'greedy') {
-      console.log(algorithm, ' not implemented, use \'greedy\'');
       return [];
     }
 
@@ -248,8 +245,6 @@ Meteor.users.helpers({
       remaining = remaining.toMilliseconds() - todo.timeRemaining.toMilliseconds();
       remaining = new Duration(remaining); // TODO: Duration operations
     }
-
-    if (todo.title === "Paco!") {console.log("todos: ", todos);}
 
     return [ dayList, todos, remaining ];
   },

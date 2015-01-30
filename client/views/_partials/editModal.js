@@ -1,4 +1,15 @@
 Template.editModal.rendered = function() {
+
+  var $taskHours = $('.edit-task .task-hours');
+  for (var i = 0; i < 101; i++) {
+    $taskHours.append($("<option/>").val(i).text(i));
+  }
+
+  var $taskMinutes = $('.edit-task .task-minutes');
+  for (var i = 0; i < 60; i += 5) {
+    $taskMinutes.append($("<option/>").val(i).text(i));
+  }
+
   // TODO: change data context somehow?
   $('#editModal').on('show.bs.modal', function(e) {
     var $modal = $(e.target);
@@ -24,8 +35,8 @@ Template.editModal.rendered = function() {
     }
 
     var timeRemaining = task.timeRemaining; // Duration
-    var hr = timeRemaining.hours;
-    var min = 5 * Math.round(timeRemaining.minutes / 5);
+    var hr = Math.floor(timeRemaining.toSeconds() / 60 / 60);
+    var min = 5 * Math.round(timeRemaining.minutes() / 5);
     if(min > 55) {
       min = 0;
       hr++;

@@ -29,7 +29,6 @@ Template.pomodoro.events({
   },
 
   'click .play-pause': function(e) {
-    console.log('this: ', this);
     var pause = Session.get('pause');
     if(pause) {
       clock.start();
