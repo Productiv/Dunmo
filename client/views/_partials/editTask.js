@@ -1,18 +1,5 @@
 Template.editTask.rendered = function() {
 
-  // $("#datetimepicker").datetimepicker({
-  //   pick12HourFormat: true
-  // });
-
-  var taskHours = $('.task-hours');
-  for (var i = 0; i < 101; i++) {
-    taskHours.append($("<option/>").val(i).text(i));
-  }
-  var taskMinutes = $('.task-minutes');
-  for (var i = 0; i < 60; i += 5) {
-    taskMinutes.append($("<option/>") .val(i) .text(i));
-  }
-
 };
 
 confirmEditTask = function(taskId) {
@@ -33,8 +20,6 @@ confirmEditTask = function(taskId) {
   }
 
   updateTask(taskId, task, function (err, id) {
-    if(err) console.log(err);
-    else    console.log('id: ', id);
     $('#editModal').modal('hide');
   });
 };
