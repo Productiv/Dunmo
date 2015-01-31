@@ -5,8 +5,9 @@
 }
 
 .task-row.overdue {
-	color: red;
+	color: red !important;
 }
+
 div.edit-complete button {
   &.complete:hover {
     color: #1fd100;

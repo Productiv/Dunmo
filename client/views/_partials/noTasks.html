@@ -1,6 +1,9 @@
 <template name="noTasks">
   {{#if currentUser}}
-    <h1 class="notice"><small> Nothing to do here! </small></h1>
+  <h1 class="notice">
+    <small> Nothing to do here! </small>
+    <a href="#" class="smaller new-task-action"> Add a task </a>
+  </h1>
   {{else}}
   <h1 class="notice"><small> Sign in to add tasks! </small></h1>
   {{/if}}

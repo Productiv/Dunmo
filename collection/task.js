@@ -41,14 +41,14 @@ Tasks.helpers({
   },
 
   incrementTimeRemaining: function(milliseconds) {
-    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
     var current = this.timeRemaining.toMilliseconds();
+    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
     return new Duration(current + milliseconds);
   },
 
   incrementTimeSpent: function(milliseconds) {
-    Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
     var current = this.timeSpent.toMilliseconds();
+    Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
     return new Duration(current + milliseconds);
   },
 
@@ -56,8 +56,6 @@ Tasks.helpers({
   percentageCompleted: function() {
     var spent = this.timeSpent.toMilliseconds();;
     var total = this.totalTime().toMilliseconds();
-    console.log('spent: ', spent);
-    console.log('total: ', total);
     return Math.floor(spent / total * 100);
   },
 
@@ -79,16 +77,19 @@ Tasks.helpers({
   // output: pair of tasks
   split: function(duration) {
     if(duration.toMilliseconds() > this.timeRemaining.toMilliseconds()) {
-      console.log('task split error: duration exceeds timeRemaining');
       return [ null, R.cloneDeep(this) ];
     }
 
     var firstTask = R.cloneDeep(this);
     firstTask.timeRemaining = new Duration(duration);
+    // firstTask.id = this._id;
+    // firstTask._id = new Mongo.ObjectID();
 
     var secondTask = R.cloneDeep(this);
     var remaining  = this.timeRemaining.toMilliseconds() - duration.toMilliseconds();
     secondTask.timeRemaining =  new Duration(remaining);
+    // secondTask.id = this._id;
+    // secondTask._id = new Mongo.ObjectID();
 
     // TODO: set timeSpent also
 
@@ -96,6 +97,14 @@ Tasks.helpers({
   }
 
 });
+
+Tasks._findOne = Tasks.findOne;
+
+Tasks.findOne = function(selector, options) {
+  var item = Tasks._findOne(selector, options);
+  item     = fieldsToDuration(item);
+  return item;
+};
 
 insertTask = function (task, callback) {
   task.createdAt     = new Date();
@@ -107,7 +116,6 @@ insertTask = function (task, callback) {
 	task.timeRemaining = task.timeRemaining || fromSeconds(30 * 60);
   task.ownerId       = task.ownerId       || Meteor.userId();
   task = fieldsToMilliseconds(task);
-  console.log('task: ', task);
 	return Tasks.insert(task, callback);
 };
 
@@ -121,7 +129,6 @@ updateTask = function(_id, modifier, callback) {
 
 fetchTasks = function(selector, options) {
   var ary = Tasks.find(selector, options).fetch();
-  console.log('ary: ', ary);
   return lodash.map(ary, fieldsToDuration);
 };
 
@@ -143,4 +150,22 @@ findTasks = function(ids) {
 tasksByIndex = function(selector) {
   if(!selector) selector = {};
   return Tasks.find(selector, { sort: [[ 'index', 'asc' ]] });
+};
+
+// input: collection of tasks
+// return: input collection, sorted by due, importance, and length, in that order
+basicSort = function(tasks) {
+  tasks = _.sortBy(tasks, 'timeRemaining', function(duration) {
+    return duration.toSeconds();
+  });
+
+  tasks = _.sortBy(tasks, 'importance');
+
+  tasks = _.sortBy(tasks, function(task) {
+    var dueDate = new Date(task.dueAt);
+    dueDate.setHours(0,0,0,0);
+    return dueDate;
+  });
+
+  return tasks;
 };

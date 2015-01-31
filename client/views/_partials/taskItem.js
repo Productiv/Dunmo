@@ -13,7 +13,6 @@ Template.taskItem.rendered = function() {
 Template.taskItem.helpers({
 
   importanceClass: function() {
-    console.log('this.timeRemainingStr(): ', this.timeRemainingStr());
     if (this.importance == 1) {
       return "lowImportance";
     } else if (this.importance == 2) {
@@ -36,6 +35,14 @@ Template.taskItem.helpers({
   overdueClass: function() {
     if(this.isOverdue) return "overdue";
     else               return "";
+  },
+
+  timeRemainingStr: function() {
+    console.log("this.title, this.overdue: ", this.title, this.overdue);
+    var remaining;
+    if(this.isOverdue) annotation = "overdue";
+    else               annotation = "remaining";
+    return this.timeRemainingStr() + " " + annotation;
   }
 
 });

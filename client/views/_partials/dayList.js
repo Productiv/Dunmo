@@ -45,7 +45,6 @@ function render() {
   var date = this.date;
   var user = Meteor.user();
   var timeRemaining = user.timeRemaining(date);
-  console.log('timeRemaining: ', timeRemaining);
   var minutesUnit = 5;
   var hr = timeRemaining.hours;
   var min = Math.ceil(timeRemaining.minutes / minutesUnit) * minutesUnit;
@@ -62,7 +61,6 @@ function render() {
       taskHours.append($("<option/>").val(i).text(i));
     }
     var thing = taskHours.val(hr);
-    console.log("thing: ", thing);
   });
 
   $(function() {
@@ -77,11 +75,8 @@ function render() {
 function confirm() {
   var hr = $('#task-hours').val();
   var min = $('#task-minutes').val();
-  console.log('hr, min: ', hr, min);
   var remaining = ((hr * 60 * 60) + (min * 60)) * 1000;
-  console.log('remaining: ', remaining);
   var user = Meteor.user();
   var date = this.date;
-  console.log('user, date: ', user, date);
   user.timeRemaining(date, remaining);
 };

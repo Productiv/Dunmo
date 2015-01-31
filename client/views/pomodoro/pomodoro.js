@@ -29,6 +29,7 @@ Template.pomodoro.events({
   },
 
   'click .play-pause': function(e) {
+    console.log('this: ', this);
     var pause = Session.get('pause');
     if(pause) {
       clock.start();
@@ -41,8 +42,8 @@ Template.pomodoro.events({
 
   'click .complete': function (event) {
     $('pomodoro-container').hide();
-    var time = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
-    this.spendTime(time * 1000);
+    var seconds = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
+    this.spendTime(seconds * 1000);
     this.markDone();
     window.location.href = '/';
   }

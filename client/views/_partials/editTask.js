@@ -32,8 +32,6 @@ confirmEditTask = function(taskId) {
     task.importance = $("#importance-group label.active").children("input").eq(0).val();
   }
 
-  console.log('task: ', task);
-
   updateTask(taskId, task, function (err, id) {
     if(err) console.log(err);
     else    console.log('id: ', id);

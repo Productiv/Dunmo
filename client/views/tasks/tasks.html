@@ -2,12 +2,16 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        {{#if dayLists}}
-          {{#each dayLists}}
-            {{> dayList}}
-          {{/each}}
+        {{#if currentUser}}
+          {{#if dayLists}}
+            {{#each dayLists}}
+              {{> dayList}}
+            {{/each}}
+          {{else}}
+            {{> noTasks}}
+          {{/if}}
         {{else}}
-          {{> noTasks}}
+          <p> Log in or create an account to start creating tasks. </p>
         {{/if}}
       </div>
     </div>

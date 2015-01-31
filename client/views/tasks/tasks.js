@@ -12,7 +12,6 @@ Template.tasks.helpers({
     if(!user) return [];
     else {
       var list = user.todoList();
-      console.log('list: ', list);
       return list;
     }
   }
@@ -20,10 +19,6 @@ Template.tasks.helpers({
 });
 
 Template.tasks.events({
-
-  'click #newTaskBtn': function() {
-    location.href = '/tasks/new';
-  },
 
   'click .task-row .dialdiv': function(e) {
     $target = $(e.target);

@@ -2,11 +2,8 @@ Template.editModal.rendered = function() {
   // TODO: change data context somehow?
   $('#editModal').on('show.bs.modal', function(e) {
     var $modal = $(e.target);
-    console.log('modal: ', $modal);
     var taskId = $modal.attr('data-task-id');
-    console.log('open edit modal, taskId: ', taskId);
     var task = findOneTask(taskId);
-    console.log('open edit modal, task: ', task);
 
     // fill fields with data
     $('.edit-task input.title').val(task.title);
@@ -47,7 +44,6 @@ Template.editModal.rendered = function() {
 Template.editModal.events({
   'click .confirm': function (e) {
     var taskId = $(e.target).closest('.modal').attr('data-task-id');
-    console.log('taskId: ', taskId);
     confirmEditTask(taskId);
   }
 });
