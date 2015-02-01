@@ -178,14 +178,11 @@ Meteor.users.helpers({
     var todos     = user.sortedTodos();
 
     todoList = user._generateTodoList(freetimes, todos, 'greedy');
-    console.log('date: ', date);
-    console.log('todoList: ', todoList);
     if(date) {
       todoList = _.select(todoList, function(dayList) {
         return dayList.date >= date
       });
     }
-    console.log('todoList: ', todoList);
     TodoList.insert({ownerId: this._id, list: todoList});
     return todoList;
   },
@@ -220,10 +217,10 @@ Meteor.users.helpers({
     dayList.todos = [];
 
     while(remaining.toSeconds() > 0 && todos.length > 0) { // TODO: remaining.toTaskInterval() > 0 ?
-      var ret   = user._appendTodo(dayList, todos, remaining);
-      dayList   = ret[0];
-      todos     = ret[1];
-      remaining = ret[2];
+      var ret   = R.cloneDeep(user._appendTodo(dayList, todos, remaining));
+      dayList   = R.cloneDeep(ret[0]);
+      todos     = R.cloneDeep(ret[1]);
+      remaining = R.cloneDeep(ret[2]);
     }
 
     if(todos.length > 0) {
@@ -237,14 +234,17 @@ Meteor.users.helpers({
 
   // a private helper function for todoList
   _appendTodo: function(dayList, todos, remaining) {
-    var todo = todos[0];
+    var todo = R.cloneDeep(todos[0]);
+    // console.log("todo: ", todo);
+    // console.log("todo.timeRemaining: ", todo.timeRemaining);
+    // console.log("remaining: ", remaining);
 
     // TODO: what about overdue items on the first day?
     // TODO: todo.timeRemaining.toTaskInterval() > remaining.toTaskInterval() ?
-    if(todo.timeRemaining.toSeconds() > remaining.toSeconds()) {
-      var ret   = todo.split(remaining);
-      todo      = ret[0];
-      todos[0]  = ret[1];
+    if((todo.timeRemaining.toSeconds() > remaining.toSeconds()) && (todo.dueAt >= (new Date()))) {
+      var ret   = R.cloneDeep(todo.split(remaining));
+      todo      = R.cloneDeep(ret[0]);
+      todos[0]  = R.cloneDeep(ret[1]);
       remaining = new Duration(0);
     } else {
       todos.shift();
@@ -262,7 +262,7 @@ Meteor.users.helpers({
   // a private helper function for todoList
   // assume dayList is "full"
   _appendOverdue: function(dayList, todos) {
-    var todo = todos[0];
+    var todo = R.cloneDeep(todos[0]);
 
     while(todo && (todo.dueAt <= dayList.date.endOfDay())) {
       todo.isOverdue = true;

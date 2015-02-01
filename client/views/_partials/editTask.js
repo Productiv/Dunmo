@@ -11,6 +11,7 @@ confirmEditTask = function(taskId) {
   }
   if (!($(".task-hours").val() == 0 && $(".task-minutes").val() == 0)) {
     task.timeRemaining = fromSeconds(($('.task-hours').val() * 60 * 60) + ($('.task-minutes').val() * 60));
+    console.log("task.timeRemaining: ", task.timeRemaining);
   }
   if ($("#datetimepicker input").val() != "") {
     task.dueAt = new Date($('#datetimepicker input').val());

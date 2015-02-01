@@ -15,6 +15,15 @@
 Tasks = new Mongo.Collection("tasks");
 
 Tasks.before.insert(function(userId, doc) {
+  console.log("doc: ", doc);
+  doc.createdAt = new Date();
+  doc = fieldsToMilliseconds(doc);
+  //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
+  return doc;
+});
+
+Tasks.before.update(function(userId, doc, null, { $}) {
+  console.log("doc: ", doc);
   doc.createdAt = new Date();
   doc = fieldsToMilliseconds(doc);
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
@@ -123,8 +132,7 @@ insertTask = function (task, callback) {
 	task.timeSpent     = task.timeSpent     || new Duration(0);
 	task.timeRemaining = task.timeRemaining || fromSeconds(30 * 60);
   task.ownerId       = task.ownerId       || Meteor.userId();
-  task = fieldsToMilliseconds(task);
-	return Tasks.insert(task, callback);
+  return Tasks.insert(task, callback);
 };
 
 updateTask = function(_id, modifier, callback) {
@@ -132,6 +140,7 @@ updateTask = function(_id, modifier, callback) {
   if(!_.some(keys, isFirstChar('$'))) modifier = { $set: modifier };
   if(!modifier.$set) modifier.$set = { updatedAt: new Date() };
   else modifier.$set.updatedAt = new Date();
+  console.log("modifier: ", modifier);
   Tasks.update(_id, modifier, callback);
 };
 
