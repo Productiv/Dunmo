@@ -11,17 +11,19 @@
       </div>
       <div class="col-xs-4">
         <ul class="nav navbar-nav navbar-right">
-          <li><a class="navbar-link new new-task-action" href="#"><i class="glyphicon glyphicon-plus"></i></a></li>
-          <li>
-            <a class="navbar-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              Views <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="/tasks">      Agenda     </a></li>
-              <li><a href="/tasks/all">  All Todos  </a></li>
-              <li><a href="/tasks/done"> Done Tasks </a></li>
-            </ul>
-          </li>
+          {{#if currentUser}}
+            <li><a class="navbar-link new new-task-action" href="#"><i class="glyphicon glyphicon-plus"></i></a></li>
+            <li>
+              <a class="navbar-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Views <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="/tasks">      Agenda     </a></li>
+                <li><a href="/tasks/all">  All Todos  </a></li>
+                <li><a href="/tasks/done"> Done Tasks </a></li>
+              </ul>
+            </li>
+          {{/if}}
         </ul>
       </div>
     </div>
