@@ -11,6 +11,7 @@ Template.tasks.helpers({
     else {
       var todos = Tasks.find({ ownerId: Meteor.userId(), isDone: false });
       var dayLists = DayLists.find({ ownerId: Meteor.userId(), date: { $gte: Date.todayStart() } });
+      console.log('dayLists: ', dayLists.fetch());
       var list = user.reactiveTodoList(todos, dayLists);
       return list;
     }
