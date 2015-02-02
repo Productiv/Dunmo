@@ -139,9 +139,9 @@ div#login-dropdown-list {
 }
 
 .navbar-default .navbar-nav > .open {
-  a,
-  a:hover,
-  a:focus {
+  > a,
+  > a:hover,
+  > a:focus {
     background-color: $color-secondary;
   }
 }
