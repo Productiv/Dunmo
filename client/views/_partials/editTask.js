@@ -6,17 +6,24 @@ confirmEditTask = function(taskId) {
   // event.preventDefault();
   // validation
   var task = {};
-  if ($(".title").val() != "") {
-    task.title = $('.title').val();
+  var $parent = $('.edit-task');
+  var title = $parent.find('.title').val();
+  var hours = $parent.find('.task-hours').val();
+  var minutes = $parent.find('.task-minutes').val();
+  var datetime = $parent.find('#datetimepicker input').val();
+  var $importance = $parent.find('.importance');
+
+  if (title != "") {
+    task.title = title;
   }
-  if (!($(".task-hours").val() == 0 && $(".task-minutes").val() == 0)) {
-    task.timeRemaining = fromSeconds(($('.task-hours').val() * 60 * 60) + ($('.task-minutes').val() * 60));
+  if (!(hours == 0 && minutes == 0)) {
+    task.timeRemaining = fromSeconds((hours * 60 * 60) + (minutes * 60));
   }
-  if ($("#datetimepicker input").val() != "") {
-    task.dueAt = new Date($('#datetimepicker input').val());
+  if (datetime != "") {
+    task.dueAt = new Date(datetime);
   }
-  if ($("#importance-group label.active").length != 0) {
-    task.importance = $("#importance-group label.active").children("input").eq(0).val();
+  if ($importance.length != 0) {
+    task.importance = $importance.children("input").eq(0).val();
   }
 
   updateTask(taskId, task, function (err, id) {
