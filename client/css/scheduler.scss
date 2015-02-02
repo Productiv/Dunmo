@@ -5,7 +5,7 @@ $lowImportance:   #20d4bc;
 $medImportance:   #f29830;
 $highImportance:  #d42038;
 $color-primary:   #1fd100;
-$color-secondary: #ffef07;
+$color-secondary: #06ff00;
 $color-tertiary:  #e51914;
 $color-default:   #c9ccca;
 $color-dark:      #3e403f;
@@ -114,6 +114,7 @@ div#login-dropdown-list {
   &:hover {
     color: white;
     text-decoration: none;
+    cursor: pointer;
   }
 }
 
@@ -134,6 +135,14 @@ div#login-dropdown-list {
 
   .new {
     margin: -4px;
+  }
+}
+
+.navbar-default .navbar-nav > .open {
+  a,
+  a:hover,
+  a:focus {
+    background-color: $color-secondary;
   }
 }
 

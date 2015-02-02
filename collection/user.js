@@ -194,16 +194,12 @@ Meteor.users.helpers({
     });
     todos = basicSort(todos);
 
-    // console.log('todos: ', todos);
-
     freetimes = freetimeCursor.fetch();
     freetimes = freetimes.map(function(doc) {
       doc = fieldsToDuration(doc);
       return doc;
     });
     freetimes = this._padDays(freetimes);
-
-    console.log('freetimes: ', freetimes);
 
     var user = this;
 
