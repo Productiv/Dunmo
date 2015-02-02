@@ -1,40 +1,31 @@
-Template.editTask.rendered = function() {
-
-  // $("#datetimepicker").datetimepicker({
-  //   pick12HourFormat: true
-  // });
-
-  var taskHours = $('.task-hours');
-  for (var i = 0; i < 101; i++) {
-    taskHours.append($("<option/>").val(i).text(i));
-  }
-  var taskMinutes = $('.task-minutes');
-  for (var i = 0; i < 60; i += 5) {
-    taskMinutes.append($("<option/>") .val(i) .text(i));
-  }
-
-};
 
 confirmEditTask = function(taskId) {
   // event.preventDefault();
   // validation
   var task = {};
-  if ($(".title").val() != "") {
-    task.title = $('.title').val();
+  var $parent = $('.edit-task');
+  var title = $parent.find('.title').val();
+  var hours = $parent.find('.task-hours').val();
+  var minutes = $parent.find('.task-minutes').val();
+  var datetime = $parent.find('#datetimepicker input').val();
+  var $importance = $parent.find('#importance-group .btn-group');
+
+  if (title != "") {
+    task.title = title;
   }
-  if (!($(".task-hours").val() == 0 && $(".task-minutes").val() == 0)) {
-    task.timeRemaining = fromSeconds(($('.task-hours').val() * 60 * 60) + ($('.task-minutes').val() * 60));
+  if (!(hours == 0 && minutes == 0)) {
+    task.timeRemaining = fromSeconds((hours * 60 * 60) + (minutes * 60));
   }
-  if ($("#datetimepicker input").val() != "") {
-    task.dueAt = new Date($('#datetimepicker input').val());
+  if (datetime != "") {
+    task.dueAt = new Date(datetime);
   }
-  if ($("#importance-group label.active").length != 0) {
-    task.importance = $("#importance-group label.active").children("input").eq(0).val();
+  if ($importance.length != 0) {
+    var importance = $importance.find('input:checked').attr('id');
+    console.log('importance: ', importance);
+    task.importance = importance;
   }
 
   updateTask(taskId, task, function (err, id) {
-    if(err) console.log(err);
-    else    console.log('id: ', id);
     $('#editModal').modal('hide');
   });
 };

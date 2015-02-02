@@ -38,10 +38,7 @@ Template.taskItem.helpers({
   },
 
   timeRemainingStr: function() {
-    console.log("this.title, this.overdue: ", this.title, this.overdue);
-    var remaining;
-    if(this.isOverdue) annotation = "overdue";
-    else               annotation = "remaining";
+    var annotation = "remaining";
     return this.timeRemainingStr() + " " + annotation;
   }
 
@@ -49,17 +46,27 @@ Template.taskItem.helpers({
 
 Template.taskItem.events({
 
-  "click .complete": function(e) {
-    this.spendTime(this.timeRemaining.toMilliseconds());
-    this.markDone();
+  'click .complete': function(e) {
+    if(this.isDone) {
+      console.log('this.isDone: ', this.isDone);
+      if(this.timeRemaining.toMilliseconds() === 0) {
+        var task = this;
+        this.setTimeRemaining(30*60*1000, function() {
+          task.markDone(false);
+        });
+      } else {
+        task.markDone(false);
+      }
+    } else {
+      console.log('test');
+      this.spendTime(this.timeRemaining.toMilliseconds());
+      this.markDone();
+    }
   },
 
-  "click .edit": function(e) {
-    $("#editModal").attr("data-task-id", this._id);
-  },
-
-  "hover #due-date": function (event) {
-    // body...
+  'click .btn.edit': function(e) {
+    console.log('this._id: ', this._id);
+    $('.edit-modal').attr('data-task-id', this._id);
   }
 
 });

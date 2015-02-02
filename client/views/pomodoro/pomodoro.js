@@ -21,6 +21,7 @@ Template.pomodoro.events({
     var time = clock.getTime().time - (new Duration(this.timeSpent).toSeconds());
     time = time * 1000;
     this.spendTime(time);
+
     window.location.href = '/';
   },
 
@@ -29,7 +30,6 @@ Template.pomodoro.events({
   },
 
   'click .play-pause': function(e) {
-    console.log('this: ', this);
     var pause = Session.get('pause');
     if(pause) {
       clock.start();
@@ -38,14 +38,14 @@ Template.pomodoro.events({
       clock.stop();
       Session.set('pause', true);
     }
-  },
+  } //,
 
-  'click .complete': function (event) {
-    $('pomodoro-container').hide();
-    var seconds = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
-    this.spendTime(seconds * 1000);
-    this.markDone();
-    window.location.href = '/';
-  }
+  // 'click .complete': function (event) {
+  //   $('pomodoro-container').hide();
+  //   var seconds = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
+  //   this.spendTime(seconds * 1000);
+  //   this.markDone();
+  //   window.location.href = '/';
+  // }
 });
 

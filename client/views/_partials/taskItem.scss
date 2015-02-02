@@ -1,3 +1,4 @@
+
 .task-row {
   .dialdiv:hover, input:hover {
     cursor: pointer;
@@ -14,5 +15,17 @@ div.edit-complete button {
   }
   &.edit:hover {
     color: #f29830;
+  }
+}
+
+.task-row.done {
+  .dialdiv:hover, input:hover {
+    cursor: default;
+  }
+}
+
+.task-row.done {
+  .complete.active {
+    color: #1fd100;
   }
 }

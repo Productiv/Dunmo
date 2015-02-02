@@ -5,13 +5,13 @@ Template.tasks.rendered = function() {
 
 Template.tasks.helpers({
 
-
-
   dayLists: function() {
     var user = Meteor.user();
     if(!user) return [];
     else {
-      var list = user.todoList();
+      var todos = Tasks.find({ ownerId: Meteor.userId(), isDone: false });
+      var dayLists = DayLists.find({ ownerId: Meteor.userId(), date: { $gte: Date.todayStart() } });
+      var list = user.reactiveTodoList(todos, dayLists);
       return list;
     }
   }

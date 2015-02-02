@@ -42,14 +42,33 @@ Tasks.helpers({
 
   incrementTimeRemaining: function(milliseconds) {
     var current = this.timeRemaining.toMilliseconds();
-    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
-    return new Duration(current + milliseconds);
+    console.log("this.timeRemaining.toMilliseconds(): ", current);
+    if (current + milliseconds <= 0) {
+      this.setTimeRemaining(0);
+      this.markDone(true);
+      return new Duration(0);
+    } else {
+      Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
+      return new Duration(current + milliseconds);
+    }
   },
 
   incrementTimeSpent: function(milliseconds) {
     var current = this.timeSpent.toMilliseconds();
+    if (current + milliseconds <= 0) {
+      this.setTimeSpent(0);
+      return new Duration(0);
+    }
     Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
     return new Duration(current + milliseconds);
+  },
+
+  setTimeRemaining: function(milliseconds, callback) {
+    Tasks.update(this._id, { $set: { timeRemaining: milliseconds }}, callback);
+  },
+
+  setTimeSpent: function(milliseconds) {
+    Tasks.update(this._id, { $set: { timeSpent: milliseconds }});
   },
 
   // returns percentage between 0 and 100
@@ -68,9 +87,9 @@ Tasks.helpers({
     return this.timeRemaining.toAbbrevDetailStr();
   },
 
-  markDone: function(done) {
+  markDone: function(done, callback) {
     if(done === undefined) done = true;
-    Tasks.update(this._id, { $set: { isDone: done } });
+    Tasks.update(this._id, { $set: { isDone: done } }, callback);
   },
 
   // input:  duration of first task in output
@@ -115,13 +134,16 @@ insertTask = function (task, callback) {
 	task.timeSpent     = task.timeSpent     || new Duration(0);
 	task.timeRemaining = task.timeRemaining || fromSeconds(30 * 60);
   task.ownerId       = task.ownerId       || Meteor.userId();
-  task = fieldsToMilliseconds(task);
-	return Tasks.insert(task, callback);
+  return Tasks.insert(task, callback);
 };
 
 updateTask = function(_id, modifier, callback) {
   var keys = _.keys(modifier);
-  if(!_.some(keys, isFirstChar('$'))) modifier = { $set: modifier };
+
+  if(!_.some(keys, isFirstChar('$'))) {
+    modifier = fieldsToMilliseconds(modifier);
+    modifier = { $set: modifier };
+  }
   if(!modifier.$set) modifier.$set = { updatedAt: new Date() };
   else modifier.$set.updatedAt = new Date();
   Tasks.update(_id, modifier, callback);
@@ -130,12 +152,6 @@ updateTask = function(_id, modifier, callback) {
 fetchTasks = function(selector, options) {
   var ary = Tasks.find(selector, options).fetch();
   return lodash.map(ary, fieldsToDuration);
-};
-
-findOneTask = function(selector) {
-  var item = Tasks.findOne(selector);
-  item     = fieldsToDuration(item);
-  return item;
 };
 
 findTask = function(id) {

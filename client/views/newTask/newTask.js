@@ -66,8 +66,6 @@ function confirm() {
   task.timeRemaining = fromSeconds( hr + min );
   task.importance = $("#importance-group label.active").children("input").eq(0).val();
   insertTask(task, function (err, id) {
-    if(err) console.log(err);
-    else    console.log('id: ', id);
     Router.go('/tasks');
   });
 }
