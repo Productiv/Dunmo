@@ -2,6 +2,17 @@ Router.configure({
   layoutTemplate: 'layout'
 });
 
+var checkForUser = function() {
+  if (!(Meteor.loggingIn() || Meteor.user())) {
+    this.render('login');
+    this.render('tasksNav', { to: 'navbar' });
+    pause();
+  }
+  this.next();
+}
+
+Router.onBeforeAction(checkForUser);
+
 Router.route('/', function () {
   this.redirect('/tasks');
 });
@@ -62,4 +73,3 @@ Router.route('/pomodoro/:id', function () {
   this.render('tasksNav', { to: 'navbar' });
   this.render('editModal', { to: 'modal', data: data });
 });
-
