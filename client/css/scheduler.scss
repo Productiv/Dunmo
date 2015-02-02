@@ -144,3 +144,18 @@ div.btn-group-justified label {
     padding-left: 10px;
   }
 }
+
+/* Login */
+
+.login-container .container {
+  @media(min-width: 768px) {
+    width: 50%;
+  }
+  div.submit-row {
+    padding-top: 5px;
+
+    button {
+      width: 100%;
+    }
+  }
+}
