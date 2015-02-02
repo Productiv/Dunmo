@@ -21,19 +21,6 @@ Tasks.before.insert(function(userId, doc) {
   return doc;
 });
 
-Tasks.before.update(function(userId, doc, fieldNames, modifier, options) {
-  doc.updatedAt = new Date();
-  doc = fieldsToMilliseconds(doc);
-  //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
-  return doc;
-});
-
-Tasks.after.update(function(userId, doc, fieldNames, modifier, options) {
-  doc = fieldsToDuration(doc);
-  //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
-  return doc;
-});
-
 Tasks.helpers({
 
   owner: function() {
@@ -55,18 +42,29 @@ Tasks.helpers({
 
   incrementTimeRemaining: function(milliseconds) {
     var current = this.timeRemaining.toMilliseconds();
-    Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
-    return new Duration(current + milliseconds);
+    console.log("this.timeRemaining.toMilliseconds(): ", current);
+    if (current + milliseconds <= 0) {
+      this.setTimeRemaining(0);
+      this.markDone(true);
+      return new Duration(0);
+    } else {
+      Tasks.update(this._id, { $inc: { timeRemaining: milliseconds }});
+      return new Duration(current + milliseconds);
+    }
   },
 
   incrementTimeSpent: function(milliseconds) {
     var current = this.timeSpent.toMilliseconds();
+    if (current + milliseconds <= 0) {
+      this.setTimeSpent(0);
+      return new Duration(0);
+    }
     Tasks.update(this._id, { $inc: { timeSpent: milliseconds }});
     return new Duration(current + milliseconds);
   },
 
-  setTimeRemaining: function(milliseconds) {
-    Tasks.update(this._id, { $set: { timeRemaining: milliseconds }});
+  setTimeRemaining: function(milliseconds, callback) {
+    Tasks.update(this._id, { $set: { timeRemaining: milliseconds }}, callback);
   },
 
   setTimeSpent: function(milliseconds) {

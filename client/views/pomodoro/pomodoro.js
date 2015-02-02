@@ -21,6 +21,7 @@ Template.pomodoro.events({
     var time = clock.getTime().time - (new Duration(this.timeSpent).toSeconds());
     time = time * 1000;
     this.spendTime(time);
+
     window.location.href = '/';
   },
 
