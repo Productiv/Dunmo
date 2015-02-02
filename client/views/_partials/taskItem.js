@@ -38,9 +38,7 @@ Template.taskItem.helpers({
   },
 
   timeRemainingStr: function() {
-    var remaining;
-    if(this.isOverdue) annotation = "overdue";
-    else               annotation = "remaining";
+    var annotation = "remaining";
     return this.timeRemainingStr() + " " + annotation;
   }
 

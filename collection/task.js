@@ -22,10 +22,17 @@ Tasks.before.insert(function(userId, doc) {
   return doc;
 });
 
-Tasks.before.update(function(userId, doc, null, { $}) {
+Tasks.before.update(function(userId, doc, fieldNames, modifier, options) {
   console.log("doc: ", doc);
-  doc.createdAt = new Date();
+  doc.updatedAt = new Date();
   doc = fieldsToMilliseconds(doc);
+  //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
+  return doc;
+});
+
+Tasks.after.update(function(userId, doc, fieldNames, modifier, options) {
+  console.log("doc: ", doc);
+  doc = fieldsToDuration(doc);
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
   return doc;
 });
@@ -137,7 +144,11 @@ insertTask = function (task, callback) {
 
 updateTask = function(_id, modifier, callback) {
   var keys = _.keys(modifier);
-  if(!_.some(keys, isFirstChar('$'))) modifier = { $set: modifier };
+
+  if(!_.some(keys, isFirstChar('$'))) {
+    modifier = fieldsToMilliseconds(modifier);
+    modifier = { $set: modifier };
+  }
   if(!modifier.$set) modifier.$set = { updatedAt: new Date() };
   else modifier.$set.updatedAt = new Date();
   console.log("modifier: ", modifier);

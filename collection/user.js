@@ -241,6 +241,10 @@ Meteor.users.helpers({
 
     // TODO: what about overdue items on the first day?
     // TODO: todo.timeRemaining.toTaskInterval() > remaining.toTaskInterval() ?
+    var thing = remaining.toSeconds();
+    console.log("thing: ", thing);
+    console.log("todo: ", todo);
+    console.log("todo.timeRemaining: ", todo.timeRemaining);
     if((todo.timeRemaining.toSeconds() > remaining.toSeconds()) && (todo.dueAt >= (new Date()))) {
       var ret   = R.cloneDeep(todo.split(remaining));
       todo      = R.cloneDeep(ret[0]);
