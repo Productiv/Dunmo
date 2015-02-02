@@ -1,6 +1,3 @@
-Template.editTask.rendered = function() {
-
-};
 
 confirmEditTask = function(taskId) {
   // event.preventDefault();
@@ -11,7 +8,7 @@ confirmEditTask = function(taskId) {
   var hours = $parent.find('.task-hours').val();
   var minutes = $parent.find('.task-minutes').val();
   var datetime = $parent.find('#datetimepicker input').val();
-  var $importance = $parent.find('.importance');
+  var $importance = $parent.find('#importance-group');
 
   if (title != "") {
     task.title = title;

@@ -8,7 +8,6 @@ Router.route('/', function () {
 
 Router.route('/tasks', function () {
   this.render('tasks');
-  Session.set('page', 'tasks');
   this.render('tasksNav', { to: 'navbar' });
   this.render('editModal', { to: 'modal' });
 });
@@ -19,10 +18,39 @@ Router.route('/tasks/new', function () {
 });
 
 Router.route('/tasks/all', function () {
-  Session.set('page', 'allTasks');
-  this.render('allTasks');
+  this.render('showTasks', {
+    data: function() {
+      var user  = Meteor.user();
+      var todos = user ? user.sortedTodos() : null;
+      if(todos && todos.length === 0) todos = null;
+      return {
+        title: "All Todos",
+        tasks: todos
+      };
+    }
+  });
   this.render('tasksNav', { to: 'navbar' });
   this.render('editModal', { to: 'modal' });
+  this.render('taskItem', { to: 'taskItem' });
+  this.render('noTasks', { to: 'noTasks' });
+});
+
+Router.route('/tasks/done', function () {
+  this.render('showTasks', {
+    data: function() {
+      var user  = Meteor.user();
+      var tasks = user ? user.doneTasks() : null;
+      if(tasks.length === 0) tasks = null;
+      return {
+        title: "Done Tasks",
+        tasks: tasks
+      };
+    }
+  });
+  this.render('tasksNav', { to: 'navbar' });
+  this.render('editModal', { to: 'modal' });
+  this.render('doneItem', { to: 'taskItem' });
+  this.render('noDoneTasks', { to: 'noTasks' });
 });
 
 Router.route('/pomodoro/:id', function () {

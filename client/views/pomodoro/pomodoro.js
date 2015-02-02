@@ -38,14 +38,14 @@ Template.pomodoro.events({
       clock.stop();
       Session.set('pause', true);
     }
-  },
+  } //,
 
-  'click .complete': function (event) {
-    $('pomodoro-container').hide();
-    var seconds = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
-    this.spendTime(seconds * 1000);
-    this.markDone();
-    window.location.href = '/';
-  }
+  // 'click .complete': function (event) {
+  //   $('pomodoro-container').hide();
+  //   var seconds = clock.getTime().time - (new Duration(this.timeSpent)).toSeconds();
+  //   this.spendTime(seconds * 1000);
+  //   this.markDone();
+  //   window.location.href = '/';
+  // }
 });
 

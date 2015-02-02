@@ -28,6 +28,11 @@ $color-link:      #2a6496;
   color: black;
 }
 
+.de-emphasized {
+  color: $color-grey;
+  font-style: italic;
+}
+
 /*Page Effects*/
 .page {
   padding-top: 75px;

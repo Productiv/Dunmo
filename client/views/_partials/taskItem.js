@@ -47,17 +47,13 @@ Template.taskItem.helpers({
 Template.taskItem.events({
 
   "click .complete": function(e) {
+    console.log('test');
     this.spendTime(this.timeRemaining.toMilliseconds());
     this.markDone();
   },
 
   "click .edit": function(e) {
     $("#editModal").attr("data-task-id", this._id);
-    // Blaze.render(editTask);
-  },
-
-  "hover #due-date": function (event) {
-    // body...
   }
 
 });

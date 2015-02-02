@@ -1,16 +1,16 @@
-<template name="allTasks">
+<template name="showTasks">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1>All Tasks</h1>
+        <h1>{{title}}</h1>
         <hr>
         {{#if tasks}}
           {{#each tasks}}
-            {{> taskItem}}
+            {{> yield "taskItem"}}
             <hr>
           {{/each}}
         {{else}}
-          {{> noTasks}}
+          {{> yield "noTasks"}}
         {{/if}}
       </div>
     </div>
