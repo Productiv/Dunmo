@@ -111,7 +111,7 @@ Meteor.users.helpers({
   _padDays: function(freetimes, start, end) {
     // create all the dayLists from startDate until the furthest due date, sorted by date
     var startDate = start ? new Date(start) : Date.todayStart();
-    var endDate   = end   ? new Date(end)   : user.lastDueDate();
+    var endDate   = end   ? new Date(end)   : this.lastDueDate();
 
     var map = {};
     freetimes.forEach(function (day) {
@@ -194,11 +194,16 @@ Meteor.users.helpers({
     });
     todos = basicSort(todos);
 
+    // console.log('todos: ', todos);
+
     freetimes = freetimeCursor.fetch();
     freetimes = freetimes.map(function(doc) {
       doc = fieldsToDuration(doc);
       return doc;
     });
+    freetimes = this._padDays(freetimes);
+
+    console.log('freetimes: ', freetimes);
 
     var user = this;
 
