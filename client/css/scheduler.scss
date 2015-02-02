@@ -5,6 +5,7 @@ $lowImportance:   #20d4bc;
 $medImportance:   #f29830;
 $highImportance:  #d42038;
 $color-primary:   #1fd100;
+$color-primary-dark-20: #06cc00;
 $color-secondary: #06ff00;
 $color-tertiary:  #e51914;
 $color-default:   #c9ccca;
@@ -153,7 +154,7 @@ div#login-dropdown-list {
 
 /*DayLists*/
 .day-title {
-  color: $color-primary;
+  color: $color-primary-dark-20;
 }
 
 /*Task Items*/
