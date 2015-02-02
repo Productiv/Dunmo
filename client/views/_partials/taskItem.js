@@ -46,14 +46,27 @@ Template.taskItem.helpers({
 
 Template.taskItem.events({
 
-  "click .complete": function(e) {
-    console.log('test');
-    this.spendTime(this.timeRemaining.toMilliseconds());
-    this.markDone();
+  'click .complete': function(e) {
+    if(this.isDone) {
+      console.log('this.isDone: ', this.isDone);
+      if(this.timeRemaining.toMilliseconds() === 0) {
+        var task = this;
+        this.setTimeRemaining(30*60*1000, function() {
+          task.markDone(false);
+        });
+      } else {
+        task.markDone(false);
+      }
+    } else {
+      console.log('test');
+      this.spendTime(this.timeRemaining.toMilliseconds());
+      this.markDone();
+    }
   },
 
-  "click .edit": function(e) {
-    $("#editModal").attr("data-task-id", this._id);
+  'click .btn.edit': function(e) {
+    console.log('this._id: ', this._id);
+    $('.edit-modal').attr('data-task-id', this._id);
   }
 
 });

@@ -154,12 +154,6 @@ fetchTasks = function(selector, options) {
   return lodash.map(ary, fieldsToDuration);
 };
 
-findOneTask = function(selector) {
-  var item = Tasks.findOne(selector);
-  item     = fieldsToDuration(item);
-  return item;
-};
-
 findTask = function(id) {
   return Tasks.findOne({ _id: id});
 }

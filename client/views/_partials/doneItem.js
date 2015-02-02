@@ -34,17 +34,24 @@ Template.doneItem.helpers({
 
 });
 
-// Template.doneItem.events({
+Template.doneItem.events({
 
-//   "click .complete": function(e) {
-//     console.log('this.isDone: ', this.isDone);
-//     this.markDone(false);
-//   },
+  "click .complete": function(e) {
+    console.log('this.isDone: ', this.isDone);
+    if(this.timeRemaining.toMilliseconds() === 0) {
+      var task = this;
+      this.setTimeRemaining(30*60*1000, function() {
+        task.markDone(false);
+      });
+    } else {
+      task.markDone(false);
+    }
+  },
 
-//   "click .edit": function(e) {
-//     console.log('this._id: ', this._id);
-//     $("#editModal").attr("data-task-id", this._id);
-//   }
+  "click .edit": function(e) {
+    console.log('this._id: ', this._id);
+    $("#editModal").attr("data-task-id", this._id);
+  }
 
-// });
+});
 

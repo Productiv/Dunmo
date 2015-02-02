@@ -55,7 +55,7 @@ Router.route('/tasks/done', function () {
 
 Router.route('/pomodoro/:id', function () {
   var data = function() {
-    var task = findOneTask(this.params.id);
+    var task = Tasks.findOne(this.params.id);
     return task;
   };
   this.render('pomodoro', { data: data });

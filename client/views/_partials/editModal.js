@@ -11,10 +11,10 @@ Template.editModal.rendered = function() {
   }
 
   // TODO: change data context somehow?
-  $('#editModal').on('show.bs.modal', function(e) {
+  $('.edit-modal').on('show.bs.modal', function(e) {
     var $modal = $(e.target);
     var taskId = $modal.attr('data-task-id');
-    var task = findOneTask(taskId);
+    var task = Tasks.findOne(taskId);
 
     // fill fields with data
     $('.edit-task input.title').val(task.title);
