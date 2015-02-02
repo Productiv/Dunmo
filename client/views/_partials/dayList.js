@@ -31,9 +31,7 @@ Template.dayList.helpers({
 
 Template.dayList.events({
   'click .timeRemaining': function(e) {
-    console.log('this._id: ', this._id);
     Session.set('editing#' + this._id, 'timeRemaining');
-    console.log('e.target: ', e.target);
     $parent = $(e.target).parents('.day-tasks-container');
     setTimeout(render.bind(this, $parent), 300);
   },
@@ -46,14 +44,12 @@ Template.dayList.events({
 });
 
 function render($parent) {
-  console.log('$parent: ', $parent);
   var timeRemaining = this.timeRemaining; // duration
   var minutesUnit = 5;
   var hr = Math.floor(timeRemaining.toSeconds() / 60 / 60);
   var min = Math.ceil(timeRemaining.minutes() / minutesUnit) * minutesUnit;
 
   var taskHours = $parent.find('select#task-hours');
-  console.log('taskHours: ', taskHours);
   for (var i = 0; i < 24; i++) {
     taskHours.append($("<option/>").val(i).text(i));
   }

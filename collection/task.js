@@ -15,7 +15,6 @@
 Tasks = new Mongo.Collection("tasks");
 
 Tasks.before.insert(function(userId, doc) {
-  console.log("doc: ", doc);
   doc.createdAt = new Date();
   doc = fieldsToMilliseconds(doc);
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
@@ -23,7 +22,6 @@ Tasks.before.insert(function(userId, doc) {
 });
 
 Tasks.before.update(function(userId, doc, fieldNames, modifier, options) {
-  console.log("doc: ", doc);
   doc.updatedAt = new Date();
   doc = fieldsToMilliseconds(doc);
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
@@ -31,7 +29,6 @@ Tasks.before.update(function(userId, doc, fieldNames, modifier, options) {
 });
 
 Tasks.after.update(function(userId, doc, fieldNames, modifier, options) {
-  console.log("doc: ", doc);
   doc = fieldsToDuration(doc);
   //TODO: if(typeof doc.date === 'date') doc.date = Day.fromDate(doc.date);
   return doc;
@@ -151,7 +148,6 @@ updateTask = function(_id, modifier, callback) {
   }
   if(!modifier.$set) modifier.$set = { updatedAt: new Date() };
   else modifier.$set.updatedAt = new Date();
-  console.log("modifier: ", modifier);
   Tasks.update(_id, modifier, callback);
 };
 

@@ -235,16 +235,10 @@ Meteor.users.helpers({
   // a private helper function for todoList
   _appendTodo: function(dayList, todos, remaining) {
     var todo = R.cloneDeep(todos[0]);
-    // console.log("todo: ", todo);
-    // console.log("todo.timeRemaining: ", todo.timeRemaining);
-    // console.log("remaining: ", remaining);
 
     // TODO: what about overdue items on the first day?
     // TODO: todo.timeRemaining.toTaskInterval() > remaining.toTaskInterval() ?
     var thing = remaining.toSeconds();
-    console.log("thing: ", thing);
-    console.log("todo: ", todo);
-    console.log("todo.timeRemaining: ", todo.timeRemaining);
     if((todo.timeRemaining.toSeconds() > remaining.toSeconds()) && (todo.dueAt >= (new Date()))) {
       var ret   = R.cloneDeep(todo.split(remaining));
       todo      = R.cloneDeep(ret[0]);
