@@ -79,25 +79,49 @@ Meteor.users.helpers({
     return dayList;
   },
 
+  lastDueDate: function() {
+    // get all unfinished tasks
+    var todos = this.todos();
+    return _.last(todos).dueAt;
+  },
+
   // output: a list of dayLists from today until the latest due date of any todo
   //         dayLists are sans todos
   freetimes: function(startDate) {
     var averageFreetime = this.averageFreetime();
 
-    // get all unfinished tasks
-    var todos = this.todos();
-
     // create all the dayLists from startDate until the furthest due date, sorted by date
     var startDate = startDate ? new Date(startDate) : Date.todayStart();
     var todaysFreetime = this.dayList(startDate);
     var freetimes = [ todaysFreetime ];
-    if (todos.length === 0) return freetimes;
-    else var endDate = _.last(todos).dueAt;
+    if (this.todos().length === 0) return freetimes;
+    else var endDate = user.lastDueDate();
 
     var d = startDate;
     d.setDate(d.getDate() + 1);
     while(d <= endDate) {
       var freetime = this.dayList(d);
+      freetimes.push(freetime);
+      d.setDate(d.getDate() + 1);
+    }
+
+    return freetimes;
+  },
+
+  _padDays: function(freetimes, start, end) {
+    // create all the dayLists from startDate until the furthest due date, sorted by date
+    var startDate = start ? new Date(start) : Date.todayStart();
+    var endDate   = end   ? new Date(end)   : user.lastDueDate();
+
+    var map = {};
+    freetimes.forEach(function (day) {
+      map[day.date] = day;
+    });
+
+    var d = startDate;
+    d.setDate(d.getDate() + 1);
+    while(d <= endDate) {
+      var freetime = map[d] ? map[d] : this.dayList(d);
       freetimes.push(freetime);
       d.setDate(d.getDate() + 1);
     }
@@ -114,8 +138,7 @@ Meteor.users.helpers({
     if(!date) date = Date.todayStart();
     var dayList = this.dayList(date);
     if(milliseconds) {
-      DayLists.update(dayList._id, { $set: { timeRemaining: milliseconds }});
-      TodoList.remove({ownerId: this._id});
+      DayLists.update(dayList._id, { $set: { timeRemaining: milliseconds } });
       return new Duration(milliseconds);
     } else return dayList.timeRemaining;
   },
@@ -163,27 +186,46 @@ Meteor.users.helpers({
     this.incrementTimeRemaining(-milliseconds);
   },
 
+  reactiveTodoList: function(todoCursor, freetimeCursor) {
+    todos = todoCursor.fetch();
+    todos = todos.map(function(doc) {
+      doc = fieldsToDuration(doc);
+      return doc;
+    });
+    todos = basicSort(todos);
+
+    freetimes = freetimeCursor.fetch();
+    freetimes = freetimes.map(function(doc) {
+      doc = fieldsToDuration(doc);
+      return doc;
+    });
+
+    var user = this;
+
+    todoList = user._generateTodoList(freetimes, todos, 'greedy');
+
+    return todoList;
+  },
+
   // output: A list of dayLists, each filled with todos. Todos are sorted by
   //         dueAt, importance, and timeRemaining, in that order. Each dayList
   //         will contain as many todos as will fit. If this results in any
   //         overdue todos, they will be added to the end of the dueAt dayList
   //         with the attribute { overdue: true }.
   todoList: function(date) {
-    var todoList = TodoList.findOne({ownerId: this._id});
-    if(todoList) return todoList.list;
-
     if (date)     date = new Date(date);
     var user      = this;
     var freetimes = user.freetimes();
     var todos     = user.sortedTodos();
 
     todoList = user._generateTodoList(freetimes, todos, 'greedy');
+
     if(date) {
       todoList = _.select(todoList, function(dayList) {
         return dayList.date >= date
       });
     }
-    TodoList.insert({ownerId: this._id, list: todoList});
+
     return todoList;
   },
 

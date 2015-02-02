@@ -21,6 +21,5 @@ confirmEditTask = function(taskId) {
 
   updateTask(taskId, task, function (err, id) {
     $('#editModal').modal('hide');
-    location.reload();
   });
 };

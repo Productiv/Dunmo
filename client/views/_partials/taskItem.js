@@ -48,9 +48,7 @@ Template.taskItem.events({
 
   "click .complete": function(e) {
     this.spendTime(this.timeRemaining.toMilliseconds());
-    this.markDone(true, function() {
-      location.reload();
-    });
+    this.markDone();
   },
 
   "click .edit": function(e) {

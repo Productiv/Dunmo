@@ -69,21 +69,4 @@ function confirm($parent) {
   var user = Meteor.user();
   var date = this.date;
   user.timeRemaining(date, remaining);
-  // var todoList = user.todoList(this.date);
-  // console.log('todoList: ', todoList);
-  // todoList.forEach(function (dayList) {
-  //   updateDayListView(dayList);
-  // });
 };
-
-// function updateDayListView(dayList) {
-//   console.log('dayList: ', dayList);
-//   var id = dayList._id;
-//   var $dayList = $('#' + id);
-//   console.log('$dayList: ', $dayList);
-//   var dl_elem = $dayList.get()[0];
-//   console.log('dl_elem: ', dl_elem);
-//   var data = Blaze.getData(dl_elem);
-//   console.log('data: ', data);
-//   data.todos = dayList.todos;
-// }

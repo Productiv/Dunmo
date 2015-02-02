@@ -1,2 +1,2 @@
 
-TodoList = new Mongo.Collection(null); // local collection
+// TodoList = new Mongo.Collection(null); // local collection
