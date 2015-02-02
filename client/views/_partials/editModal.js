@@ -24,14 +24,26 @@ Template.editModal.rendered = function() {
       $('.edit-task label.imp-one').addClass('active');
       $('.edit-task label.imp-two').removeClass('active');
       $('.edit-task label.imp-three').removeClass('active');
+
+      $('.edit-task label.imp-one input').attr('checked', true);
+      $('.edit-task label.imp-two input').attr('checked', false);
+      $('.edit-task label.imp-three input').attr('checked', false);
     } else if(importance == 2) {
       $('.edit-task label.imp-one').removeClass('active');
       $('.edit-task label.imp-two').addClass('active');
       $('.edit-task label.imp-three').removeClass('active');
+
+      $('.edit-task label.imp-one input').attr('checked', false);
+      $('.edit-task label.imp-two input').attr('checked', true);
+      $('.edit-task label.imp-three input').attr('checked', false);
     } else {
       $('.edit-task label.imp-one').removeClass('active');
       $('.edit-task label.imp-two').removeClass('active');
       $('.edit-task label.imp-three').addClass('active');
+
+      $('.edit-task label.imp-one input').attr('checked', false);
+      $('.edit-task label.imp-two input').attr('checked', false);
+      $('.edit-task label.imp-three input').attr('checked', true);
     }
 
     var timeRemaining = task.timeRemaining; // Duration

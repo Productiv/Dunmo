@@ -8,7 +8,7 @@ confirmEditTask = function(taskId) {
   var hours = $parent.find('.task-hours').val();
   var minutes = $parent.find('.task-minutes').val();
   var datetime = $parent.find('#datetimepicker input').val();
-  var $importance = $parent.find('#importance-group');
+  var $importance = $parent.find('#importance-group .btn-group');
 
   if (title != "") {
     task.title = title;
@@ -20,7 +20,9 @@ confirmEditTask = function(taskId) {
     task.dueAt = new Date(datetime);
   }
   if ($importance.length != 0) {
-    task.importance = $importance.children("input").eq(0).val();
+    var importance = $importance.find('input:checked').attr('id');
+    console.log('importance: ', importance);
+    task.importance = importance;
   }
 
   updateTask(taskId, task, function (err, id) {
