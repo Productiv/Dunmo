@@ -1,0 +1,88 @@
+
+/*Navigation*/
+
+.dunmo {
+  margin: auto;
+  margin-top: -7px;
+}
+
+.navbar-nav > li > a {
+  padding-top: 6px;
+}
+
+.navbar-custom {
+  background-color: $color-primary;
+  color:#ffffff;
+  border-radius:0;
+}
+
+.navbar-brand {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  margin: auto;
+  margin-top: 10px;
+  margin-left: -6px;
+  padding: 8px;
+  padding-left: 0;
+  font-size: 20px;
+  color: white !important;
+  &:hover {
+    cursor: default;
+    color: white !important;
+  }
+}
+
+.navbar {
+  .login {
+    display: none;
+  }
+
+  @media(min-width: 768px) {
+    .navbar-nav > li > a {
+      padding-top: 14px;
+    }
+
+    .login-p {
+      margin-top: 14px;
+    }
+  }
+}
+
+.navbar-link {
+  color: white !important;
+  text-decoration: none;
+  &:hover {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+.navbar-right {
+  float: right;
+}
+
+@media(max-width: 768px) {
+  .login {
+    margin: 0;
+    margin-top: 10px;
+  }
+
+  .navbar-nav {
+    margin-top: 15px;
+    margin-bottom: 0;
+  }
+
+  .new {
+    margin: -4px;
+  }
+}
+
+.navbar-default .navbar-nav > .open {
+  > a,
+  > a:hover,
+  > a:focus {
+    background-color: rgba(0,0,0, 0.2);
+  }
+}
