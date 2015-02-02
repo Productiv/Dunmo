@@ -89,9 +89,9 @@ Tasks.helpers({
     return this.timeRemaining.toAbbrevDetailStr();
   },
 
-  markDone: function(done) {
+  markDone: function(done, callback) {
     if(done === undefined) done = true;
-    Tasks.update(this._id, { $set: { isDone: done } });
+    Tasks.update(this._id, { $set: { isDone: done } }, callback);
   },
 
   // input:  duration of first task in output
