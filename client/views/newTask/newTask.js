@@ -22,19 +22,19 @@ Template.newTask.rendered = function() {
 }
 
 Template.newTaskNav.events({
-  "click .confirm": function (event) {
-    confirm();
+  "click .confirm": function (e) {
+    confirm(e);
   }
 });
 
 Template.newTask.events({
-  "click .confirm": function (event) {
-    confirm();
+  "click .confirm": function (e) {
+    confirm(e);
   }
 });
 
-function confirm() {
-  event.preventDefault();
+function confirm(e) {
+  e.preventDefault();
   // TODO seperate validation
   var itemsInvalid = false;
   $(".form-group").removeClass("has-error");
