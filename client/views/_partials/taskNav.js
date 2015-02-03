@@ -4,10 +4,13 @@ Template.tasksNav.events({
 	},
 	'click #tasksBtn': function() {
 		location.href = '/tasks';
+	},
+
+	'click a#signOut': function() {
+		Meteor.logout();
 	}
 });
 
 Template.tasksNav.helpers({
-	
-});
 
+});
