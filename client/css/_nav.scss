@@ -34,18 +34,12 @@
 }
 
 .navbar {
-  .login {
-    display: none;
-  }
 
   @media(min-width: 768px) {
     .navbar-nav > li > a {
       padding-top: 14px;
     }
 
-    .login-p {
-      margin-top: 14px;
-    }
   }
 }
 
