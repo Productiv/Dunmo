@@ -4,9 +4,7 @@ Router.configure({
 
 var checkForUser = function() {
   if (!(Meteor.loggingIn() || Meteor.user())) {
-    this.render('login');
-    this.render('tasksNav', { to: 'navbar' });
-    pause();
+    this.redirect('/login');
   }
   this.next();
 }
@@ -15,6 +13,14 @@ Router.onBeforeAction(checkForUser);
 
 Router.route('/', function () {
   this.redirect('/tasks');
+});
+
+Router.route('/login', function () {
+  if (Meteor.user()) {
+    this.redirect('/tasks');
+  }
+  this.render('login');
+  this.render('tasksNav', { to: 'navbar' });
 });
 
 Router.route('/tasks', function () {

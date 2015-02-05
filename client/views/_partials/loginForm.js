@@ -10,14 +10,13 @@ Template.loginForm.events({
 
       // If validation passes, supply the appropriate fields to the
       // Meteor.loginWithPassword() function.
-      Meteor.loginWithPassword(email, password, function(err){
-      if (err) {
-        alert('attempt failed');
-      }
-      else {
-        Router.go('/tasks');
-      }
-    });
+      Meteor.loginWithPassword(email, password, function(err) {
+        if (err) {
+          alert('bad password');
+        } else {
+          Router.go('/tasks');
+        }
+      });
        return false;
     }
 });
