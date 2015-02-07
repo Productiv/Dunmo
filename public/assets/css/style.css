@@ -259,11 +259,18 @@ hr {
 			transition: all .1s ease-in-out;
 }
 
+.btn-apple {
+	background: #1fd100;
+	border-radius: 30px;
+	padding: 16px 32px 20px;
+	color: white;
+	margin: 10px;
+}
 
 /* HEADER SECTION */
 #h {
-	background: url(../img/header.png) no-repeat center top;
-	padding-top: 115px;
+	background: url(../img/header-blur.jpg) no-repeat center top;
+	padding-top: 92px;
 	text-align:center;
 	background-attachment: relative;
 	background-position: center center;
@@ -293,8 +300,17 @@ hr {
 	color: white;
 }
 
-#h h2 {
+#h .leader {
+	margin-top: 48px;
 	color: white;
+}
+
+#h .logo {
+	margin-top: -32px;
+}
+
+#h .btn-apple {
+	margin-top: 30px;
 }
 
 .go {
@@ -305,7 +321,7 @@ hr {
 	-moz-transition: all 1s ease;
 	-webkit-transition: all 1s ease;
 	-o-transition: all 1s ease;
-	padding-top: 120px;
+	padding-top: 110px;
 	padding-bottom: 15px;
 }
 
@@ -355,14 +371,6 @@ hr {
 
 .icon-sm {
 	font-size: 20px;
-}
-
-.btn-apple {
-	background: #1fd100;
-	border-radius: 30px;
-	padding: 16px 32px 20px;
-	color: white;
-	margin: 10px;
 }
 
 .btn-android {
@@ -420,7 +428,7 @@ hr {
 
 /* Testimonial Section */
 #t {
-	background: url(../img/header.png) no-repeat center top;
+	background: url(../img/header2-blur.png) no-repeat center top;
 	padding-top: 100px;
 	padding-bottom: 100px;
 	text-align:center;
