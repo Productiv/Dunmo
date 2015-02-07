@@ -12,7 +12,8 @@ var checkForUser = function() {
 Router.onBeforeAction(checkForUser);
 
 Router.route('/', function () {
-  this.redirect('/tasks');
+  this.redirect('/index.html');
+  // this.redirect('/tasks');
 });
 
 Router.route('/login', function () {
